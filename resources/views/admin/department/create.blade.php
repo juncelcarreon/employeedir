@@ -1,74 +1,94 @@
 @extends('layouts.main')
 @section('title')
-Department / Add New
-@endsection
-@section('pagetitle')
-Department / Add New
+Department > Create
 @endsection
 @section('content')
-	<style type="text/css">
-        .row.margin-container{
-            margin: 10px;
-        }
-        #division_id-error{
-            margin-top: 65px;
-            margin-left: -61px;
-            position: absolute;
-        }
-        label.error + span{
-            padding-bottom: 30px;
-        }
-        #account_id-error{
-            margin-left: -60px;
-        }
-	</style>
-    <form id="create_department_form" role="form" method="POST" action="{{ route('department.store')}}" >
-        {{ csrf_field() }}
-        <div class="col-md-3" style="">
-            <div class="section-header">
-                <h4>New Department</h4>
-            </div>
-            <div class="panel panel-container">
-                <div class="row margin-container">
-                    <div class="form-group">
-                        <label>Department Name</label>
-                        <input type="text" name="department_name" class="form-control" required>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        New Department
+
+        <a href="<?= url('department') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
+    </div>
+    <div class="panel-body timeline-container">
+        <div class="flex-center position-ref full-height">
+            <form action="<?= route('department.store') ?>" method="POST">
+            {{ csrf_field() }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Department Name:</strong>
+                            <input type="text" name="department_name" class="form-control" placeholder="Department Name..." required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Department Code</label>
-                        <input type="text" name="department_code" class="form-control" required>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Department Code:</strong>
+                            <input type="text" name="department_code" class="form-control" placeholder="Department Code..." required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Division </label>
-                        <select class="select2 form-control"  name="division_id">
-                            <option selected="" disabled="">Select</option>
-                            @foreach($divisions as $division)
-                            <option value="{{ $division->id }}"> {{$division->division_name}}</option>
-                            @endforeach
-                        </select>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Division:</strong>
+                            <select class="select2 form-control" name="division_id">
+                                <option value="" selected disabled>Select Division</option>
+                                <?php
+                                foreach($divisions as $division) {
+                                ?>
+                                <option value="<?= $division->id ?>"><?= $division->division_name ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Account </label>
-                        <select class="select2 form-control"  name="account_id" required>
-                            <option selected="" disabled="">Select</option>
-                            @foreach($accounts as $account)
-                                <option value="{{ $account->id }}"> {{$account->account_name}}</option>
-                            @endforeach
-                        </select>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Account</strong>
+                            <select class="select2 form-control" name="account_id" required>
+                                <option value="" disabled selected>Select Account</option>
+                                <?php
+                                foreach($accounts as $account) {
+                                ?>
+                                <option value="<?= $account->id ?>"><?= $account->account_name ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <br>
-                        <button class="btn btn-primary">Save</button>               
-                    </div>      
                 </div>
-            </div>
+                <div class="col-md-12" style="border-top: 1px solid rgba(0,0,0,.125); padding-top: 15px; margin-top: 15px"></div>
+                <div class="form-group pull-right">
+                    <button id="btn_save" class="btn btn-primary">Save</button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
+</div>
 @endsection
 @section('scripts')
-    <script type="text/javascript">
-        $('#create_department_form').validate({
-            ignore: []
-        });
-    </script>
+<script type="text/javascript">
+$(function(e) {
+    var departments = [<?php foreach($departments as $department) { echo '"'.$department->department_code.'"'.","; } ?>];
+
+    activeMenu($('#menu-department'));
+
+    $('#btn_save').click(function(e) {
+        e.preventDefault();
+        var result = true;
+
+        result = checkRequired($(this).closest('form'));
+
+        if(result && $.inArray($('input[name="department_code"]').val(), departments) !== -1) {
+            alert('Department Code Already Exists');
+
+            result = false;
+        }
+
+        if(result) {
+            saveForm($(this));
+        }
+    });
+});
+</script>
 @endsection

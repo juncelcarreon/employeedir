@@ -49,7 +49,7 @@
 </div>
 <div class="col-md-3">
     <div class="form-group">
-        <label>Supervisor</label>
+        <label>Immediate Superior</label>
         <select class="select2 form-control"  name="supervisor_id" >
             <option selected="" disabled="">Select</option>
             @foreach($supervisors as $supervisor)

@@ -12,16 +12,9 @@ class AdminMiddleware
      * @return mixed
      */
 
-    /*
-        CHANGE LOG
-
-        2022-10-22:
-            - Add Manager to the access group
-                * Juncel
-    */
     public function handle($request, Closure $next)
     {
-        if (Auth::user()->usertype != 3 && (!Auth::check() || Auth::user()->is_admin == 0)) {
+        if (Auth::user()->usertype != 3 && Auth::user()->usertype != 2  && (!Auth::check() || Auth::user()->is_admin == 0)) {
         	// route to not an admin page
             return redirect()->route('403');
         }

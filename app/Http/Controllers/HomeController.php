@@ -14,43 +14,34 @@ use App\Posts;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        // $this->middleware('auth');
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
-        if (Auth::check()) {
-            if(Auth::user()->isAdmin()) {
-                return redirect('dashboard');
-            }
-        }   
-        return view('home')
-            ->with('posts', Posts::where('enabled', '=', '1')->get())
-            ->with('new_hires', User::allExceptSuperAdmin()->orderBy('prod_date', 'DESC')->paginate(5))
-            ->with('employees', User::allExceptSuperAdmin()->get())->with('birthdays', User::whereRaw('MONTH(birth_date) = '.date('n'))->whereRaw('deleted_at is null')->where("status","=",1)->orderByRaw('DAYOFMONTH(birth_date) ASC')->get())
-            ->with('engagements', ElinkActivities::thisMonth()->orderBy('created_at', 'DESC')->get());
+        if(Auth::check() && Auth::user()->isAdmin()) {
+            return redirect('dashboard');
+        }
+
+        $data['posts'] = Posts::where('enabled', '=', '1')->get();
+        $data['new_hires'] = User::allExceptSuperAdmin()->orderBy('prod_date', 'DESC')->paginate(5);
+        $data['employees'] = User::allExceptSuperAdmin()->get();
+        $data['birthdays'] = User::whereRaw('MONTH(birth_date) = '.date('n'))->whereRaw('deleted_at is null')->where("status","=",1)->orderByRaw('DAYOFMONTH(birth_date) ASC')->get();
+        $data['engagements'] = ElinkActivities::thisMonth()->orderBy('created_at', 'DESC')->get();
+        $data['dashboard'] = 0;
+
+        return view('home', $data);
     }
+
     public function dashboard(Request $request)
     {
-        return view('home')
-            ->with('posts', Posts::where('enabled', '=', '1')->get())
-            ->with('new_hires', User::allExceptSuperAdmin()->orderBy('prod_date', 'DESC')->paginate(5))
-            ->with('employees', User::allExceptSuperAdmin()->get())
-            ->with('birthdays', User::whereRaw('MONTH(birth_date) = '.date('n'))->whereRaw('deleted_at is null')->where("status","=",1)->orderByRaw('DAYOFMONTH(birth_date) ASC')->get())
-            ->with('engagements', ElinkActivities::thisMonth()->orderBy('created_at', 'DESC')->get());
+        $data['posts'] = Posts::where('enabled', '=', '1')->get();
+        $data['new_hires'] = User::allExceptSuperAdmin()->orderBy('prod_date', 'DESC')->paginate(5);
+        $data['employees'] = User::allExceptSuperAdmin()->get();
+        $data['birthdays'] = User::whereRaw('MONTH(birth_date) = '.date('n'))->whereRaw('deleted_at is null')->where("status","=",1)->orderByRaw('DAYOFMONTH(birth_date) ASC')->get();
+        $data['engagements'] = ElinkActivities::thisMonth()->orderBy('created_at', 'DESC')->get();
+        $data['dashboard'] = 1;
+
+        return view('home', $data);
     }
+
     public function newhires(Request $request)
     {
         return User::allExceptSuperAdmin()->orderBy('prod_date', 'DESC')->paginate(5);

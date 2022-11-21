@@ -96,6 +96,11 @@ Route::middleware(['auth'])->group(function(){
         Route::get('employees/{id}/reactivate', 'EmployeeInfoController@reactivate');
         Route::get('upload/info','EmployeeInfoController@uploadInfo');
         Route::get('hierarchy', 'HierarchyController@hierarchy');
+        Route::get('setting', 'SettingController@index');
+        Route::post('setting/updateHierarchy', 'SettingController@updateHierarchy');
+        Route::post('setting/updateAttendance', 'SettingController@updateAttendance');
+        Route::post('setting/updateDirectives', 'SettingController@updateDirectives');
+        Route::post('setting/updateDresscode', 'SettingController@updateDresscode');
         Route::post('hierarchy', 'HierarchyController@updateHierarchy');
         Route::post('upload/info/process','EmployeeInfoController@processUploadInfo');
         Route::post('upload/info/avega','EmployeeInfoController@processAvega');
@@ -110,6 +115,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('leave/decline', 'LeaveController@decline');
     Route::post('leave/update', 'LeaveController@updateLeaveEntry');
     Route::post('leave/credits', 'LeaveController@updatecredits');
+    Route::get('testleave', 'LeaveController@test');
     Route::post('employee/{id}/savepassword', 'EmployeeInfoController@savepassword');
     Route::post('leave/rack','LeaveController@deleteLeaveDate');
     Route::post('save-profile','EmployeeInfoController@saveProfile');
@@ -117,7 +123,35 @@ Route::middleware(['auth'])->group(function(){
     Route::post('save-transfer', 'EmployeeInfoController@saveMovements');
     Route::post('send-45','UtilsController@sendProb_55');
     Route::post('save-break-info','TimeKeepingController@saveBreakInfo');
-   
+    Route::get('approved-lists', 'LeaveController@approveLists');
+
+    Route::resource('overtime', 'OvertimeController');
+    Route::post('overtime/recommend', 'OvertimeController@recommend');
+    Route::post('overtime/approve', 'OvertimeController@approve');
+    // Route::post('overtime/noted', 'OvertimeController@noted');
+    Route::post('overtime/decline', 'OvertimeController@decline');
+    Route::post('overtime/update', 'OvertimeController@update');
+    Route::post('overtime/complete', 'OvertimeController@complete');
+    Route::post('overtime/revert', 'OvertimeController@revert');
+    Route::post('overtime/verification', 'OvertimeController@verification');
+    Route::get('overtime/timekeeping/{id}', 'OvertimeController@timekeeping');
+    Route::get('team-overtime', 'OvertimeController@team');
+
+    Route::resource('undertime', 'UndertimeController');
+    Route::post('undertime/recommend', 'UndertimeController@recommend');
+    Route::post('undertime/approve', 'UndertimeController@approve');
+    // Route::post('undertime/noted', 'UndertimeController@noted');
+    Route::post('undertime/decline', 'UndertimeController@decline');
+    Route::post('undertime/update', 'UndertimeController@update');
+    Route::get('team-undertime', 'UndertimeController@team');
+
+    Route::resource('dainfraction', 'DAInfractionController');
+    Route::post('dainfraction/acknowledged', 'DAInfractionController@acknowledged');
+    Route::post('dainfraction/explanation', 'DAInfractionController@explanation');
+    Route::post('dainfraction/update', 'DAInfractionController@update');
+
+    Route::resource('survey', 'SurveyController');
+
     Route::get('recommend-request-info/{id}', 'EmployeeInfoController@recommendApproval');
     Route::get('approve-request-info/{id}', 'EmployeeInfoController@approveChangeProfile');
     Route::get('leave-credits', 'LeaveController@credits')->name('leave-credits');

@@ -169,6 +169,8 @@ Separated Employees
 @section('scripts')
 <script type="text/javascript">
     $(document).ready(function(){
+        activeMenu($('#menu-separated-employees'));
+
         $('#sort_option_list').trigger('change');
     });
     $('#departments_list').change(function(){

@@ -168,6 +168,7 @@ class LeaveRequest extends Model
                 WHERE
                     (e.team_name = '$dept' or e.usertype = 3 )
                         AND d.date >= CURDATE()
+                        AND l.approve_status_id <> 2
                 ORDER BY d.date ASC
             ");
         else
@@ -183,6 +184,7 @@ class LeaveRequest extends Model
                 WHERE
                     e.team_name = '$dept'
                         AND d.date >= CURDATE()
+                        AND l.approve_status_id <> 2
                 ORDER BY d.date ASC
             ");
     }
@@ -198,7 +200,7 @@ class LeaveRequest extends Model
         );
     }
 
-    public static function getLeave($leave_type = 'pending', $id = null){
+    public static function getLeave($leave_type = 'pending', $id = null, $type = 'list'){
         $query = "";
         switch ($leave_type) {
             case 'approve':
@@ -212,8 +214,12 @@ class LeaveRequest extends Model
                 break;
         }
 
-        if(!empty($id)) {
+        if(!empty($id) && $type == 'list') {
             $query .= "AND `leave_request`.`employee_id`={$id}";
+        }
+
+        if(!empty($id) && $type == 'team') {
+            $query .= "AND (`employee_info`.`manager_id`={$id} OR `employee_info`.`supervisor_id`={$id})";
         }
 
         $data = DB::select("
@@ -240,7 +246,7 @@ class LeaveRequest extends Model
         ");
 
         foreach($data as $key=>$value) {
-            $details = DB::select("SELECT * FROM `leave_request_details` WHERE `leave_request_details`.`leave_id` = {$value->id} AND `leave_request_details`.`status` = 1 ORDER BY `leave_request_details`.`date`");
+            $details = DB::select("SELECT * FROM `leave_request_details` WHERE `leave_request_details`.`leave_id` = {$value->id} AND `leave_request_details`.`status` != 0 AND `leave_request_details`.`pay_type` != 3 ORDER BY `leave_request_details`.`date`");
 
             $data[$key]->leave_details = $details;
         }

@@ -16,13 +16,13 @@
      </a>
  </li>
 <li <?php echo \Request::url() == url('employees') ? 'class="active"' : ''; ?>>
-    <a href="{{url('employees')}}">
+    <a id="menu-active-employees" href="{{url('employees')}}">
         <em class="fa fa-users">&nbsp;</em>
         Employees 
      </a>
  </li>
- <li <?php echo \Request::url() == url('leave/create') ? 'class="active"' : ''; ?>>
-    <a href="{{url('leave/')}}">
+ <li <?php echo \Request::url() == url('leave') ? 'class="active"' : ''; ?>>
+    <a id="menu-leaves" href="{{url('leave/')}}">
         <em class="fa fa-calendar">&nbsp;</em>
         Leaves 
      </a>
@@ -35,7 +35,7 @@
  </li>
 
 <li <?php echo \Request::url() == url('events/calendar') ? 'class="active"' : ''; ?>>
-    <a href="{{url('events/calendar')}}">
+    <a id="menu-events" href="{{url('events/calendar')}}">
         <em class="fa fa-calendar">&nbsp;</em>
         Events Calendar
     </a>
@@ -50,12 +50,6 @@
         </li>-->
     @endif
     @if(Auth::user()->usertype == 2 || Auth::user()->usertype == 3)
-    <li <?php echo \Request::url() == url('leave') ? 'class="active"' : ''; ?>>
-        <a href="\for-approval">
-            <em class="fa fa-calendar">&nbsp;</em>
-            Team Leave Request&nbsp;&nbsp;<span class="badge label-danger"></span>
-        </a>
-    </li>
     <li <?php echo \Request::url() == url('sup-view') ? 'class="active"' : ''; ?>>
     <a href="{{url('sup-view')}}">
         <em class="fa fa-clock-o">&nbsp;</em>

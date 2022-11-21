@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Mail\ProbitionaryEmailNotificationA;
 use App\Mail\ProbitionaryEmailNotificationB;
 use App\Mail\LeaveReminder;
+use App\Mail\InfractionReminder;
 use App\User;
 use App\SentEmailArchives;
 use App\LeaveRequest;
+use App\DAInfraction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -57,7 +59,7 @@ class EmailRemindersController extends Controller
                         $archives->save();
 
                         $data['id'] = $archives->id;
-                        // Mail::to($supervisor->email)->cc(['hrd@elink.com.ph','juncelcarreon@elink.com.ph'])->send(new ProbitionaryEmailNotificationA($data));
+                        Mail::to($supervisor->email)->cc(['hrd@elink.com.ph','juncelcarreon@elink.com.ph'])->send(new ProbitionaryEmailNotificationA($data));
                     } else{
                         if($three_month_evaluation->status == 0 && date('Y-m-d', strtotime($three_month_evaluation->updated_at)) != date('Y-m-d')) {
                             $data['id'] = $three_month_evaluation->id;
@@ -87,7 +89,7 @@ class EmailRemindersController extends Controller
                         $archives->save();
 
                         $data['id'] = $archives->id;
-                        // Mail::to($supervisor->email)->cc(['hrd@elink.com.ph','juncelcarreon@elink.com.ph'])->send(new ProbitionaryEmailNotificationB($data));
+                        Mail::to($supervisor->email)->cc(['hrd@elink.com.ph','juncelcarreon@elink.com.ph'])->send(new ProbitionaryEmailNotificationB($data));
                     } else{
                         if($five_month_evaluation->status == 0 && date('Y-m-d', strtotime($five_month_evaluation->updated_at)) != date('Y-m-d')) {
                             $data['id'] = $five_month_evaluation->id;
@@ -158,6 +160,42 @@ class EmailRemindersController extends Controller
                     $data['leader_name'] = 'HR DEPARTMENT';
 
                     // Mail::to('hrd@elink.com.ph')->cc('juncelcarreon@elink.com.ph')->send(new LeaveReminder($data));
+                }
+            }
+        }
+    }
+
+    public function reminderInfraction()
+    {
+        ini_set('memory_limit', '-1');
+
+        $data_array = [];
+        foreach(DAInfraction::getInfractions(0) as $infraction) {
+            $difference = strtotime(now()) - strtotime($infraction->created_at);
+            $days = abs(round($difference / 86400));
+            $archive = SentEmailArchives::where('employee_id', $infraction->employee_id)->where('mail_type', "INFRACTION{$infraction->id}")->first();
+            $data = [
+                'emp_name' => strtoupper($infraction->first_name),
+                'url' => url("dainfraction/{$infraction->id}")
+            ];
+
+            if($days >= 1) {
+                if(empty($archive->id)) {
+                    $archives = new SentEmailArchives();
+                    $archives->employee_id  = $infraction->employee_id;
+                    $archives->mail_type    = 'INFRACTION'.$infraction->id;
+                    $archives->status       = 0;
+                    $archives->save();
+
+                    // Mail::to('juncelcarreon@elink.com.ph')->send(new InfractionReminder($data));
+                    // Mail::to($infraction->email)->send(new InfractionReminder($data));
+                } else {
+                    if(date('Y-m-d', strtotime($archive->updated_at)) != date('Y-m-d')) {
+                        SentEmailArchives::where('id', $archive->id)->update(['updated_at' => date('Y-m-d H:i:s')]);
+
+                        // Mail::to('juncelcarreon@elink.com.ph')->send(new InfractionReminder($data));
+                        // Mail::to($infraction->email)->send(new InfractionReminder($data));
+                    }
                 }
             }
         }

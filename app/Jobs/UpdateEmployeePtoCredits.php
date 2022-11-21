@@ -50,8 +50,8 @@ class UpdateEmployeePtoCredits implements ShouldQueue
                     leave_credits
                 WHERE
                     employee_id = $id AND type = 1
-                        AND month = MONTH(NOW())
-                        AND year = YEAR(NOW());
+                        AND month = '10'
+                        AND year = '2020';
             ");
             if(count($det) == 0){
                 $div = 0;

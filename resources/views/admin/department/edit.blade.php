@@ -1,81 +1,95 @@
 @extends('layouts.main')
 @section('title')
-Department / Edit 
-@endsection
-@section('pagetitle')
-Department / Edit 
+Department > Create 
 @endsection
 @section('content')
-<style type="text/css">
-    .row.margin-container{
-        margin: 10px;
-    }
-</style>
-{{ Form::open(array('url' => 'department/' . $department->id,'id' => 'edit_department_form')) }}
-    {{ Form::hidden('_method', 'PUT') }}
-    {{ csrf_field() }}
-    <div class="col-md-3" style="">
-        <div class="section-header">
-            <h4>Edit Department</h4>
-        </div>
-        <div class="panel panel-container">
-            <div class="row margin-container">
-                <div class="form-group">
-                    <label>Department Name</label>
-                    <input type="text" name="department_name" class="form-control" value="{{ $department->department_name}}" required>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Edit Department
+
+        <a href="<?= url('department') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
+    </div>
+    <div class="panel-body timeline-container">
+        <div class="flex-center position-ref full-height">
+            {{ Form::open(array('url' => 'department/' . $department->id,'id' => 'edit_department_form')) }}
+            {{ Form::hidden('_method', 'PUT') }}
+                {{ csrf_field() }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Department Name:</strong>
+                            <input type="text" name="department_name" class="form-control" value="<?= $department->department_name ?>" placeholder="Department Name..." required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Department Code:</strong>
+                            <input type="text" name="department_code" class="form-control" value="<?= $department->department_code ?>" placeholder="Department Code..." required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Division:</strong>
+                            <select class="select2 form-control" name="division_id">
+                                <option value="" selected disabled>Select Division</option>
+                                <?php
+                                foreach($divisions as $division) {
+                                ?>
+                                <option value="<?= $division->id ?>"<?= ($department->division_id == $division->id) ? ' selected' : '' ?>><?= $division->division_name ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Account</strong>
+                            <select class="select2 form-control" name="account_id" required>
+                                <option value="" disabled selected>Select Account</option>
+                                <?php
+                                foreach($accounts as $account) {
+                                ?>
+                                <option value="<?= $account->id ?>"<?= $department->account_id == $account->id ? ' selected' : '' ?>><?= $account->account_name ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Department Code</label>
-                    <input type="text" name="department_code" value="{{ $department->department_code}}" class="form-control" required>
+                <div class="col-md-12" style="border-top: 1px solid rgba(0,0,0,.125); padding-top: 15px; margin-top: 15px"></div>
+                <div class="form-group pull-right">
+                    <button id="btn_save" class="btn btn-primary">Update</button>
                 </div>
-                <div class="form-group">
-                    <label>Division </label>
-                    <select class="select2 form-control"  name="division_id">
-                        <option selected="" disabled="">Select</option>
-                        @foreach($divisions as $division)
-                            <option {{ $department->division_id == $division->id ? 'selected' : '' }} value="{{ $division->id }}"> {{$division->division_name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Account </label>
-                    <select class="select2 form-control"  name="account_id" required>
-                        <option selected="" disabled="">Select</option>
-                        @foreach($accounts as $account)
-                            <option value="{{ $account->id }}" {{ $department->account_id == $account->id ? 'selected' : '' }}> {{$account->account_name}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-primary">Save</button>               
-                </div>      
-            </div>
+            {{ Form::close() }}
         </div>
     </div>
-</form>
+</div>
 @endsection
 @section('scripts')
- <script type="text/javascript">
-    var changed = false;
-    $('#edit_department_form').validate({
-        ignore: []
-     });
-     $('#image_uploader').change(function(){
-        changed = true;
-     });
-     $('input').change(function(){
-        changed = true;
-     });
-     $('select').change(function(){
-        changed = true;
-     });
-     $('#edit_department_form').submit(function(){
-        changed = false;
-     });
-     window.onbeforeunload = function(){
-        if(changed){
-            return '';
+<script type="text/javascript">
+$(function(e) {
+    var departments = [<?php foreach($departments as $department) { echo '"'.$department->department_code.'"'.","; } ?>];
+
+    activeMenu($('#menu-department'));
+
+    $('#btn_save').click(function(e) {
+        e.preventDefault();
+        var result = true;
+
+        result = checkRequired($(this).closest('form'));
+
+        if(result && $.inArray($('input[name="department_code"]').val(), departments) !== -1) {
+            alert('Department Code Already Exists');
+
+            result = false;
         }
-     }
+
+        if(result) {
+            saveForm($(this));
+        }
+    });
+});
 </script>
 @endsection

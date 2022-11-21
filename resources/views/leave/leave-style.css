@@ -116,3 +116,21 @@
     .datepicker4-error{
 
     }
+    .form-group strong{
+        display: block;
+        margin-bottom: 10px;
+    }
+    .cto-dates input{
+        display: inline-block;
+        vertical-align: middle;
+        width: 80%;
+    }
+    .cto-dates .btn{
+        display: inline-block;
+        vertical-align: middle;
+        width: 18%;
+    }
+
+.panel-subheading{
+    background: #5bc0de !important;
+}

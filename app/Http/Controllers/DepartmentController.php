@@ -10,37 +10,22 @@ use App\User;
 
 class DepartmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $departments = EmployeeDepartment::all();
-        return view('admin.department')->with('departments', $departments);
+        $data['departments'] = EmployeeDepartment::all();
+
+        return view('admin.department', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $divisions = ElinkDivision::all();
-        $accounts = ElinkAccount::all();
-        $managers = User::all();
+        $data['divisions'] = ElinkDivision::all();
+        $data['accounts'] = ElinkAccount::all();
+        $data['departments'] = EmployeeDepartment::all();
 
-        return view('admin.department.create')->with('divisions', $divisions)->with('accounts', $accounts)->with('managers', $managers);
+        return view('admin.department.create', $data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $employeeDepartment = new EmployeeDepartment();
@@ -53,40 +38,16 @@ class DepartmentController extends Controller
         return redirect('department')->with('success', "Successfully created department");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        $department = EmployeeDepartment::find($id);
-        $divisions = ElinkDivision::all();
-        $accounts = ElinkAccount::all();
-        $managers = User::all();
+        $data['department'] = EmployeeDepartment::find($id);
+        $data['divisions'] = ElinkDivision::all();
+        $data['accounts'] = ElinkAccount::all();
+        $data['departments'] = EmployeeDepartment::where('id', '<>', $id)->whereNull('deleted_at')->get();
 
-        return view('admin.department.edit')->with('divisions', $divisions)->with('accounts', $accounts)->with('managers', $managers)->with('department', $department);
+        return view('admin.department.edit', $data);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $employeeDepartment = EmployeeDepartment::find($id);
@@ -99,12 +60,6 @@ class DepartmentController extends Controller
         return redirect('department')->with('success', "Successfully edited department");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $employeeDepartment = EmployeeDepartment::find($id);

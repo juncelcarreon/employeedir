@@ -259,7 +259,9 @@ Employee Information / Edit
     var emp_no = {{ @$employee->id }};
     var csrf_token = $('meta[name="csrf-token"]').attr('content');
     var ctr_linkee = 2;
-    
+
+    activeMenu($('#menu-active-employees'));
+
     $.ajaxPrefilter(function(options, originalOptions, jqXHR){
         if (options.type.toLowerCase() === "post") {
             options.data = options.data || "";

@@ -347,3 +347,65 @@ button#toggle-sidebar{
 button#toggle-sidebar span{
     font-size: 22px;
 }
+
+body, #sidebar-collapse{
+    overflow: overlay
+}
+
+#sidebar-collapse ul li a:hover{
+    background: rgba(255,255,255,.1);
+}
+#sidebar-collapse .menu-open .menu-has-child{
+    background: #3a75fb;
+}
+#sidebar-collapse .active .menu-child-item, #sidebar-collapse .menu-child-item:focus{
+    background: rgba(255,255,255,.9);
+    color: #343a40;
+    text-decoration: none !important;
+}
+#sidebar-collapse .menu-child{
+    display: none;
+    position: static;
+    width: 100%;
+    background: unset;
+    box-shadow: none;
+    float: none;
+    padding: 0;
+    border: 0;
+}
+#sidebar-collapse .menu-child li a{
+    display: block;
+    height: auto !important;
+    padding: 8px 15px;
+}
+#sidebar-collapse .menu-has-child:after{
+    position: absolute;
+    right: 15px;
+    font-family:'FontAwesome';
+    content: "\f053";
+}
+#sidebar-collapse .menu-open .menu-has-child:after{
+    content:"\f078" !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  overflow: overlay;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(136,136,136,.8);
+  border-radius: 10px;
+}
+
+.form-group strong {
+    display: block;
+    margin-bottom: 10px;
+}

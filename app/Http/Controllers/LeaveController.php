@@ -45,160 +45,151 @@ class LeaveController extends Controller
     public function index()
     {
         app('App\Http\Controllers\EmailRemindersController')->reminderApproval();
-        $leave_requests = [];
-        if(Auth::user()->isAdmin() || Auth::user()->usertype == 3){
-            return view('leave.index')->with('leave_requests', LeaveRequest::getLeave())->with('type', 'pending');
-        } else {
-            if(Auth::user()) { $leave_requests = LeaveRequest::getLeave('pending', Auth::user()->id); }
 
-            return view('leave.index')->with('leave_requests', $leave_requests)->with('type', 'pending');
-        }
-        return redirect('leave/create');
+        $id = Auth::user()->id;
+
+        $data['leave_requests'] = LeaveRequest::getLeave('pending', Auth::user()->id);
+        $data['type'] = 'pending';
+        $data['is_leader'] = count(DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id} OR `employee_info`.`supervisor_id`={$id})"));
+
+        if(Auth::user()->isAdmin()){ $data['leave_requests'] = LeaveRequest::getLeave(); }
+
+        return view('leave.index', $data);
     }
 
-    public function approveLeaves(){
-        if(Auth::user()->isAdmin() || Auth::user()->usertype == 3){
-            return view('leave.index')->with('leave_requests', LeaveRequest::getLeave('approve'))->with('type', 'approve');
-        } else {
-            if(Auth::user()) { $leave_requests = LeaveRequest::getLeave('approve', Auth::user()->id); }
+    public function approveLeaves()
+    {
+        $id = Auth::user()->id;
 
-            return view('leave.index')->with('leave_requests', $leave_requests)->with('type', 'approve');
-        }
-        return redirect('leave/create');
+        $data['leave_requests'] = LeaveRequest::getLeave('approve', Auth::user()->id);
+        $data['type'] = 'approve';
+        $data['is_leader'] = count(DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id} OR `employee_info`.`supervisor_id`={$id})"));
+
+        if(Auth::user()->isAdmin()){ $data['leave_requests'] = LeaveRequest::getLeave('approve'); }
+
+        return view('leave.index', $data);
     }
 
-    /*
-    public function forApproval(){
-        $employee_category = Auth::user()->employee_category;
-        $employee_id = Auth::user()->id;
+    public function cancelledLeaves()
+    {
+        $id = Auth::user()->id;
 
-        $leave_requests = LeaveRequest::all();
-        return view('leave.approve')
-            ->with('leave_requests', $leave_requests)
-            ->with('category',$employee_category)
-            ->with('employee_id',$employee_id);
-    }
-     * 
-     */
-    
-    public function forApproval(){
-        $req_obj = new LeaveRequest();
-	$todayDate = now();
-        if(Auth::user()){
-            $leave_requests = LeaveRequest::where('approve_status_id',NULL)->orWhere('approve_status_id',3)->orWhere('approve_status_id',0)->whereYear('created_at', '=', $todayDate->year)->get();
-            $employee_id = Auth::user()->id;
-        }
-        else
-            $leave_requests = [];
-        return view('leave.approve')
-        ->with('leave_requests', $leave_requests)
-        ->with('employee_id',$employee_id)
-        ->with(['req_obj' => $req_obj]);
-    }
-    
-    public function teamApproves(){
-        $req_obj = new LeaveRequest();
+        $data['leave_requests'] = LeaveRequest::getLeave('cancelled', Auth::user()->id);
+        $data['type'] = 'cancelled';
+        $data['is_leader'] = count(DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id} OR `employee_info`.`supervisor_id`={$id})"));
 
-        if(Auth::user()){
-            $leave_requests = LeaveRequest::where('approve_status_id',1)->get();
-            $employee_id = Auth::user()->id;
-        }
-        else
-            $leave_requests = [];
-        return view('leave.approve')
-        ->with('leave_requests', $leave_requests)
-        ->with('employee_id',$employee_id)
-        ->with(['req_obj' => $req_obj]);
-        return redirect('leave/create');
-    }
-    
-    public function cancelledLeaves(){
-        if(Auth::user()->isAdmin() || Auth::user()->usertype == 3){
-            return view('leave.index')->with('leave_requests', LeaveRequest::getLeave('cancelled'))->with('type', 'cancelled');
-        } else {
-            if(Auth::user()) { $leave_requests = LeaveRequest::getLeave('cancelled', Auth::user()->id); }
+        if(Auth::user()->isAdmin()){ $data['leave_requests'] = LeaveRequest::getLeave('cancelled'); }
 
-            return view('leave.index')->with('leave_requests', $leave_requests)->with('type', 'cancelled');
-        }
-        return redirect('leave/create');
+        return view('leave.index', $data);
     }
-    
-    public function teamCancelled(){
-        $req_obj = new LeaveRequest();
 
-        if(Auth::user()){
-            $leave_requests = LeaveRequest::where('approve_status_id',2)->get();
-            $employee_id = Auth::user()->id;
-        }
-        else
-            $leave_requests = [];
-        return view('leave.approve')
-        ->with('leave_requests', $leave_requests)
-        ->with('employee_id',$employee_id)
-        ->with(['req_obj' => $req_obj]);
-        return redirect('leave/create');
+    public function forApproval()
+    {
+        $data['leave_requests'] = LeaveRequest::getLeave('pending', Auth::user()->id, 'team');
+        $data['type'] = 'pending';
+
+        return view('leave.approve', $data);
     }
-    
-    /*
-     * 
-     */
-    
-    public function apiLeaveList(){
+
+    public function teamApproves()
+    {
+        $data['leave_requests'] = LeaveRequest::getLeave('approve', Auth::user()->id, 'team');
+        $data['type'] = 'approve';
+
+        return view('leave.approve', $data);
+    }
+
+    public function teamCancelled()
+    {
+        $data['leave_requests'] = LeaveRequest::getLeave('cancelled', Auth::user()->id, 'team');
+        $data['type'] = 'cancelled';
+
+        return view('leave.approve', $data);
+    }
+
+    public function approveLists()
+    {
+        $id = Auth::user()->id;
+
+        $data['leave_requests'] = LeaveRequest::getLeave('approve');
+
+        return view('leave.list', $data);
+    }
+
+    public function apiLeaveList()
+    {
         return json_encode(['obj' => DB::table('leave_request')->leftJoin('employee_info','leave_request.employee_id','=','employee_info.id')->get()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-	/*if(Auth::user()->is_regular == 0){
-            abort(403);
-        }*/
-        //return view('leave.create')->with('employees', User::AllExceptSuperAdmin()->get());
         $id_obj = Auth::user()->id;
         $obj = DB::select($this->newQuery($id_obj));
+        $year = date('Y');
+        $employees = DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id_obj} OR `employee_info`.`supervisor_id`={$id_obj})");
         $credits = (object) [
             'past_credit'       => 0,
             'current_credit'    => 0,
             'used_credit'       => 0,
             'total_credits'     => 0
         ];
-        if(count($obj) > 0)
+
+        if(count($obj) > 0) { 
             $credits = $obj[0];
-        return view('leave.create2',[
-                'employees'     => User::AllExceptSuperAdmin()->get(),
-                'leave_types'   => LeaveType::all(),
-                'blocked_dates' => $this->getBlockedDates(),
-                'credits'       => $credits
-            ]
-        );
+
+           switch ($credits->employee_category):
+                case 1:
+                    $div = 20;
+                    break;
+                case 2:
+                    $div = 14;
+                    break;
+                case 3:
+                    $div = 10;
+                    break;
+                case 4:
+                    $div = 10;
+                    break;
+            endswitch;
+
+            $different_in_months = DateHelper::getDifferentMonths($credits->hired_date);
+            $monthly_accrual = (($div / 12) * $different_in_months) + $credits->monthly_accrual;
+            $credits->monthly_accrual = $monthly_accrual;
+            $credits->current_credit = ($monthly_accrual + $credits->past_credit) - ($credits->used_jan_to_jun + $credits->used_jul_to_dec);
+        }
+
+        $data['employees'] = User::AllExceptSuperAdmin()->get();
+        $data['leave_types'] = (count($employees) > 0) ? LeaveType::where('status' , '<>', 3)->get() : LeaveType::where('status' , '<>', 3)->where('id', '<>', 8)->get();
+        $data['blocked_dates'] = $this->getBlockedDates();
+        $data['credits'] = $credits;
+        $data['is_leader'] = count($employees);
+
+        return view('leave.create2', $data);
     }
-    
+
     /*
     Get the Leave Dates from leave_request_details.
     The param $id is a primary key from leave_request table. There can be
     more than 1 day in one leave request.
     */
-    public function getLeaveDates($id){
+    public function getLeaveDates($id)
+    {
         //return LeaveRequestDetails::where('leave_id',$id)->get();
         return DB::table('leave_request_details')
             ->select(DB::raw('id, leave_id, date_format(date,"%b %e, %Y") as date, length, pay_type'))
             ->where("leave_id",$id)
             ->where("status",1)
+            ->where("pay_type",'<>',3)
             ->get();
     }
-    
-    /*
-     * 
-     */
-    public function reports(){
+
+    public function reports()
+    {
         return view('leave.reports');
     }
-        
-    public function filterTest(){
+
+    public function filterTest()
+    {
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="myfile.xlsx"');
         header('Cache-Control: max-age=0');
@@ -211,7 +202,8 @@ class LeaveController extends Controller
         $writer->save('php://output');
     }
     
-    public function processSave(Request $req){
+    public function processSave(Request $req)
+    {
         $file = [];
         $file['Original Filename'] = $req->file('prev_leave_credits')->getClientOriginalName();
         $path = str_replace("public","",$_SERVER['DOCUMENT_ROOT']);
@@ -297,7 +289,8 @@ class LeaveController extends Controller
         return json_encode($list);
     }
     
-    public function uploadCredits(){
+    public function uploadCredits()
+    {
         return view('leave/upload');
     }
 
@@ -316,29 +309,50 @@ class LeaveController extends Controller
             'pay_type'   => $request->pay_type
         ];
         $leave = new LeaveRequest();
-
         $datetime = new DateTime();
-        //$leave_date_from = $datetime->createFromFormat('m/d/Y', $request->leave_date_from)->format("Y-m-d H:i:s");
-        //$leave_date_to = $datetime->createFromFormat('m/d/Y', $request->leave_date_to)->format("Y-m-d H:i:s");
+        $employee = User::withTrashed()->find($request->employee_id);
         $report_date = $datetime->createFromFormat('m/d/Y', $request->report_date)->format("Y-m-d H:i:s");
         $date_filed = $datetime->createFromFormat('m/d/Y', $request->date_filed)->format("Y-m-d H:i:s");
 
         $leave->employee_id = $request->employee_id;
         $leave->filed_by_id = Auth::user()->id;
-        $leave->recommending_approval_by_id = Auth::user()->supervisor_id;
-        $leave->approved_by_id = Auth::user()->manager_id;
-
-        // $leave->leave_date_from = $leave_date_from;
-        // $leave->leave_date_to =$leave_date_to;
+        $leave->recommending_approval_by_id = $employee->supervisor_id;
+        $leave->approved_by_id = $employee->manager_id;
         $leave->number_of_days = $request->number_of_days;
         $leave->report_date = $report_date;
         $leave->reason = $request->reason;
         $leave->contact_number = $request->contact_number;
-        $leave->leave_type_id = $request->leave_type_id ;//fixed (10/6/22)
         $leave->pay_type_id = $request->pay_type_id;
         $leave->date_filed = $date_filed;
+        $leave->leave_type_id = (empty($request->leave_type_id) ? $request->leave_cto : $request->leave_type_id);
+        if(!empty($request->leave_cto)) {
+            if(!empty($request->leave_type_id) && $request->leave_type_id == 5) {
+                $leave->leave_type_id = 99; // CTO & VL
+            }
+
+            if(count($request->cto_date) == count($request->leave_date)) {
+                $leave->leave_type_id = $request->leave_cto; //JUST CTO
+            } else {
+                $leave->leave_type_id = 99; // CTO & VL
+            }
+        }
         $leave->save();
         $leave_id = $leave->id;
+
+        if(!empty($request->leave_cto)):
+            for($i = 0; $i < count($request->cto_date); $i++):
+                if(!empty($request->cto_date[$i]) && ($leave->leave_type_id == 99 || $leave->leave_type_id == 8)) {
+                    $details = [
+                        'leave_id'      => $leave_id,
+                        'date'          => date('Y-m-d', strtotime($request->cto_date[$i])),
+                        'length'        => 1,
+                        'pay_type'      => 3 //CTO
+                    ];
+
+                    LeaveRequestDetails::create($details);
+                }
+            endfor;
+        endif;
 
         for($i = 0; $i < count($obj['leave_date']); $i++):
             $details = [
@@ -353,30 +367,25 @@ class LeaveController extends Controller
 
         //SEND EMAIL NOTIFICATION
         $data = [
-            'requester_name' => strtoupper(Auth::user()->fullname()),
+            'requester_name' => strtoupper($employee->fullname()),
             'type' => (($request->pay_type_id == 1) ? 'PLANNED' : 'UNPLANNED'),
             'id' => $leave_id,
             'details' => $obj
         ];
 
-        // Mail::to(Auth::user()->email)->send(new LeaveSelfNotification(['emp_name' => strtoupper(Auth::user()->first_name)]));
-        // Mail::to('juncelcarreon@elink.com.ph')->send(new LeaveSelfNotification(['emp_name' => strtoupper(Auth::user()->first_name)]));
+        // Mail::to($employee->email)->send(new LeaveSelfNotification(['emp_name' => strtoupper($employee->first_name)]));
 
-        $supervisor = User::find(Auth::user()->supervisor_id);
+        $supervisor = User::find($employee->supervisor_id);
         if(!empty($supervisor->id)) {
             $data['emp_name'] = strtoupper($supervisor->first_name);
             // Mail::to($supervisor->email)->send(new LeaveNotification($data));
         }
 
-        $manager = User::find(Auth::user()->manager_id);
+        $manager = User::find($employee->manager_id);
         if(!empty($manager->id)) {
             $data['emp_name'] = strtoupper($manager->first_name);
             // Mail::to($manager->email)->send(new LeaveNotification($data));
         }
-
-        // $data['emp_name'] = 'CC EMAIL';
-
-        // Mail::to('juncelcarreon@elink.com.ph')->send(new LeaveNotification($data));
 
         return redirect("leave" . '/' . $leave_id)->with('success', 'Leave Request Successfully Submitted!!');
     }
@@ -390,19 +399,57 @@ class LeaveController extends Controller
     public function show($id)
     {
         $leave_request = LeaveRequest::find($id);
+        $employee = DB::select("SELECT `employee_info`.*, (SELECT CONCAT(`supervisor`.`first_name`, ' ', `supervisor`.`last_name`) FROM `employee_info` AS `supervisor` WHERE `supervisor`.`id`=`employee_info`.`supervisor_id` AND `supervisor`.`deleted_at` IS NULL AND `supervisor`.`status` = 1) AS `supervisor`, (SELECT CONCAT(`manager`.`first_name`, ' ', `manager`.`last_name`) FROM `employee_info` AS `manager` WHERE `manager`.`id`=`employee_info`.`manager_id` AND `manager`.`deleted_at` IS NULL AND `manager`.`status` = 1) AS `manager` FROM `employee_info` WHERE `employee_info`.`id`={$leave_request->employee_id}");
         $obj = DB::select($this->newQuery($leave_request->employee_id));
         $credits = (object) [
             'past_credit'       => 0,
             'current_credit'    => 0,
             'used_credit'       => 0,
+            'conversion_credit' => 0,
+            'expired_credit'    => 0,
+            'loa'               => 0,
+            'used_jan_to_jun'   => 0,
+            'is_regular'        => 0,
+            'monthly_accrual'   => 0,
             'total_credits'     => 0
         ];
 
-        if(count($obj) > 0)
-        $credits = $obj[0];
-        $leaveDetails = LeaveRequestDetails::where("leave_id",$id)->where('status',1)->get();
+        if(count($obj) > 0) { 
+            $credits = $obj[0];
 
-        return view('leave.show')->with('leave_request', $leave_request)->with('details',$leaveDetails)->with('leave_types', LeaveType::all())->with('pay_types', PayType::all())->with('credits',$credits);
+           switch ($credits->employee_category):
+                case 1:
+                    $div = 20;
+                    break;
+                case 2:
+                    $div = 14;
+                    break;
+                case 3:
+                    $div = 10;
+                    break;
+                case 4:
+                    $div = 10;
+                    break;
+            endswitch;
+
+            $different_in_months = DateHelper::getDifferentMonths($credits->hired_date);
+            $monthly_accrual = (($div / 12) * $different_in_months) + $credits->monthly_accrual;
+            $credits->monthly_accrual = $monthly_accrual;
+            $credits->current_credit = ($monthly_accrual + $credits->past_credit) - ($credits->used_jan_to_jun + $credits->used_jul_to_dec);
+        }
+
+        $leaveDetails = LeaveRequestDetails::where("leave_id",$id)->where('status','<>',0)->where('pay_type','<>',3)->orderBy('date')->get();
+        $ctoDetails = LeaveRequestDetails::where("leave_id",$id)->where('status','<>',0)->where('pay_type',3)->orderBy('date')->get();
+
+        $data['leave_request'] = $leave_request;
+        $data['details'] = $leaveDetails;
+        $data['leave_types'] = LeaveType::where('status' , '<>', 3)->get();
+        $data['pay_types'] = PayType::all();
+        $data['credits'] = $credits;
+        $data['employee'] = $employee[0];
+        $data['cto_dates'] = $ctoDetails;
+
+        return view('leave.show', $data);
     }
 
     /**
@@ -419,31 +466,62 @@ class LeaveController extends Controller
             'length'    => 1,
             'pay_type'  => 0
         ];
+        $cto_row = [
+            'leave_id'  => $id,
+            'date'      => '',
+            'length'    => 1,
+            'pay_type'  => 0
+        ];
         $leave_request = LeaveRequest::with('employee')->find($id);
-        
-        $emp_id = $leave_request->employee_id;
-        $obj_credits = DB::select($this->newQuery($emp_id));
+        $obj_credits = DB::select($this->newQuery($leave_request->employee_id));
+        $employees = DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$leave_request->employee_id} OR `employee_info`.`supervisor_id`={$leave_request->employee_id})");
         $credits = (object) [
             'past_credit'       => 0,
             'current_credit'    => 0,
             'used_credit'       => 0,
             'total_credits'     => 0
         ];
-        if(count($obj_credits) > 0)
+        if(count($obj_credits) > 0) {
             $credits = $obj_credits[0];
-        
-        $obj = LeaveRequestDetails::where('leave_id',$id)->where('status',1)->get();
-        if(count($obj) > 0):
-            $row = $obj[0];
-        endif;
-        return view('leave.edit')
-            ->with('leave_request', $leave_request)
-            ->with('leave_types', LeaveType::all())
-            ->with('pay_types', PayType::all())
-            ->with('filed_days', $obj)
-            ->with('leave',$row)
-            ->with('credits',$credits)
-            ->with('blocked_dates', $this->getBlockedDates());
+
+           switch ($credits->employee_category):
+                case 1:
+                    $div = 20;
+                    break;
+                case 2:
+                    $div = 14;
+                    break;
+                case 3:
+                    $div = 10;
+                    break;
+                case 4:
+                    $div = 10;
+                    break;
+            endswitch;
+
+            $different_in_months = DateHelper::getDifferentMonths($credits->hired_date);
+            $monthly_accrual = (($div / 12) * $different_in_months) + $credits->monthly_accrual;
+            $credits->monthly_accrual = $monthly_accrual;
+            $credits->current_credit = ($monthly_accrual + $credits->past_credit) - ($credits->used_jan_to_jun + $credits->used_jul_to_dec);
+        }
+
+        $obj = LeaveRequestDetails::where('leave_id',$id)->where('status',1)->where('pay_type','<>',3)->get();
+        $cto = LeaveRequestDetails::where('leave_id',$id)->where('status',1)->where('pay_type',3)->get();
+        if(count($obj) > 0) { $row = $obj[0]; }
+        if(count($cto) > 0) { $cto_row = $cto[0]; }
+
+        $data['leave_request'] = $leave_request;
+        $data['leave_types'] = (count($employees) > 0) ? LeaveType::where('status' , '<>', 3)->get() : LeaveType::where('status' , '<>', 3)->where('id', '<>', 8)->get();
+        $data['pay_types'] = PayType::all();
+        $data['filed_days'] = $obj;
+        $data['leave'] = $row;
+        $data['cto_dates'] = $cto;
+        $data['cto_row'] = $cto_row;
+        $data['credits'] = $credits;
+        $data['blocked_dates'] = $this->getBlockedDates();
+        $data['is_leader'] = count($employees);
+
+        return view('leave.edit', $data);
     }
 
     /**
@@ -457,10 +535,10 @@ class LeaveController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
     }
-    
-    public function displayReport(Request $r){
+
+    public function displayReport(Request $r)
+    {
         $tar = [
             'from'      => date("Y-m-d", strtotime($r->get('from'))),
             'to'        => date("Y-m-d", strtotime($r->get('to'))),
@@ -503,7 +581,8 @@ class LeaveController extends Controller
         return view("leave.reports",["obj" => $obj, "target" => $tar]);
     }
     
-    public function downloadReport(Request $r){
+    public function downloadReport(Request $r)
+    {
         $tar = [
             'from'      => date("Y-m-d", strtotime($r->get('from'))),
             'to'        => date("Y-m-d", strtotime($r->get('to'))),
@@ -628,17 +707,46 @@ class LeaveController extends Controller
         $writer->setOffice2003Compatibility(true);
         $writer->save('php://output');
     }
-    
-    public function updateLeaveEntry(Request $request){
+
+    public function updateLeaveEntry(Request $request)
+    {
         $leave = LeaveRequest::find($request->id);
-        
+
         $obj = [
             'leave_date'    => $request->leave_date,
             'length'        => $request->length,
             'pay_type'      => $request->pay_type,
             'field_id'      => $request->field_id
         ];
-        
+
+        $datetime = new DateTime();
+        $report_date = $datetime->createFromFormat('m/d/Y', $request->report_date)->format("Y-m-d H:i:s");
+        $date_filed = $datetime->createFromFormat('m/d/Y', $request->date_filed)->format("Y-m-d H:i:s");
+
+        $leave->employee_id = $request->employee_id;
+        $leave->filed_by_id = Auth::user()->id;
+        $leave->recommending_approval_by_id = Auth::user()->supervisor_id;
+        $leave->approved_by_id = Auth::user()->manager_id;
+        $leave->number_of_days = $request->number_of_days;
+        $leave->report_date = $report_date;
+        $leave->reason = $request->reason;
+        $leave->contact_number = $request->contact_number;
+        $leave->pay_type_id = $request->pay_type_id;
+        $leave->date_filed = $date_filed;
+        $leave->leave_type_id = (empty($request->leave_type_id) ? $request->leave_cto : $request->leave_type_id);
+        if(!empty($request->leave_cto)) {
+            if(!empty($request->leave_type_id) && $request->leave_type_id == 5) {
+                $leave->leave_type_id = 99; // CTO & VL
+            }
+
+            if(count($request->cto_date) == count($request->leave_date)) {
+                $leave->leave_type_id = $request->leave_cto; //JUST CTO
+            } else {
+                $leave->leave_type_id = 99; // CTO & VL
+            }
+        }
+        // $leave->save();
+
         for($i = 0; $i < count($obj['field_id']); $i++):
             if($obj['field_id'][$i] > 0):
                 LeaveRequestDetails::where('id',"=",$obj['field_id'][$i])
@@ -657,41 +765,37 @@ class LeaveController extends Controller
                 LeaveRequestDetails::create($details);
             endif;
         endfor;
-        
-        $datetime = new DateTime();
-        //$leave_date_from = $datetime->createFromFormat('m/d/Y', $request->leave_date_from)->format("Y-m-d H:i:s");
-        //$leave_date_to = $datetime->createFromFormat('m/d/Y', $request->leave_date_to)->format("Y-m-d H:i:s");
-        $report_date = $datetime->createFromFormat('m/d/Y', $request->report_date)->format("Y-m-d H:i:s");
-        $date_filed = $datetime->createFromFormat('m/d/Y', $request->date_filed)->format("Y-m-d H:i:s");
 
-        $leave->employee_id = $request->employee_id;
-        $leave->filed_by_id = Auth::user()->id;
-        $leave->recommending_approval_by_id = Auth::user()->supervisor_id;
-        $leave->approved_by_id = Auth::user()->manager_id;
+        LeaveRequestDetails::where('leave_id', $request->id)->where('pay_type', 3)->delete();
 
-        // $leave->leave_date_from = $leave_date_from;
-        // $leave->leave_date_to =$leave_date_to;
-        $leave->number_of_days = $request->number_of_days;
-        $leave->report_date = $report_date;
-        $leave->reason = $request->reason;
-        $leave->contact_number = $request->contact_number;
-        $leave->leave_type_id = $request->leave_type_id;
-        $leave->pay_type_id = $request->pay_type_id;
-        $leave->date_filed = $date_filed;
-        $leave->save();
-        header("Location: /leave/".$request->id);
-        die();
+        if(!empty($request->cto_date)):
+            for($i = 0; $i < count($request->cto_date); $i++):
+                if(!empty($request->cto_date[$i]) && ($leave->leave_type_id == 99 || $leave->leave_type_id == 8)) {
+                    $details = [
+                        'leave_id'      => $request->id,
+                        'date'          => date('Y-m-d', strtotime($request->cto_date[$i])),
+                        'length'        => 1,
+                        'pay_type'      => 3 //CTO
+                    ];
+
+                    LeaveRequestDetails::create($details);
+                }
+            endfor;
+        endif;
+
+        return redirect("leave" . '/' . $request->id)->with('success', 'Leave Request Successfully Updated!!');
     }
-    
-    public function deleteLeaveDate(Request $request){
+
+    public function deleteLeaveDate(Request $request)
+    {
         LeaveRequest::where('id',$request->leave)
             ->update(['number_of_days' => $request->total]);
         return LeaveRequestDetails::where('id',"=",$request->id)
             ->update(['status' => 0]);
     }
-    
-    public function uploadLastCredit(Request $request){
-        
+
+    public function uploadLastCredit(Request $request)
+    {
     }
 
     /**
@@ -702,17 +806,20 @@ class LeaveController extends Controller
      */
     public function destroy($id)
     {
-        //
     }
 
-    public function recommend(Request $request){
+    public function recommend(Request $request)
+    {
         $leave_request = LeaveRequest::find($request->leave_id);
+        if($leave_request->approve_status_id == 1) {
+            return back()->with('error', 'Already approved.');
+        }
         $leave_request->recommending_approval_by_id = Auth::user()->id;
         $leave_request->recommending_approval_by_signed_date = date('Y-m-d H:i:s');
         $leave_request->approve_status_id = 3;
 
-        $employee = User::find($leave_request->employee_id);
-        $manager = User::find($employee->manager_id);
+        $employee = User::withTrashed()->find($leave_request->employee_id);
+        $manager = User::withTrashed()->find($employee->manager_id);
 
         if($leave_request->save()){
             // SEND EMAIL NOTIFICATION
@@ -725,12 +832,10 @@ class LeaveController extends Controller
                 $data['leader_name'] = 'HR DEPARTMENT';
 
                 // Mail::to('hrd@elink.com.ph')->send(new LeaveReminder($data));
-                // Mail::to('juncelcarreon@elink.com.ph')->send(new LeaveReminder($data));
             } else {
                 $data['leader_name'] = strtoupper($manager->first_name); 
 
                 // Mail::to($manager->email)->send(new LeaveReminder($data));
-                // Mail::to('juncelcarreon@elink.com.ph')->send(new LeaveReminder($data));
             }
 
             return back()->with('success', 'Leave request successfully recommended for approval.');
@@ -739,23 +844,114 @@ class LeaveController extends Controller
         }
     }
 
-    public function approve(Request $request){
+    public function approve(Request $request)
+    {
         $leave_request = LeaveRequest::find($request->leave_id);
         $leave_request->approved_by_id = Auth::user()->id;
         $leave_request->approved_by_signed_date = date('Y-m-d H:i:s');
         $leave_request->approve_status_id = 1;
 
-        $id = $request->leave_id;
-        $req_det_obj = DB::select("select * from leave_request_details where leave_id = $id;");
+        $req_det_obj = DB::select("select * from leave_request_details where leave_id = {$request->leave_id} and pay_type != 3 order by date ASC;");
+        $cto_dates = DB::select("select * from leave_request_details where leave_id = {$request->leave_id} and pay_type = 3 order by date ASC;");
+        $employee = User::withTrashed()->find($leave_request->employee_id);
+        $obj = DB::select($this->newQuery($employee->id));
+        $credits = (object) [
+            'past_credit'       => 0,
+            'current_credit'    => 0,
+            'used_credit'       => 0,
+            'total_credits'     => 0
+        ];
+
+        if(count($obj) > 0) {
+            $credits = $obj[0];
+            switch ($credits->employee_category):
+                case 1:
+                    $div = 20;
+                    break;
+                case 2:
+                    $div = 14;
+                    break;
+                case 3:
+                    $div = 10;
+                    break;
+                case 4:
+                    $div = 10;
+                    break;
+            endswitch;
+
+            $different_in_months = DateHelper::getDifferentMonths($credits->hired_date);
+            $monthly_accrual = (($div / 12) * $different_in_months) + $credits->monthly_accrual;
+            $credits->monthly_accrual = $monthly_accrual;
+            $credits->current_credit = ($monthly_accrual + $credits->past_credit) - ($credits->used_jan_to_jun + $credits->used_jul_to_dec);
+        }
+
+        // Count With Pay
         $with_pay = 0;
         if(count($req_det_obj) > 0):
             foreach($req_det_obj as $det):
                 $with_pay += $det->pay_type == 1 ? 1 : 0;
             endforeach;
         endif;
-        
-        if($with_pay > 0):
-            $lc_obj = DB::select("select * from leave_credits where leave_id = $id;");
+
+        // Count CTO Dates and remove from with pay
+        if(!empty($cto_dates)):
+            $with_pay = $with_pay - count($cto_dates);
+            for($i=0;$i<count($cto_dates);$i++):
+                // LeaveRequestDetails::where('id', $req_det_obj[$i]->id)->update(['status' => 3]);
+            endfor;
+        endif;
+
+        // For Bereavement Leave
+        if($leave_request->leave_type_id == 1) {
+            $with_pay = $with_pay - 3;
+            for($i=0;$i<3;$i++):
+                LeaveRequestDetails::where('id', $req_det_obj[$i]->id)->update(['status' => 3]);
+            endfor;
+
+            LeaveRequestDetails::where('leave_id', $leave_request->id)->where('status', 1)->update(['pay_type' => 0]);
+            if($employee->is_regular == 0) {
+                $with_pay = 0;
+            } else {
+                if(floor($credits->current_credit) >= $with_pay) {
+                    LeaveRequestDetails::where('leave_id', $leave_request->id)->where('status', 1)->where('pay_type', 0)->update(['pay_type' => 1]);
+                } else {
+                    $with_pay = floor($credits->current_credit);
+                    $without_pay_data = DB::select("select * from leave_request_details where leave_id = {$request->leave_id} and status = 1 and pay_type = 0 order by date ASC;");
+
+                    if(floor($credits->current_credit) > 0) {
+                        for($i=0;$i<floor($credits->current_credit);$i++):
+                            LeaveRequestDetails::where('id', $without_pay_data[$i]->id)->update(['pay_type' => 1]);
+                        endfor;
+                    } else {
+                        $with_pay = 0;
+                    }
+                }
+            }
+        } else {
+            LeaveRequestDetails::where('leave_id', $leave_request->id)->where('status', 1)->update(['pay_type' => 0]);
+            if($employee->is_regular == 0) {
+                $with_pay = 0;
+            } else {
+                if(floor($credits->current_credit) >= $with_pay) {
+                    LeaveRequestDetails::where('leave_id', $leave_request->id)->where('status', 1)->where('pay_type', 0)->update(['pay_type' => 1]);
+                } else {
+                    $with_pay = floor($credits->current_credit);
+                    $without_pay_data = DB::select("select * from leave_request_details where leave_id = {$request->leave_id} and status = 1 and pay_type = 0 order by date ASC;");
+
+                    if(floor($credits->current_credit) > 0) {
+                        for($i=0;$i<floor($credits->current_credit);$i++):
+                            LeaveRequestDetails::where('id', $without_pay_data[$i]->id)->update(['pay_type' => 1]);
+                        endfor;
+                    } else {
+                        $with_pay = 0;
+                    }
+                }
+            }
+        }
+
+        // Save Leave Credit Deduction
+        if($with_pay > 0 && count($req_det_obj)):
+            $lc_obj = DB::select("select * from leave_credits where leave_id = {$request->leave_id};");
             if(count($lc_obj) == 0 ):
                 $lc = new LeaveCredits();
                 $lc->employee_id = $leave_request->employee_id;
@@ -763,23 +959,20 @@ class LeaveController extends Controller
                 $lc->type = 5;
                 $lc->month = date("m");
                 $lc->year = date("Y");
-                $lc->leave_id = $id;
+                $lc->leave_id = $request->leave_id;
                 $lc->status = 1;
-                // $lc->save();
+                $lc->save();
             endif;
         endif;
 
         // SEND EMAIL NOTIFICATION
-        $employee = User::where('id', $leave_request->employee_id)->first();
-        $details = LeaveRequestDetails::where('leave_id', $leave_request->id)->orderBy('date')->first();
         $data = [
             'emp_name' => strtoupper($employee->first_name),
-            'date' => $details->date
+            'date' => $req_det_obj[0]->date
         ];
 
         if($leave_request->save()){
             // Mail::to($employee->email)->send(new LeaveApproved($data));
-            // Mail::to('juncelcarreon@elink.com.ph')->send(new LeaveApproved($data));
 
             return back()->with('success', 'Leave request successfully approved. . .');
         } else {
@@ -787,11 +980,12 @@ class LeaveController extends Controller
         }
     }
 
-    public function noted(Request $request){
+    public function noted(Request $request)
+    {
         $leave_request = LeaveRequest::find($request->leave_id);
         $leave_request->noted_by_id = Auth::user()->id;
         $leave_request->noted_by_signed_date = date('Y-m-d H:i:s');
-        $leave_request->approve_status_id = 1;
+        // $leave_request->approve_status_id = 1;
 
         if($leave_request->save()){
             return back()->with('success', 'Leave request successfully approved.');
@@ -800,10 +994,14 @@ class LeaveController extends Controller
         }
     }
 
-    public function decline(Request $request){
+    public function decline(Request $request)
+    {
         $leave_request = LeaveRequest::find($request->leave_id);
         $leave_request->reason_for_disapproval = $request->reason_for_disapproval;
         $leave_request->approve_status_id = 2;
+
+        LeaveCredits::where('leave_id', $request->leave_id)->delete();
+        LeaveRequestDetails::where('leave_id',$request->leave_id)->where('status',3)->update(['status'=>1]);
 
         // SEND EMAIL NOTIFICATION
         $employee = User::where('id', $leave_request->employee_id)->first();
@@ -815,15 +1013,15 @@ class LeaveController extends Controller
 
         if($leave_request->save()){
             // Mail::to($employee->email)->send(new LeaveDeclined($data));
-            // Mail::to('juncelcarreon@elink.com.ph')->send(new LeaveDeclined($data));
 
             return back()->with('success', 'Leave request successfully declined.');
         } else {
             return back()->with('error', 'Something went wrong.');
         }
     }
-    
-    public function creditIncrementVer2($month){
+
+    public function creditIncrementVer2($month)
+    {
         $obj = DB::select("
             SELECT 
                 *
@@ -867,7 +1065,8 @@ class LeaveController extends Controller
         return "done";
     }
 
-    public function creditIncrement(){
+    public function creditIncrement()
+    {
         $obj = DB::select("
             SELECT 
                 *
@@ -877,7 +1076,7 @@ class LeaveController extends Controller
                 status = 1 AND deleted_at IS NULL
                     AND eid LIKE 'ESCC-%';
         ");
-        
+
         foreach($obj as $e):
             $id = $e->id;
             $det = DB::select("
@@ -907,39 +1106,46 @@ class LeaveController extends Controller
                 $credit->save();
             }
         endforeach;
-        
         return "done";
     }
-    
-    public function credits(){
+
+    public function credits()
+    {
         $obj = DB::select($this->newQuery());
+
         return view('leave.credits')->with('employees', $obj);
     }
-    
-    public function leaveCredits(){
-        $obj = DB::select($this->newQuery());
-        return view('leave.expanded-credits')->with('employees', $obj);
+
+    public function leaveCredits()
+    {
+        $data['employees'] = DB::select($this->newQuery());
+
+        return view('leave.expanded-credits', $data);
     }
-    
-    public function leaveTracker(){
+
+    public function leaveTracker()
+    {
         $obj = DB::select($this->newQuery());
+
         return view('leave.expanded-tracker')->with('employees', $obj);
     }
-    
-    public function pastCredits(){
+
+    public function pastCredits()
+    {
         $obj = DB::select($this->pastQuery());
+
         return view('leave.past-credits')->with('employees', $obj);
     }
 
-    public function editcredits(Request $request, $employee_id){
-         $employee = User::find($employee_id);
+    public function editcredits(Request $request, $employee_id)
+    {
+        $employee = User::find($employee_id);
         $credit = DB::select($this->newQuery($employee->id));
-
         if(count($credit) > 0){
             $credits = (object) $credit[0];
         }
 
-	switch ($credits->employee_category):
+	   switch ($credits->employee_category):
             case 1:
                 $div = 20;
                 break;
@@ -955,20 +1161,20 @@ class LeaveController extends Controller
         endswitch;
         $different_in_months = DateHelper::getDifferentMonths($employee->hired_date);
         $monthly_accrual = (($div / 12) * $different_in_months) + $credits->monthly_accrual;
-
         $credits->monthly_accrual = $monthly_accrual;
+        $credits->current_credit = ($monthly_accrual + $credits->past_credit) - ($credits->used_jan_to_jun + $credits->used_jul_to_dec);
 
         return view('leave.editcredits', compact('employee', 'credits'));
-
     }
 
-    public function updatecredits(Request $request){
-	 if ($request->monthly_accrual == 0 && $request->pto_forwarded == 0) {
+    public function updatecredits(Request $request)
+    {
+        if ($request->monthly_accrual == 0 && $request->pto_forwarded == 0) {
             return back()->withErrors(['fail' => 'Value zero on both monthly accrual and pto forwarded are not valid']);
         }
         $employee = User::find($request->employee_id);
 
-	if ($request->monthly_accrual != 0) {
+	   if ($request->monthly_accrual != 0) {
             $leave = LeaveCredits::create([
                 'employee_id' => $employee->id,
                 'credit' => $request->monthly_accrual,
@@ -1005,7 +1211,8 @@ class LeaveController extends Controller
         return back()->with('success', 'Successfully updated leave credits!');
     }
     
-    private function getBlockedDates(){
+    private function getBlockedDates()
+    {
         $blocked_dates = [];
         $obj = LeaveRequest::getBlockedDates(Auth::user()->team_name);
         $events = LeaveRequest::getCWD();
@@ -1023,16 +1230,19 @@ class LeaveController extends Controller
                         array_push($blocked_dates,$tar_date);
             endforeach;
         endif;
-        
+
         return $blocked_dates;
     }
     
-    public function conversion(){
+    public function conversion()
+    {
         $obj = DB::select($this->newQuery());
+
         return view('leave.credits-conversion')->with('employees', $obj);
     }
     
-    public function saveConversion(Request $r){
+    public function saveConversion(Request $r)
+    {
         $conversion = $r->post('con');
         $id = $r->post('id');
         $lc = new LeaveCredits();
@@ -1046,8 +1256,8 @@ class LeaveController extends Controller
         $lc->save();
     }
     
-    public function xlsCredits(){
-       
+    public function xlsCredits()
+    { 
         $writesheet = new Spreadsheet();
         $writer = IOFactory::createWriter($writesheet, "Xlsx");
         $sheet = $writesheet->getActiveSheet();
@@ -1080,7 +1290,8 @@ class LeaveController extends Controller
         $writer->save('php://output');
     }
     
-    public function xlsCreditsVer2(){
+    public function xlsCreditsVer2()
+    {
         $writesheet = new Spreadsheet();
         $writer = IOFactory::createWriter($writesheet, "Xlsx");
         $sheet = $writesheet->getActiveSheet();
@@ -1115,7 +1326,8 @@ class LeaveController extends Controller
         $writer->save('php://output');
     }
     
-    public function patchCredits(){
+    public function patchCredits()
+    {
         $obj = DB::select("select id from employee_info");
         $list=[];
         foreach($obj as $employee):
@@ -1136,241 +1348,252 @@ class LeaveController extends Controller
      *  on  year = YEAR(NOW()) for conversion credits
      *  type = 3
      */
-    private function newQuery($id = NULL){
-	$today = now();
-            $today->month = 1;
-            $today->day = 1;
+    private function newQuery($id = NULL)
+    {
+        $today = now();
+        $today->month = 1;
+        $today->day = 1;
         $firstHalfYearStart = $today->format('Y-m-d');
         
-            $today->month = 6;
-            $today->day = 30;
+        $today->month = 6;
+        $today->day = 30;
         $firstHalfYearEnd = $today->format('Y-m-d');
 
-            $today->month = 7;
-            $today->day = 1;
+        $today->month = 7;
+        $today->day = 1;
         $lastHalfYearStart = $today->format('Y-m-d');
 
-            $today->month = 12;
-            $today->day = 31;
+        $today->month = 12;
+        $today->day = 31;
         $lastHalfYearEnd = $today->format('Y-m-d');
 
         $sql = "  
-  SELECT 
-    eid,
-    id,
-    CONCAT(e.first_name, ' ', e.last_name) AS employee_name,
-    employee_category,
-    hired_date,
-    e.prod_date,
-    e.position_name,
-    e.is_regular,
-    0 as used_credit,
-    0 as total_credits,
-    IFNULL((SELECT 
-                sum(credit)
-                FROM
-                    leave_credits
-                WHERE
-                    year = YEAR(NOW()) AND type = 6
-                        AND employee_id = e.id
-                        AND leave_credits.status = 1
-                LIMIT 1),
-            0) AS expired_credit,
-    IFNULL((SELECT 
-                    SUM(credit)
-                FROM
-                    leave_credits
-                WHERE
-                    year = YEAR(NOW()) - 1 AND type = 2
-                        AND employee_id = e.id
-                        AND leave_credits.status = 1
-                ),
-            0) AS past_credit,
+          SELECT 
+            `employee_info`.`id`,
+            `employee_info`.`eid`,
+            CONCAT(`employee_info`.`first_name`, ' ', `employee_info`.`last_name`) AS `employee_name`,
+            `employee_info`.`employee_category`,
+            `employee_info`.`hired_date`,
+            `employee_info`.`prod_date`,
+            `employee_info`.`position_name`,
+            `employee_info`.`is_regular`,
+            0 as `used_credit`,
+            0 as `total_credits`,
+            IFNULL((SELECT 
+                        sum(`leave_credits`.`credit`)
+                    FROM
+                        `leave_credits`
+                    WHERE
+                        `leave_credits`.`year` = YEAR(NOW()) AND 
+                        `leave_credits`.`type` = 6 AND 
+                        `leave_credits`.`employee_id` = `employee_info`.`id` AND
+                        `leave_credits`.`status` = 1
+                    LIMIT 1),
+                0) AS `expired_credit`,
+            IFNULL((SELECT 
+                        sum(`leave_credits`.`credit`)
+                    FROM
+                        `leave_credits`
+                    WHERE
+                        `leave_credits`.`year` = YEAR(NOW()) - 1 AND 
+                        `leave_credits`.`type` = 2 AND 
+                        `leave_credits`.`employee_id` = `employee_info`.`id` AND
+                        `leave_credits`.`status` = 1
+                    LIMIT 1),
+                0) AS `past_credit`,
+            IFNULL((SELECT 
+                    `leave_credits`.`credit`
+                    FROM
+                        `leave_credits`
+                    WHERE
+                        `leave_credits`.`year` = YEAR(NOW()) AND 
+                        `leave_credits`.`type` = 3 AND 
+                        `leave_credits`.`employee_id` = `employee_info`.`id` AND
+                        `leave_credits`.`status` = 1
+                    LIMIT 1),
+                0) AS `conversion_credit`,
+            IFNULL((SELECT 
+                        `leave_credits`.`credit`
+                    FROM
+                        `leave_credits`
+                    WHERE
+                        `leave_credits`.`year` = YEAR(NOW()) AND 
+                        `leave_credits`.`type` = 4 AND 
+                        `leave_credits`.`employee_id` = `employee_info`.`id` AND
+                        `leave_credits`.`status` = 1
+                    LIMIT 1),
+                0) AS `loa`,
+            IFNULL((SELECT 
+                        sum(`leave_credits`.`credit`)
+                    FROM
+                        `leave_credits`
+                    WHERE
+                        `leave_credits`.`year` = YEAR(NOW()) AND 
+                        `leave_credits`.`type` = 7 AND 
+                        `leave_credits`.`employee_id` = `employee_info`.`id` AND
+                        `leave_credits`.`status` = 1
+                    LIMIT 1),
+                0) AS `monthly_accrual`,
+            IFNULL((SELECT 
+                        sum(`leave_credits`.`credit`)
+                    FROM
+                        `leave_credits`
+                    WHERE
+                        `leave_credits`.`year` = YEAR(NOW()) AND 
+                        `leave_credits`.`type` = 1 AND 
+                        `leave_credits`.`employee_id` = `employee_info`.`id` AND
+                        `leave_credits`.`status` = 1
+                    LIMIT 1),
+                0) AS `current_credit`,
+            IFNULL((SELECT 
+                        sum(`leave_request_details`.`length`)
+                    FROM
+                        `leave_request`
+                    LEFT JOIN
+                        `leave_request_details`
+                    ON
+                        `leave_request_details`.`leave_id` = `leave_request`.`id`
+                    WHERE
+                        `leave_request`.`employee_id` = `employee_info`.`id` AND
+                        `leave_request_details`.`date` >= '{$firstHalfYearStart}' AND 
+                        `leave_request_details`.`date` <= '{$firstHalfYearEnd}' AND 
+                        `leave_request_details`.`pay_type` = 1 AND 
+                        `leave_request_details`.`status` = 1 AND 
+                        `leave_request`.`approve_status_id` = 1
+                    LIMIT 1),
+                0) AS `used_jan_to_jun`,
+            IFNULL((SELECT 
+                        sum(`leave_request_details`.`length`)
+                    FROM
+                        `leave_request`
+                    LEFT JOIN
+                        `leave_request_details`
+                    ON
+                        `leave_request_details`.`leave_id` = `leave_request`.`id`
+                    WHERE
+                        `leave_request`.`employee_id` = `employee_info`.`id` AND
+                        `leave_request_details`.`date` >= '{$lastHalfYearStart}' AND 
+                        `leave_request_details`.`date` <= '{$lastHalfYearEnd}' AND 
+                        `leave_request_details`.`pay_type` = 1 AND 
+                        `leave_request_details`.`status` = 1 AND 
+                        `leave_request`.`approve_status_id` = 1
+                    LIMIT 1),
+                0) AS `used_jul_to_dec`
+        FROM
+            `employee_info`
+        WHERE
+            `employee_info`.`status` = 1 AND 
+            `employee_info`.`deleted_at` IS NULL AND 
+            `employee_info`.`eid` LIKE 'ESCC-%'";
 
-    IFNULL((SELECT 
-                    credit
-                FROM
-                    leave_credits
-                WHERE
-                    year = YEAR(NOW())  AND type = 3
-                        AND employee_id = e.id
-                        AND leave_credits.status = 1
-                LIMIT 1),
-            0) AS conversion_credit,
-    IFNULL((SELECT 
-                    credit
-                FROM
-                    leave_credits
-                WHERE
-                    year = YEAR(NOW()) AND type = 4
-                        AND employee_id = e.id
-                        AND leave_credits.status = 1
-                LIMIT 1),
-            0) AS loa,
-	IFNULL((
-            SELECT
-                SUM(credit)
-            FROM
-                leave_credits
-            WHERE
-                year = YEAR(NOW())
-                    AND
-                type = 7
-                    AND
-                employee_id = e.id
-                    AND
-                leave_credits.status = 1
-            ),
-        0) AS monthly_accrual,
-    IFNULL((SELECT 
-                    SUM(credit)
-                FROM
-                    leave_credits
-                WHERE
-                    year = YEAR(NOW()) AND type = 1
-                        AND leave_credits.status = 1
-                        AND employee_id = e.id),
-            0) AS current_credit,
-    IFNULL((SELECT 
-                    SUM(lrd.length)
-                FROM
-                    elink_employee_directory.leave_request AS lr
-                        LEFT JOIN
-                    leave_request_details AS lrd ON lrd.leave_id = lr.id
-                WHERE
-                    lr.employee_id = e.id
-                        AND lrd.date >= '$firstHalfYearStart'
-                        AND date <= '$firstHalfYearEnd'
-                        AND lrd.pay_type = 1
-                        AND lrd.status = 1
-                        AND lr.approve_status_id = 1),
-            0) AS used_jan_to_jun,
-    IFNULL((SELECT 
-                    SUM(lrd.length)
-                FROM
-                    elink_employee_directory.leave_request AS lr
-                        LEFT JOIN
-                    leave_request_details AS lrd ON lrd.leave_id = lr.id
-                WHERE
-                    lr.employee_id = e.id
-                        AND lrd.date >= '$lastHalfYearStart'
-                        AND date <= '$lastHalfYearEnd'
-                        AND lrd.pay_type = 1
-                        AND lrd.status = 1
-                        AND lr.approve_status_id = 1),
-            0) AS used_jul_to_dec
-FROM
-    elink_employee_directory.employee_info AS e
-WHERE
-    e.status = 1
-        AND eid LIKE 'ESCC-%'";
-         /*AND e.deleted_at IS NULL */
         if($id)
-            $sql.=" and e.id = ".$id;
-        
+            $sql.=" AND `employee_info`.`id` = {$id}";
+
         return $sql;
     }
-    
-        private function pastQuery($id = NULL){
-        $sql = "  
-  SELECT 
-    eid,
-    id,
-    CONCAT(e.first_name, ' ', e.last_name) AS employee_name,
-    e.prod_date,
-    e.position_name,
-    0 as used_credit,
-    0 as total_credits,
-    IFNULL((SELECT 
-                sum(credit)
-                FROM
-                    leave_credits
-                WHERE
-                    year = 2020 AND type = 6
-                        AND employee_id = e.id
-                        AND leave_credits.status = 1
-                LIMIT 1),
-            0) AS expired_credit,
-    IFNULL((SELECT 
-                    credit
-                FROM
-                    leave_credits
-                WHERE
-                    year = 2020 - 1 AND type = 2
-                        AND employee_id = e.id
-                        AND leave_credits.status = 1
-                LIMIT 1),
-            0) AS past_credit,
-    IFNULL((SELECT 
-                    credit
-                FROM
-                    leave_credits
-                WHERE
-                    year = 2020 AND type = 3
-                        AND employee_id = e.id
-                        AND leave_credits.status = 1
-                LIMIT 1),
-            0) AS conversion_credit,
-    IFNULL((SELECT 
-                    credit
-                FROM
-                    leave_credits
-                WHERE
-                    year = 2020 AND type = 4
-                        AND employee_id = e.id
-                        AND leave_credits.status = 1
-                LIMIT 1),
-            0) AS loa,
-    IFNULL((SELECT 
-                    SUM(credit)
-                FROM
-                    leave_credits
-                WHERE
-                    year = 2020 AND type = 1
-                        AND leave_credits.status = 1
-                        AND employee_id = e.id),
-            0) AS current_credit,
-    IFNULL((SELECT 
-                    SUM(lrd.length)
-                FROM
-                    elink_employee_directory.leave_request AS lr
-                        LEFT JOIN
-                    leave_request_details AS lrd ON lrd.leave_id = lr.id
-                WHERE
-                    lr.employee_id = e.id
-                        AND lrd.date >= '2020-01-01'
-                        AND date <= '2020-06-30'
-                        AND lrd.pay_type = 1
-                        AND lrd.status = 1
-                        AND lr.approve_status_id = 1),
-            0) AS used_jan_to_jun,
-    IFNULL((SELECT 
-                    SUM(lrd.length)
-                FROM
-                    elink_employee_directory.leave_request AS lr
-                        LEFT JOIN
-                    leave_request_details AS lrd ON lrd.leave_id = lr.id
-                WHERE
-                    lr.employee_id = e.id
-                        AND lrd.date >= '2020-07-01'
-                        AND date <= '2020-12-31'
-                        AND lrd.pay_type = 1
-                        AND lrd.status = 1
-                        AND lr.approve_status_id = 1),
-            0) AS used_jul_to_dec
-FROM
-    elink_employee_directory.employee_info AS e
-WHERE
-    e.status = 1 AND e.deleted_at IS NULL
-        AND eid LIKE 'ESCC-%'";
-        
-        if($id)
-            $sql.=" and e.id = ".$id;
-        
-        return $sql;
+
+    private function pastQuery($id = NULL)
+    {
+                $sql = "  
+          SELECT 
+            eid,
+            id,
+            CONCAT(e.first_name, ' ', e.last_name) AS employee_name,
+            e.prod_date,
+            e.position_name,
+            0 as used_credit,
+            0 as total_credits,
+            IFNULL((SELECT 
+                        sum(credit)
+                        FROM
+                            leave_credits
+                        WHERE
+                            year = 2020 AND type = 6
+                                AND employee_id = e.id
+                                AND leave_credits.status = 1
+                        LIMIT 1),
+                    0) AS expired_credit,
+            IFNULL((SELECT 
+                            credit
+                        FROM
+                            leave_credits
+                        WHERE
+                            year = 2020 - 1 AND type = 2
+                                AND employee_id = e.id
+                                AND leave_credits.status = 1
+                        LIMIT 1),
+                    0) AS past_credit,
+            IFNULL((SELECT 
+                            credit
+                        FROM
+                            leave_credits
+                        WHERE
+                            year = 2020 AND type = 3
+                                AND employee_id = e.id
+                                AND leave_credits.status = 1
+                        LIMIT 1),
+                    0) AS conversion_credit,
+            IFNULL((SELECT 
+                            credit
+                        FROM
+                            leave_credits
+                        WHERE
+                            year = 2020 AND type = 4
+                                AND employee_id = e.id
+                                AND leave_credits.status = 1
+                        LIMIT 1),
+                    0) AS loa,
+            IFNULL((SELECT 
+                            SUM(credit)
+                        FROM
+                            leave_credits
+                        WHERE
+                            year = 2020 AND type = 1
+                                AND leave_credits.status = 1
+                                AND employee_id = e.id),
+                    0) AS current_credit,
+            IFNULL((SELECT 
+                            SUM(lrd.length)
+                        FROM
+                            elink_employee_directory.leave_request AS lr
+                                LEFT JOIN
+                            leave_request_details AS lrd ON lrd.leave_id = lr.id
+                        WHERE
+                            lr.employee_id = e.id
+                                AND lrd.date >= '2020-01-01'
+                                AND date <= '2020-06-30'
+                                AND lrd.pay_type = 1
+                                AND lrd.status = 1
+                                AND lr.approve_status_id = 1),
+                    0) AS used_jan_to_jun,
+            IFNULL((SELECT 
+                            SUM(lrd.length)
+                        FROM
+                            elink_employee_directory.leave_request AS lr
+                                LEFT JOIN
+                            leave_request_details AS lrd ON lrd.leave_id = lr.id
+                        WHERE
+                            lr.employee_id = e.id
+                                AND lrd.date >= '2020-07-01'
+                                AND date <= '2020-12-31'
+                                AND lrd.pay_type = 1
+                                AND lrd.status = 1
+                                AND lr.approve_status_id = 1),
+                    0) AS used_jul_to_dec
+        FROM
+            elink_employee_directory.employee_info AS e
+        WHERE
+            e.status = 1 AND e.deleted_at IS NULL
+                AND eid LIKE 'ESCC-%'";
+                
+                if($id)
+                    $sql.=" and e.id = ".$id;
+                
+                return $sql;
     }
-    
-    private function newQuery2($id = NULL){
+
+    private function newQuery2($id = NULL)
+    {
         $sql = "         
             SELECT 
                 eid,
@@ -1431,5 +1654,51 @@ WHERE
             $sql.=" and e.id = ".$id;
         
         return $sql;
+    }
+
+    public function test()
+    {
+        $id_obj = Auth::user()->id;
+        $obj = DB::select($this->newQuery($id_obj));
+        $year = date('Y');
+        $employees = DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id_obj} OR `employee_info`.`supervisor_id`={$id_obj})");
+        $credits = (object) [
+            'past_credit'       => 0,
+            'current_credit'    => 0,
+            'used_credit'       => 0,
+            'total_credits'     => 0
+        ];
+
+        if(count($obj) > 0) { 
+            $credits = $obj[0];
+
+           switch ($credits->employee_category):
+                case 1:
+                    $div = 20;
+                    break;
+                case 2:
+                    $div = 14;
+                    break;
+                case 3:
+                    $div = 10;
+                    break;
+                case 4:
+                    $div = 10;
+                    break;
+            endswitch;
+
+            $different_in_months = DateHelper::getDifferentMonths($credits->hired_date);
+            $monthly_accrual = (($div / 12) * $different_in_months) + $credits->monthly_accrual;
+            $credits->monthly_accrual = $monthly_accrual;
+            $credits->current_credit = ($monthly_accrual + $credits->past_credit) - ($credits->used_jan_to_jun + $credits->used_jul_to_dec);
+        }
+
+        $data['employees'] = User::AllExceptSuperAdmin()->get();
+        $data['leave_types'] = (count($employees) > 0) ? LeaveType::where('status' , '<>', 3)->get() : LeaveType::where('status' , '<>', 3)->where('id', '<>', 8)->get();
+        $data['blocked_dates'] = $this->getBlockedDates();
+        $data['credits'] = $credits;
+        $data['is_leader'] = count($employees);
+
+        return view('leave.create3', $data);
     }
 }

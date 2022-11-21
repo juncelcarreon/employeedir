@@ -9,7 +9,7 @@
 			<form enctype="multipart/form-data" method="POST" action=""> 
 				{{ csrf_field() }}
 				<div class="form-group">
-					<input type="file" name="file">
+					<input type="file" name="file" accept="image/png, image/jpg, image/jpeg">
 				</div>
 				<span class="text-center mt-2">
 					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">

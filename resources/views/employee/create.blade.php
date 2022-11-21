@@ -582,8 +582,9 @@ Employee / Add
         </div>
     </div>
 </script>
-<script type="text/javascript">    
-    
+<script type="text/javascript">
+    activeMenu($('#menu-active-employees'));
+
     var ctr = 1;
     
     $('#create_employee_form').validate({

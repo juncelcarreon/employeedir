@@ -1,4 +1,7 @@
 @extends('layouts.main')
+@section('title')
+    Blog Posts | HR Progress
+@endsection
 @section('content')
 <style>
 	.switch {
@@ -63,62 +66,76 @@
 <div class="panel panel-default">
 	<div class="panel panel-heading">
 		Posts
-		<a class="pull-right btn btn-primary" href="{{ url('posts/create') }}">Create New Post</a>
+
+		<a class="pull-right btn btn-primary" href="<?= url('posts/create') ?>"><span class="fa fa-plus"></span>&nbsp; Create New Post</a>
 	</div>
-	<div class="panel-body">
-		<br>
-		<table id="post-table" class="table-striped">
+    <div class="pane-body panel">
+        <br>
+        <br>
+		<table id="post-table" class="table-striped table">
 			<thead>
 				<tr>
-					<td>ID</td>
-					<td >Image</td>
+					<td>#</td>
+					<td style="width: 420px;">Image</td>
 					<td align="center">Option</td>
 				</tr>
 			</thead>
 			<tbody>
-				@foreach($posts as $post)
+				<?php
+				$i=1;
+				foreach($posts as $post){
+				?>
 				<tr>
-					<td class="image-id">{{ $post->id }}</td>
-					<td width="420px"><img src="{{ $post->image }}" class="img-thumbnail post-image"></td>
+					<td class="image-id"><?= $i ?></td>
+					<td>
+						<img src="<?= $post->image ?>" class="img-thumbnail post-image">
+					</td>
 					<td align="center">
 						<label class="switch" title="Enable/Disable">
-							<input type="checkbox" {{ $post->enabled == 1 ? 'checked' : '' }} name="leave_type_id" value="1" id="progress1" tabIndex="1" class="primary" data-id="{{ $post->id }}" >
+							<input type="checkbox" value="1" id="progress1" tabIndex="1" class="primary" data-id="<?= $post->id ?>" <?= $post->enabled == 1 ? 'checked' : '' ?>>
 							<span class="slider"></span>
 						</label>
-						<a href="#" class="btn-delete delete_btn" data-toggle="modal" data-target="#messageModal" title="Delete" data-id="{{$post->id}}">
+						<a href="#" class="btn-delete delete_btn" data-toggle="modal" data-target="#messageModal" title="Delete" data-id="<?= $post->id ?>">
 							<i class="fa fa-trash"></i>
 						</a>
 					</td>
 				</tr>
-				@endforeach
+				<?php
+				$i++;
+				}
+				?>
 			</tbody>
 		</table>
 	</div>
 </div>
 @endsection
 @section('scripts')
-	<script>
-		$(document).on('change', 'input[type=checkbox]', function(){
-			let enabled;
-			let id = $(this).data('id');
-			if($(this).is(":checked")){
-				enabled = 1;
-			}else{
-				enabled = 0;
-			}
-            $.LoadingOverlay("show");
-			setTimeout(function(){
-                $.LoadingOverlay("hide");
-				window.location.replace("{{ url('posts')}}" + "/" + id + "/enabled?enabled=" + enabled);
-			}, 1000);
-		});
-		$('.delete_btn').click(function(){
-			$('#messageModal .modal-title').html('Delete Post');
-			$('#messageModal #message').html('Are you sure you want to delete the post ?');
-			$('#messageModal .delete_form').attr('action', "{{ url('posts') }}/" + $(this).attr("data-id"));
-		});
-		$('#messageModal #yes').click(function(){
-			$('#messageModal .delete_form').submit();
-		});
-	</script>
+<script>
+$(function() {
+    activeMenu($('#menu-hr-progress'));
+
+	$(document).on('change', 'input[type=checkbox]', function(){
+		let enabled;
+		let id = $(this).data('id');
+		if($(this).is(":checked")){
+			enabled = 1;
+		}else{
+			enabled = 0;
+		}
+        $.LoadingOverlay("show");
+		setTimeout(function(){
+            $.LoadingOverlay("hide");
+			window.location.replace("<?= url('posts') ?>/" + id + "/enabled?enabled=" + enabled);
+		}, 1000);
+	});
+	$('.delete_btn').click(function(){
+		$('#messageModal .modal-title').html('Delete Post');
+		$('#messageModal #message').html('Are you sure you want to delete the post ?');
+		$('#messageModal .delete_form').attr('action', "<?= url('posts') ?>/" + $(this).attr("data-id"));
+	});
+	$('#messageModal #yes').click(function(){
+		$('#messageModal .delete_form').submit();
+	});
+});
+</script>
 @endsection

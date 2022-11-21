@@ -18,8 +18,7 @@ class PasswordResetController extends Controller
     }
 
 	public function confirmReset($token)
-	{
-        
+	{   
         if(!$token){
             abort(404);
         }
@@ -30,12 +29,12 @@ class PasswordResetController extends Controller
 
         $birthDate = Carbon::parse($employee->birth_date);
         $birthYear = str_split($birthDate->year);
-        $newPassword = $birthDate->format('F') .''.$birthDate->format('d').''.$birthYear[2].''.$birthYear[3];
+        $newPassword = date('F', strtotime($employee->birth_date)) .''.date('d', strtotime($employee->birth_date)).''.date('Y', strtotime($employee->birth_date));
 
         $employee->password = Hash::make($newPassword);
         $employee->save();
 
-         return view('auth.passwords.email_token');
+         return view('auth.passwords.success');
     }
 
        public function reset(Request $request)

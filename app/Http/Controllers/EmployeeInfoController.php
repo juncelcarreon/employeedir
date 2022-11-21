@@ -34,461 +34,376 @@ use Illuminate\Support\Facades\Validator;
 class EmployeeInfoController extends Controller
 {
 
-    public function login(Request $request)
-    {   
-        return $this->authModel->login($request);
-    }
+	public function login(Request $request)
+	{
+		return $this->authModel->login($request);
+	}
 
-    public function loginAPIv2(Request $request)
-    {
-        
-        return $this->authModel->loginAPIv2($request);
-    }
+	public function loginAPIv2(Request $request)
+	{
+		return $this->authModel->loginAPIv2($request);
+	}
 
-    public function loginAPI(Request $request)
-    {
-        return $this->authModel->loginAPI($request);
-    }
+	public function loginAPI(Request $request)
+	{
+		return $this->authModel->loginAPI($request);
+	}
 
-   public function session(Request $request)
-   {
-        return $this->authModel->session($request);
-   }
-   
-   public function processLinkees(Request $req){
-	$validator = Validator::make($req->all(),[
-            "adtl_linkee" => 'required'
-        ]);
+	public function session(Request $request)
+	{
+		return $this->authModel->session($request);
+	}
 
-        if($validator->fails()){
-            return ['data' => false];
-        }
+	public function processLinkees(Request $req)
+	{
+		$validator = Validator::make($req->all(), ["adtl_linkee" => 'required']);
 
-        $adtl_linker = $req->get('adtl_linker');
-        $adtl_linkee = $req->get('adtl_linkee');
-        $adtl_row = $req->get('adtl_row');
-        $adtl_added_by = Auth::user()->id;
-        $adtl_date_added = date("Y-m-d H:i:s");
-       
-        $exist = AdtlLinkee::where('adtl_linker', $adtl_linker)->where('adtl_linkee', $adtl_linkee)->first();
+		if($validator->fails()) {
+			return ['data' => false];
+		}
 
-        if(!$exist){
-            $linkee = AdtlLinkee::create([
-                'adtl_linker' => $adtl_linker,
-                'adtl_linkee' => $adtl_linkee,
-                'adtl_row' => 1,
-                'adtl_added_by' => $adtl_added_by,
-                'adtl_date_added' => $adtl_date_added,
-                'adtl_status' => 1
-            ]);
+		$adtl_linker = $req->get('adtl_linker');
+		$adtl_linkee = $req->get('adtl_linkee');
+		$adtl_row = $req->get('adtl_row');
+		$adtl_added_by = Auth::user()->id;
+		$adtl_date_added = date("Y-m-d H:i:s");
 
-            $linkerInformation = User::where('id', $linkee->adtl_linker)->first();
-            $linkeeInformation = User::where('id', $linkee->adtl_linkee)->first();
-	    $linkeeInformation->supervisor_id = $linkerInformation->id;
-            $linkeeInformation->supervisor_name = $linkerInformation->fullname();
-            $linkeeInformation->save();
-        }
-        return ['data' => $linkeeInformation ?? false];
+		$exist = AdtlLinkee::where('adtl_linker', $adtl_linker)->where('adtl_linkee', $adtl_linkee)->first();
 
-       // $adtl_linker = $req->get('adtl_linker');
-      //  $adtl_linkee = $req->get('adtl_linkee');
-      //  $adtl_row = $req->get('adtl_row');
-      //  $adtl_added_by = Auth::user()->id;
-      //  $adtl_date_added = date("Y-m-d H:i:s");
-       
-       // $stat = DB::select("
-         //   SELECT 
-         //       adtl_id
-         //   FROM
-         //       adtl_linkees
-         //   WHERE
-          //      adtl_status = 1 AND adtl_linker = $adtl_linker
-        //            AND adtl_row = $adtl_row;
-      //  ");
-        
-       // if(count($stat) > 0){/* Update an existing linkee in a row */
-         //   $id = $stat[0]->adtl_id;
-         //   $status = DB::update("
-          //      UPDATE 
-          //          `adtl_linkees` 
-           //     SET 
-          //          `adtl_linker` = '$adtl_linker', `adtl_linkee` = '$adtl_linkee', `adtl_row` = '$adtl_row', `adtl_added_by` = '$adtl_added_by' 
-          //      WHERE 
-         //           `adtl_linkees`.`adtl_id` = $id;
-        //    ");
-       // }else{/* Create a Linkee in a row */
-         //   $status = DB::insert("
-         //       INSERT INTO  `adtl_linkees` 
-         //           (`adtl_id`, `adtl_linker`, `adtl_linkee`, `adtl_row`, `adtl_added_by`, `adtl_date_added`, `adtl_status`) 
-              //  VALUES 
-            //        (NULL, '$adtl_linker', '$adtl_linkee', '$adtl_row', '$adtl_added_by', '$adtl_date_added', '1');
-          //  ");
-        //}
-        
-       // return ['status' => $status];
-   }
+		if(!$exist){
+			$data['adtl_linker'] = $adtl_linker;
+			$data['adtl_linkee'] = $adtl_linkee;
+			$data['adtl_row'] = 1;
+			$data['adtl_added_by'] = $adtl_added_by;
+			$data['adtl_date_added'] = $adtl_date_added;
+			$data['adtl_status'] = 1;
 
-  public function deleteLinkees(Request $request)
-   {
-        $validator = Validator::make($request->all(),[
-            "adtl_linkee" => 'required'
-        ]);
+			$linkee = AdtlLinkee::create($data);
 
-        if($validator->fails()){
-            return ['data' => false];
-        }
+			$linkerInformation = User::where('id', $linkee->adtl_linker)->first();
+			$linkeeInformation = User::where('id', $linkee->adtl_linkee)->first();
+			$linkeeInformation->supervisor_id = $linkerInformation->id;
+			$linkeeInformation->supervisor_name = $linkerInformation->fullname();
+			$linkeeInformation->save();
+		}
 
-	$employee = User::where('id', $request->adtl_linkee)->first();
-        $linkee = AdtlLinkee::where('adtl_linkee',$request->adtl_linkee)->where('adtl_linker', $request->adtl_linker)->first();
+		return ['data' => $linkeeInformation ?? false];
+	}
 
-        if($linkee && $employee){
-	    $employee->supervisor_id = 0;
-            $employee->supervisor_name = '';
-            $employee->save();
-            DB::table('adtl_linkees')->where('adtl_id', $linkee->adtl_id)->delete();
-            return ['data' => true];
-        }
+	public function deleteLinkees(Request $request)
+	{
+		$validator = Validator::make($request->all(), ["adtl_linkee" => 'required']);
 
-        return ['data' => false];
-   }
+		if($validator->fails()){
+			return ['data' => false];
+		}
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return 'index';
-    }
+		$employee = User::where('id', $request->adtl_linkee)->first();
+		$linkee = AdtlLinkee::where('adtl_linkee',$request->adtl_linkee)->where('adtl_linker', $request->adtl_linker)->first();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('employee.create')
-        ->with('managers', User::allExceptSuperAdmin()->orderBy('last_name')->get())
-        ->with('supervisors', User::allExceptSuperAdmin()->orderBy('last_name')->get())
-        ->with('departments', EmployeeDepartment::all())->with('accounts', ElinkAccount::all())
-        ->with('positions', User::select('position_name')->groupBy('position_name')->get());
-    }
+		if($linkee && $employee) {
+			$employee->supervisor_id = 0;
+			$employee->supervisor_name = '';
+			$employee->save();
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        return $this->model->store($request);
-    }
+			DB::table('adtl_linkees')->where('adtl_id', $linkee->adtl_id)->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {   
-        $employee = User::find($id);
-        $obj = EmployeeInfoDetails::where('employee_id',"=",$id)->get();
-        $dep = EmployeeDependents::where('employee_num',$id)->where('status',1)->get();
-        $linkees = $employee->getLinkees();
-        if(count($obj) > 0):
-            $obj = $obj[0];
-        else:
-            $obj = [
-                'town_address' => '',
-                'em_con_name' => '',
-                'em_con_address' => '',
-                'em_con_num' => '',
-                'em_con_rel' => '',
-                'resignation_date' => '',
-                'avega_num' => ''
-            ];
-        endif;
+			return ['data' => true];
+		}
 
-        if (isset($employee)) {
-            return view('employee.edit')
-		->with('employee', $employee)
-                ->with('supervisors', User::where('id', '<>', '1')->get())
-                ->with('departments', EmployeeDepartment::all())
-                ->with('accounts', ElinkAccount::all())
-                ->with('details',$obj)
-                ->with('dependents',$dep)
-                ->with('positions', User::select('position_name')->groupBy('position_name')->get())
-                ->with('linkees', $linkees)
-                ->with('linkers',DB::select("select * from adtl_linkees where adtl_linker = $id and adtl_status = 1"));
-        } else {
-            return abort(404);
-        }
-    }
+		return ['data' => false];
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        return $this->model->updateEmployee($request, $id);
-    }
+	public function index()
+	{
+		return 'index';
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $employee = User::find($id);
-        $employee->delete();
+	public function create()
+	{
+		$data['managers'] = User::allExceptSuperAdmin()->orderBy('last_name')->get();
+		$data['supervisors'] = User::allExceptSuperAdmin()->orderBy('last_name')->get();
+		$data['departments'] = EmployeeDepartment::all();
+		$data['accounts'] = ElinkAccount::all();
+		$data['positions'] = User::select('position_name')->groupBy('position_name')->get();
 
-        return redirect()->back()->with('success', "Successfully deleted employee record");
-    }
+		return view('employee.create', $data);
+	}
 
-    // 
-    // change password : only admin can view this
-    //
-    public function changepassword(Request $request, $id)
-    {
-        return $this->authModel->changepassword($request, $id);
-    }
+	public function store(Request $request)
+	{
+		return $this->model->store($request);
+	}
 
-    // 
-    // change password : only admin can change
-    //
-    public function savepassword(Request $request, $id)
-    {
-        return $this->authModel->savepassword($request, $id);
-        
-    }
-    // 
-    // employees dashboard : only admin can view
-    //
-    public function employees(Request $request)
-    {
-        // app('App\Http\Controllers\EmailRemindersController')->index();
-        return $this->model->employees($request);
-    }
-    
-    public function searchMovements(Request $request){
-        return 
-            MovementsTransfer::where('mv_employee_no',$request->get("emp_no"))
-                ->leftJoin('employee_department','movements.mv_dept','=','employee_department.id')
-                ->orderBy('mv_transfer_date', 'DESC')
-                ->get();
-    }
-            
-    public function saveMovements(Request $request){
-        $obj = new MovementsTransfer();
-        $obj->mv_employee_no    = $request->post('mv_employee_no');
-        $obj->mv_dept           = $request->post('mv_dept');
-        $obj->mv_position       = $request->post('mv_position');
-        $obj->mv_transfer_date  = date('Y-m-d', strtotime($request->post('mv_transfer_date')));
-        
-        $sql = DB::select("
-            SELECT 
-                department_code
-            FROM
-                elink_employee_directory.employee_department
-            WHERE
-                id = $obj->mv_dept
-            LIMIT 1;"
-        );
-        
-        if(count($sql) > 0):
-            $userarray = [
-                'team_name'     => $request->post('dept_name'),
-                'dept_code'     => $sql[0]->department_code,
-                'position_name' => $obj->mv_position 
-            ];
-        endif;
-        
-        $affected = DB::table('employee_info')
-              ->where('id', $request->post('mv_employee_no'))
-              ->update($userarray);
-        
-        return ['status' => $obj->save(), 'User' => $affected];
-    }
-    
-    public function downloadInactive(Request $request){
-                $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        $worksheet = $spreadsheet->getActiveSheet();
-        //$employees = User::allExceptSuperAdmin()->get();
-        $employees = $this->model->download_inactive($request);
-        $COUNT = 0;
-        $EID = 1;
-        $LAST_NAME = 2;
-        $FIRST_NAME = 3;
-        $MIDDLE_NAME = 4;
-        $FULLNAME = 5;
-        $ROLE = 6;
-        $SUPERVISOR = 7;
-        $MANAGER = 8;
-        $DIVISION = 9;
-        $DEPT = 10;
-        $DEPT_CODE = 11;
-        $ACCOUNT = 12;
-        $EXT = 13;
-        $ALIAS = 14;
-        $PROD_DATE = 15;
-        $STATUS = 16;
-        $HIRED_DATE = 17;
-        $WAVE = 18;
-        $EMAIL = 19;
-        $GENDER = 20;
-        $BDAY = 21;
-        $CITYADD = 22;
-        $HOMEADD = 23;
-        $CIVILSTAT = 24;
-        $CONTACTNUM = 25;
-        $INCASECON = 26;
-        $INCASEREL = 27;
-        $INCASERELCON = 28;
-        $INCASERELADD = 29;
-        $TIN = 30;
-        $SSS = 31;
-        $PHILHEALTH = 32;
-        $HMDF = 33;
-	$RESIGNATIONDATE = 34;
+	public function edit($id)
+	{
+		$employee = User::find($id);
+		if(empty($employee)) {
+			return abort(404);
+		}
 
-        $worksheet->getCell(getNameFromNumber($COUNT + 1) . 1 )->setValue('Count'); 
-        $worksheet->getCell(getNameFromNumber($EID + 1) . 1 )->setValue('EID');
-        $worksheet->getCell(getNameFromNumber($LAST_NAME + 1) . 1 )->setValue('Last Name');
-        $worksheet->getCell(getNameFromNumber($FIRST_NAME + 1) . 1 )->setValue('First Name');
-        $worksheet->getCell(getNameFromNumber($MIDDLE_NAME + 1) . 1 )->setValue('Middle Name');
-        $worksheet->getCell(getNameFromNumber($FULLNAME + 1) . 1 )->setValue('Name');
-        $worksheet->getCell(getNameFromNumber($ROLE + 1) . 1 )->setValue('Role');
-        $worksheet->getCell(getNameFromNumber($SUPERVISOR + 1) . 1 )->setValue('Supervisor');
-        $worksheet->getCell(getNameFromNumber($MANAGER + 1) . 1 )->setValue('Manager');
-        $worksheet->getCell(getNameFromNumber($DIVISION + 1) . 1 )->setValue('Division');
-        $worksheet->getCell(getNameFromNumber($DEPT + 1) . 1 )->setValue('Dept');
-        $worksheet->getCell(getNameFromNumber($DEPT_CODE + 1) . 1 )->setValue('Dept Code');
-        $worksheet->getCell(getNameFromNumber($ACCOUNT + 1) . 1 )->setValue('Account');
-        $worksheet->getCell(getNameFromNumber($EXT + 1) . 1 )->setValue('EXT');
-        $worksheet->getCell(getNameFromNumber($ALIAS + 1) . 1 )->setValue('Phone/Pen Names');
-        $worksheet->getCell(getNameFromNumber($PROD_DATE + 1) . 1 )->setValue('Prod Date');
-        $worksheet->getCell(getNameFromNumber($STATUS + 1) . 1 )->setValue('Status');
-        $worksheet->getCell(getNameFromNumber($HIRED_DATE + 1) . 1 )->setValue('Hire Date');
-        $worksheet->getCell(getNameFromNumber($WAVE + 1) . 1 )->setValue('Wave');
-        $worksheet->getCell(getNameFromNumber($EMAIL + 1) . 1 )->setValue('Email');
-        $worksheet->getCell(getNameFromNumber($GENDER + 1 ) . 1 )->setValue('Gender');
-        $worksheet->getCell(getNameFromNumber($BDAY + 1) . 1 )->setValue('Bday');
-        $worksheet->getCell(getNameFromNumber($CITYADD + 1) . 1 )->setValue('City Address');
-        $worksheet->getCell(getNameFromNumber($HOMEADD + 1) . 1 )->setValue('Home Address');
-        $worksheet->getCell(getNameFromNumber($CIVILSTAT + 1) . 1 )->setValue('Civil Stat');
-        $worksheet->getCell(getNameFromNumber($CONTACTNUM + 1) . 1 )->setValue('Number');
-        $worksheet->getCell(getNameFromNumber($INCASECON + 1) . 1 )->setValue('Contact Person');
-        $worksheet->getCell(getNameFromNumber($INCASEREL + 1) . 1 )->setValue('Relationship');
-        $worksheet->getCell(getNameFromNumber($INCASERELCON + 1) . 1 )->setValue('Number');
-        $worksheet->getCell(getNameFromNumber($INCASERELADD + 1) . 1 )->setValue('Address');
-        $worksheet->getCell(getNameFromNumber($TIN + 1) . 1 )->setValue('TIN');
-        $worksheet->getCell(getNameFromNumber($SSS + 1) . 1 )->setValue('SSS');
-        $worksheet->getCell(getNameFromNumber($PHILHEALTH + 1) . 1 )->setValue('Philhealth');
-        $worksheet->getCell(getNameFromNumber($HMDF + 1) . 1 )->setValue('HMDF');
-        $worksheet->getCell(getNameFromNumber($RESIGNATIONDATE + 1) . 1 )->setValue('Resignation Date');
+		$obj = EmployeeInfoDetails::where('employee_id',"=",$id)->get();
+		if(count($obj) > 0) {
+			$obj = $obj[0];
+		} else {
+			$obj['town_address'] = '';
+			$obj['em_con_name'] = '';
+			$obj['em_con_address'] = '';
+			$obj['em_con_num'] = '';
+			$obj['em_con_rel'] = '';
+			$obj['resignation_date'] = '';
+			$obj['avega_num'] = '';
+		}
 
+		$data['employee'] = $employee;
+		$data['supervisors'] = User::where('id', '<>', '1')->get();
+		$data['departments'] = EmployeeDepartment::all();
+		$data['accounts'] = ElinkAccount::all();
+		$data['details'] = $obj;
+		$data['dependents'] = EmployeeDependents::where('employee_num', $id)->where('status',1)->get();
+		$data['positions'] = User::select('position_name')->groupBy('position_name')->get();
+		$data['linkees'] = $employee->getLinkees();
+		$data['linkers'] = DB::select("select * from adtl_linkees where adtl_linker = {$id} and adtl_status = 1");
 
-        $worksheet->getColumnDimension(getNameFromNumber($COUNT + 1))->setWidth(7);
-        $worksheet->getColumnDimension(getNameFromNumber($EID + 1))->setWidth(20);
-        $worksheet->getColumnDimension(getNameFromNumber($EXT + 1))->setWidth(5);
-        $worksheet->getColumnDimension(getNameFromNumber($ALIAS + 1))->setWidth(30);
-        $worksheet->getColumnDimension(getNameFromNumber($LAST_NAME + 1))->setWidth(20);
-        $worksheet->getColumnDimension(getNameFromNumber($FIRST_NAME + 1))->setWidth(20);
-        $worksheet->getColumnDimension(getNameFromNumber($MIDDLE_NAME + 1))->setWidth(20);
-        $worksheet->getColumnDimension(getNameFromNumber($FULLNAME + 1))->setWidth(40);
-        $worksheet->getColumnDimension(getNameFromNumber($SUPERVISOR + 1))->setWidth(30);
-        $worksheet->getColumnDimension(getNameFromNumber($MANAGER + 1))->setWidth(30);
-        $worksheet->getColumnDimension(getNameFromNumber($DEPT + 1))->setWidth(25);
-        $worksheet->getColumnDimension(getNameFromNumber($DEPT_CODE + 1))->setWidth(15);
-        $worksheet->getColumnDimension(getNameFromNumber($DIVISION + 1))->setWidth(15);
-        $worksheet->getColumnDimension(getNameFromNumber($ROLE + 1))->setWidth(30);
-        $worksheet->getColumnDimension(getNameFromNumber($ACCOUNT + 1))->setWidth(15);
-        $worksheet->getColumnDimension(getNameFromNumber($PROD_DATE + 1))->setWidth(15);
-        $worksheet->getColumnDimension(getNameFromNumber($STATUS + 1))->setWidth(10);
-        $worksheet->getColumnDimension(getNameFromNumber($HIRED_DATE + 1))->setWidth(10);
-        $worksheet->getColumnDimension(getNameFromNumber($WAVE + 1))->setWidth(8);
-        $worksheet->getColumnDimension(getNameFromNumber($EMAIL + 1))->setWidth(30);
-        $worksheet->getColumnDimension(getNameFromNumber($GENDER + 1))->setWidth(10);
-        $worksheet->getColumnDimension(getNameFromNumber($BDAY + 1))->setWidth(10);
+		return view('employee.edit', $data);
+	}
 
-        $row = 2;
-        foreach ($employees as $index => $value) {
+	public function update(Request $request, $id)
+	{
+		return $this->model->updateEmployee($request, $id);
+	}
 
-            $worksheet->getCell(getNameFromNumber($COUNT + 1) . $row )->setValue($row-1);
-            $worksheet->getCell(getNameFromNumber($EID + 1) . $row )->setValue($value->eid);
-            $worksheet->getCell(getNameFromNumber($LAST_NAME + 1) . $row )->setValue($value->last_name);
-            $worksheet->getCell(getNameFromNumber($FIRST_NAME + 1) . $row )->setValue($value->first_name);
-            $worksheet->getCell(getNameFromNumber($MIDDLE_NAME + 1) . $row )->setValue($value->middle_name);
-            $worksheet->getCell(getNameFromNumber($FULLNAME + 1) . $row )->setValue($value->first_name." ".$value->last_name);
-            $worksheet->getCell(getNameFromNumber($ROLE + 1) . $row )->setValue($value->position_name);
-            $worksheet->getCell(getNameFromNumber($SUPERVISOR + 1) . $row )->setValue($value->supervisor_name);
-            $worksheet->getCell(getNameFromNumber($MANAGER + 1) . $row )->setValue($value->manager_name);
-            $worksheet->getCell(getNameFromNumber($DIVISION + 1) . $row )->setValue($value->division_name);
-            $worksheet->getCell(getNameFromNumber($DEPT + 1) . $row )->setValue($value->team_name);
-            $worksheet->getCell(getNameFromNumber($DEPT_CODE + 1) . $row )->setValue($value->dept_code);
-            
-            
+	public function destroy($id)
+	{
+		$employee = User::find($id);
+		$employee->delete();
 
-            $account = ElinkAccount::find($value->account_id);
-            if ($account) 
-            {
-                $worksheet->getCell(getNameFromNumber($ACCOUNT + 1) . $row )->setValue($account->account_name);
-            }
-            
-            $civil_status = $value->civil_status == 1 ? "Single" : (
-                $value->civil_status == 2 ? "Married" : (
-                    $value->civil_status == 3 ? "Separated" : (
-                        $value->civil_status == 4 ? "Anulled" : "Divorced"
-                    )
-                )
-            );
-            $worksheet->getCell(getNameFromNumber($EXT + 1) . $row )->setValue($value->ext);
-            $worksheet->getCell(getNameFromNumber($ALIAS + 1) . $row )->setValue($value->alias);
-            $worksheet->getCell(getNameFromNumber($PROD_DATE + 1) . $row )->setValue(date("F d, Y", strtotime($value->prod_date)));
-            $worksheet->getCell(getNameFromNumber($STATUS + 1) . $row )->setValue($value->deleted_at == NULL && $value->status == 1 ? 'Active' : 'Inactive');
-            $worksheet->getCell(getNameFromNumber($HIRED_DATE + 1) . $row )->setValue(date("F d, Y", strtotime($value->hired_date)));
-            $worksheet->getCell(getNameFromNumber($WAVE + 1) . $row )->setValue($value->wave);
-            $worksheet->getCell(getNameFromNumber($EMAIL + 1) . $row )->setValue($value->email);
-            $worksheet->getCell(getNameFromNumber($GENDER + 1) . $row )->setValue(genderStringValue($value->gender));
-            $worksheet->getCell(getNameFromNumber($BDAY + 1) . $row )->setValue(date("F d, Y", strtotime($value->birth_date)));
-            $worksheet->getCell(getNameFromNumber($CITYADD + 1) . $row )->setValue($value->address);
-            $worksheet->getCell(getNameFromNumber($HOMEADD + 1) . $row )->setValue($value->town_address);
-            $worksheet->getCell(getNameFromNumber($CIVILSTAT + 1) . $row )->setValue($civil_status);
-            $worksheet->getCell(getNameFromNumber($CONTACTNUM + 1) . $row )->setValue($value->contact_number);
-            $worksheet->getCell(getNameFromNumber($INCASECON + 1) . $row )->setValue($value->em_con_name);
-            $worksheet->getCell(getNameFromNumber($INCASEREL + 1) . $row )->setValue($value->em_con_rel);
-            $worksheet->getCell(getNameFromNumber($INCASERELCON + 1) . $row )->setValue($value->em_con_num);
-            $worksheet->getCell(getNameFromNumber($INCASERELADD + 1) . $row )->setValue($value->em_con_address);
-            $worksheet->getCell(getNameFromNumber($TIN + 1) . $row )->setValue($value->tin);
-            $worksheet->getCell(getNameFromNumber($SSS + 1) . $row )->setValue($value->sss);
-            $worksheet->getCell(getNameFromNumber($PHILHEALTH + 1) . $row )->setValue($value->philhealth);
-            $worksheet->getCell(getNameFromNumber($HMDF + 1) . $row )->setValue($value->pagibig);
-            $worksheet->getCell(getNameFromNumber($RESIGNATIONDATE + 1) . $row )->setValue($value->deleted_at);
+		return redirect()->back()->with('success', "Successfully deleted employee record");
+	}
 
+	public function changepassword(Request $request, $id)
+	{
+		return $this->authModel->changepassword($request, $id);
+	}
 
-            $row++;
-        }
+	public function savepassword(Request $request, $id)
+	{
+		return $this->authModel->savepassword($request, $id);
+	}
 
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
-        $timestamp = date('m_d_Y_G_i');
-        $writer->save("./public/excel/report/inactives-". $timestamp . ".xlsx");
+	public function employees(Request $request)
+	{
+		app('App\Http\Controllers\EmailRemindersController')->index();
 
-        $file_name = 'inactives-'.$timestamp.'.xlsx';
+		return $this->model->employees($request);
+	}
 
-        return redirect('public/excel/report/' . $file_name);
-        
-    }
-    
+	public function searchMovements(Request $request)
+	{
+		return MovementsTransfer::where('mv_employee_no',$request->get("emp_no"))->leftJoin('employee_department','movements.mv_dept','=','employee_department.id')->orderBy('mv_transfer_date', 'DESC')->get();
+	}
+
+	public function saveMovements(Request $request)
+	{
+		$obj = new MovementsTransfer();
+		$obj->mv_employee_no    = $request->post('mv_employee_no');
+		$obj->mv_dept           = $request->post('mv_dept');
+		$obj->mv_position       = $request->post('mv_position');
+		$obj->mv_transfer_date  = date('Y-m-d', strtotime($request->post('mv_transfer_date')));
+
+		$sql = DB::select("
+			SELECT
+				department_code
+			FROM
+				elink_employee_directory.employee_department
+			WHERE
+				id = $obj->mv_dept
+			LIMIT 1;"
+		);
+
+		if(count($sql) > 0):
+			$userarray['team_name'] = $request->post('dept_name');
+			$userarray['dept_code'] = $sql[0]->department_code;
+			$userarray['position_name'] = $obj->mv_position;
+		endif;
+
+		$affected = DB::table('employee_info')->where('id', $request->post('mv_employee_no'))->update($userarray);
+
+		return ['status' => $obj->save(), 'User' => $affected];
+	}
+
+	public function downloadInactive(Request $request)
+	{
+		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+		$worksheet = $spreadsheet->getActiveSheet();
+		//$employees = User::allExceptSuperAdmin()->get();
+		$employees = $this->model->download_inactive($request);
+		$COUNT = 0;
+		$EID = 1;
+		$LAST_NAME = 2;
+		$FIRST_NAME = 3;
+		$MIDDLE_NAME = 4;
+		$FULLNAME = 5;
+		$ROLE = 6;
+		$SUPERVISOR = 7;
+		$MANAGER = 8;
+		$DIVISION = 9;
+		$DEPT = 10;
+		$DEPT_CODE = 11;
+		$ACCOUNT = 12;
+		$EXT = 13;
+		$ALIAS = 14;
+		$PROD_DATE = 15;
+		$STATUS = 16;
+		$HIRED_DATE = 17;
+		$WAVE = 18;
+		$EMAIL = 19;
+		$GENDER = 20;
+		$BDAY = 21;
+		$CITYADD = 22;
+		$HOMEADD = 23;
+		$CIVILSTAT = 24;
+		$CONTACTNUM = 25;
+		$INCASECON = 26;
+		$INCASEREL = 27;
+		$INCASERELCON = 28;
+		$INCASERELADD = 29;
+		$TIN = 30;
+		$SSS = 31;
+		$PHILHEALTH = 32;
+		$HMDF = 33;
+		$RESIGNATIONDATE = 34;
+
+		$worksheet->getCell(getNameFromNumber($COUNT + 1) . 1 )->setValue('Count'); 
+		$worksheet->getCell(getNameFromNumber($EID + 1) . 1 )->setValue('EID');
+		$worksheet->getCell(getNameFromNumber($LAST_NAME + 1) . 1 )->setValue('Last Name');
+		$worksheet->getCell(getNameFromNumber($FIRST_NAME + 1) . 1 )->setValue('First Name');
+		$worksheet->getCell(getNameFromNumber($MIDDLE_NAME + 1) . 1 )->setValue('Middle Name');
+		$worksheet->getCell(getNameFromNumber($FULLNAME + 1) . 1 )->setValue('Name');
+		$worksheet->getCell(getNameFromNumber($ROLE + 1) . 1 )->setValue('Role');
+		$worksheet->getCell(getNameFromNumber($SUPERVISOR + 1) . 1 )->setValue('Supervisor');
+		$worksheet->getCell(getNameFromNumber($MANAGER + 1) . 1 )->setValue('Manager');
+		$worksheet->getCell(getNameFromNumber($DIVISION + 1) . 1 )->setValue('Division');
+		$worksheet->getCell(getNameFromNumber($DEPT + 1) . 1 )->setValue('Dept');
+		$worksheet->getCell(getNameFromNumber($DEPT_CODE + 1) . 1 )->setValue('Dept Code');
+		$worksheet->getCell(getNameFromNumber($ACCOUNT + 1) . 1 )->setValue('Account');
+		$worksheet->getCell(getNameFromNumber($EXT + 1) . 1 )->setValue('EXT');
+		$worksheet->getCell(getNameFromNumber($ALIAS + 1) . 1 )->setValue('Phone/Pen Names');
+		$worksheet->getCell(getNameFromNumber($PROD_DATE + 1) . 1 )->setValue('Prod Date');
+		$worksheet->getCell(getNameFromNumber($STATUS + 1) . 1 )->setValue('Status');
+		$worksheet->getCell(getNameFromNumber($HIRED_DATE + 1) . 1 )->setValue('Hire Date');
+		$worksheet->getCell(getNameFromNumber($WAVE + 1) . 1 )->setValue('Wave');
+		$worksheet->getCell(getNameFromNumber($EMAIL + 1) . 1 )->setValue('Email');
+		$worksheet->getCell(getNameFromNumber($GENDER + 1 ) . 1 )->setValue('Gender');
+		$worksheet->getCell(getNameFromNumber($BDAY + 1) . 1 )->setValue('Bday');
+		$worksheet->getCell(getNameFromNumber($CITYADD + 1) . 1 )->setValue('City Address');
+		$worksheet->getCell(getNameFromNumber($HOMEADD + 1) . 1 )->setValue('Home Address');
+		$worksheet->getCell(getNameFromNumber($CIVILSTAT + 1) . 1 )->setValue('Civil Stat');
+		$worksheet->getCell(getNameFromNumber($CONTACTNUM + 1) . 1 )->setValue('Number');
+		$worksheet->getCell(getNameFromNumber($INCASECON + 1) . 1 )->setValue('Contact Person');
+		$worksheet->getCell(getNameFromNumber($INCASEREL + 1) . 1 )->setValue('Relationship');
+		$worksheet->getCell(getNameFromNumber($INCASERELCON + 1) . 1 )->setValue('Number');
+		$worksheet->getCell(getNameFromNumber($INCASERELADD + 1) . 1 )->setValue('Address');
+		$worksheet->getCell(getNameFromNumber($TIN + 1) . 1 )->setValue('TIN');
+		$worksheet->getCell(getNameFromNumber($SSS + 1) . 1 )->setValue('SSS');
+		$worksheet->getCell(getNameFromNumber($PHILHEALTH + 1) . 1 )->setValue('Philhealth');
+		$worksheet->getCell(getNameFromNumber($HMDF + 1) . 1 )->setValue('HMDF');
+		$worksheet->getCell(getNameFromNumber($RESIGNATIONDATE + 1) . 1 )->setValue('Resignation Date');
+
+		$worksheet->getColumnDimension(getNameFromNumber($COUNT + 1))->setWidth(7);
+		$worksheet->getColumnDimension(getNameFromNumber($EID + 1))->setWidth(20);
+		$worksheet->getColumnDimension(getNameFromNumber($EXT + 1))->setWidth(5);
+		$worksheet->getColumnDimension(getNameFromNumber($ALIAS + 1))->setWidth(30);
+		$worksheet->getColumnDimension(getNameFromNumber($LAST_NAME + 1))->setWidth(20);
+		$worksheet->getColumnDimension(getNameFromNumber($FIRST_NAME + 1))->setWidth(20);
+		$worksheet->getColumnDimension(getNameFromNumber($MIDDLE_NAME + 1))->setWidth(20);
+		$worksheet->getColumnDimension(getNameFromNumber($FULLNAME + 1))->setWidth(40);
+		$worksheet->getColumnDimension(getNameFromNumber($SUPERVISOR + 1))->setWidth(30);
+		$worksheet->getColumnDimension(getNameFromNumber($MANAGER + 1))->setWidth(30);
+		$worksheet->getColumnDimension(getNameFromNumber($DEPT + 1))->setWidth(25);
+		$worksheet->getColumnDimension(getNameFromNumber($DEPT_CODE + 1))->setWidth(15);
+		$worksheet->getColumnDimension(getNameFromNumber($DIVISION + 1))->setWidth(15);
+		$worksheet->getColumnDimension(getNameFromNumber($ROLE + 1))->setWidth(30);
+		$worksheet->getColumnDimension(getNameFromNumber($ACCOUNT + 1))->setWidth(15);
+		$worksheet->getColumnDimension(getNameFromNumber($PROD_DATE + 1))->setWidth(15);
+		$worksheet->getColumnDimension(getNameFromNumber($STATUS + 1))->setWidth(10);
+		$worksheet->getColumnDimension(getNameFromNumber($HIRED_DATE + 1))->setWidth(10);
+		$worksheet->getColumnDimension(getNameFromNumber($WAVE + 1))->setWidth(8);
+		$worksheet->getColumnDimension(getNameFromNumber($EMAIL + 1))->setWidth(30);
+		$worksheet->getColumnDimension(getNameFromNumber($GENDER + 1))->setWidth(10);
+		$worksheet->getColumnDimension(getNameFromNumber($BDAY + 1))->setWidth(10);
+
+		$row = 2;
+		foreach ($employees as $index => $value) {
+			$worksheet->getCell(getNameFromNumber($COUNT + 1) . $row )->setValue($row-1);
+			$worksheet->getCell(getNameFromNumber($EID + 1) . $row )->setValue($value->eid);
+			$worksheet->getCell(getNameFromNumber($LAST_NAME + 1) . $row )->setValue($value->last_name);
+			$worksheet->getCell(getNameFromNumber($FIRST_NAME + 1) . $row )->setValue($value->first_name);
+			$worksheet->getCell(getNameFromNumber($MIDDLE_NAME + 1) . $row )->setValue($value->middle_name);
+			$worksheet->getCell(getNameFromNumber($FULLNAME + 1) . $row )->setValue($value->first_name." ".$value->last_name);
+			$worksheet->getCell(getNameFromNumber($ROLE + 1) . $row )->setValue($value->position_name);
+			$worksheet->getCell(getNameFromNumber($SUPERVISOR + 1) . $row )->setValue($value->supervisor_name);
+			$worksheet->getCell(getNameFromNumber($MANAGER + 1) . $row )->setValue($value->manager_name);
+			$worksheet->getCell(getNameFromNumber($DIVISION + 1) . $row )->setValue($value->division_name);
+			$worksheet->getCell(getNameFromNumber($DEPT + 1) . $row )->setValue($value->team_name);
+			$worksheet->getCell(getNameFromNumber($DEPT_CODE + 1) . $row )->setValue($value->dept_code);
+
+			$account = ElinkAccount::find($value->account_id);
+			if ($account) {
+				$worksheet->getCell(getNameFromNumber($ACCOUNT + 1) . $row )->setValue($account->account_name);
+			}
+
+			$civil_status = 'Divorced';
+			switch($value->civil_status) {
+				case 1:
+				$civil_status = 'Single';
+					break;
+				case 2:
+				$civil_status = 'Married';
+					break;
+				case 3:
+				$civil_status = 'Separated';
+					break;
+				case 4:
+				$civil_status = 'Anulled';
+					break;
+			}
+
+			$worksheet->getCell(getNameFromNumber($EXT + 1) . $row )->setValue($value->ext);
+			$worksheet->getCell(getNameFromNumber($ALIAS + 1) . $row )->setValue($value->alias);
+			$worksheet->getCell(getNameFromNumber($PROD_DATE + 1) . $row )->setValue(date("F d, Y", strtotime($value->prod_date)));
+			$worksheet->getCell(getNameFromNumber($STATUS + 1) . $row )->setValue($value->deleted_at == NULL && $value->status == 1 ? 'Active' : 'Inactive');
+			$worksheet->getCell(getNameFromNumber($HIRED_DATE + 1) . $row )->setValue(date("F d, Y", strtotime($value->hired_date)));
+			$worksheet->getCell(getNameFromNumber($WAVE + 1) . $row )->setValue($value->wave);
+			$worksheet->getCell(getNameFromNumber($EMAIL + 1) . $row )->setValue($value->email);
+			$worksheet->getCell(getNameFromNumber($GENDER + 1) . $row )->setValue(genderStringValue($value->gender));
+			$worksheet->getCell(getNameFromNumber($BDAY + 1) . $row )->setValue(date("F d, Y", strtotime($value->birth_date)));
+			$worksheet->getCell(getNameFromNumber($CITYADD + 1) . $row )->setValue($value->address);
+			$worksheet->getCell(getNameFromNumber($HOMEADD + 1) . $row )->setValue($value->town_address);
+			$worksheet->getCell(getNameFromNumber($CIVILSTAT + 1) . $row )->setValue($civil_status);
+			$worksheet->getCell(getNameFromNumber($CONTACTNUM + 1) . $row )->setValue($value->contact_number);
+			$worksheet->getCell(getNameFromNumber($INCASECON + 1) . $row )->setValue($value->em_con_name);
+			$worksheet->getCell(getNameFromNumber($INCASEREL + 1) . $row )->setValue($value->em_con_rel);
+			$worksheet->getCell(getNameFromNumber($INCASERELCON + 1) . $row )->setValue($value->em_con_num);
+			$worksheet->getCell(getNameFromNumber($INCASERELADD + 1) . $row )->setValue($value->em_con_address);
+			$worksheet->getCell(getNameFromNumber($TIN + 1) . $row )->setValue($value->tin);
+			$worksheet->getCell(getNameFromNumber($SSS + 1) . $row )->setValue($value->sss);
+			$worksheet->getCell(getNameFromNumber($PHILHEALTH + 1) . $row )->setValue($value->philhealth);
+			$worksheet->getCell(getNameFromNumber($HMDF + 1) . $row )->setValue($value->pagibig);
+			$worksheet->getCell(getNameFromNumber($RESIGNATIONDATE + 1) . $row )->setValue($value->deleted_at);
+
+		$row++;
+		}
+
+		$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+		$timestamp = date('m_d_Y_G_i');
+		$writer->save("./public/excel/report/inactives-". $timestamp . ".xlsx");
+
+		$file_name = 'inactives-'.$timestamp.'.xlsx';
+
+		return redirect('public/excel/report/' . $file_name);
+	}
+
     public function downloadFilter(Request $request){
         
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
@@ -700,27 +615,20 @@ class EmployeeInfoController extends Controller
 
     public function myprofile(Request $request)
     {
-        /*
-        if (Auth::user()->isAdmin()) {
-            return view('employee.view')->with('employee', Auth::user());
-        }
-        return view('auth.profile.view')->with('employee', Auth::user())
-            ->with('my_requests', LeaveRequest::where('filed_by_id', Auth::user()->id)->get());
-         * 
-         */
-            $employee = Auth::user();
-            $id = Auth::user()->id;
-            $obj = EmployeeInfoDetails::where('employee_id',$id)->get();
-             $dep = EmployeeDependents::where('employee_num',$id)->where('status',1)->get();
-            if(count($obj) > 0)
-                $details = $obj[0];
-            else
-                $details = (object)[
-                    'town_address'      => '',
-                    'em_con_name'       => '',
-                    'em_con_rel'        => '',
-                    'em_con_num'        => ''
-                ];
+        $employee = Auth::user();
+        $id = Auth::user()->id;
+        $obj = EmployeeInfoDetails::where('employee_id',$id)->get();
+        $dep = EmployeeDependents::where('employee_num',$id)->where('status',1)->get();
+        if(count($obj) > 0)
+            $details = $obj[0];
+        else
+            $details = (object)[
+                'town_address'      => '',
+                'em_con_name'       => '',
+                'em_con_rel'        => '',
+                'em_con_num'        => ''
+            ];
+
         return view('employee.view-admin')           
             ->with('employee', $employee)
             ->with('supervisors', User::all())
@@ -728,7 +636,8 @@ class EmployeeInfoController extends Controller
             ->with('accounts', ElinkAccount::all())
             ->with('details',$details)
             ->with('linkees', $employee->getLinkees())
-            ->with('dependents',$dep);
+            ->with('dependents',$dep)
+            ->with('myprofile', 1);
     }
     
     /*

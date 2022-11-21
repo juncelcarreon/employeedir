@@ -711,132 +711,128 @@ class CoachingController extends Controller{
     }
     
     public function viewGTKY(Request $req,$id){
-        if($this->isManagement()){
-            if($req->post("update")){
-                $object = [
-                    "lnk_date"          => $req->post("lnk_date"), 
-                    "lnk_linker"        => $req->post("lnk_linker"), 
-                    "lnk_linker_name"   => $req->post("lnk_linker_name"), 
-                    "lnk_linker_email"  => $req->post("lnk_linker_email"), 
-                    "lnk_linkee"        => $req->post("lnk_linkee"), 
-                    "lnk_linkee_name"   => $req->post("lnk_linkee_name"),
-                    "lnk_linkee_email"  => $req->post("lnk_linkee_email"),
-                    "lnk_type"          => $req->post("lnk_type"),
-                    "gtk_link_id"       => $req->post("gtk_link_id"),
-                    "gtk_com_num"       => $req->post("gtk_com_num"),
-                    "gtk_address"       => $req->post("gtk_address"),
-                    "gtk_bday"          => $req->post("gtk_bday"),
-                    "gtk_bplace"        => $req->post("gtk_bplace"),
-                    "gtk_mobile"        => $req->post("gtk_mobile"),
-                    "gtk_email"         => $req->post("gtk_email"),
-                    "gtk_civil_stat"    => $req->post("gtk_civil_stat"),
-                    "gtk_fav_thing"     => $req->post("gtk_fav_thing"),
-                    "gtk_fav_color"     => $req->post("gtk_fav_color"),
-                    "gtk_fav_movie"     => $req->post("gtk_fav_movie"),
-                    "gtk_fav_song"      => $req->post("gtk_fav_song"),
-                    "gtk_fav_food"      => $req->post("gtk_fav_food"),
-                    "gtk_allergic_food" => $req->post("gtk_allergic_food"),
-                    "gtk_allergic_med"  => $req->post("gtk_allergic_med"),
-                    "gtk_learn_style"   => $req->post("gtk_learn_style"),
-                    "gtk_social_style"  => $req->post("gtk_social_style"),
-                    "gtk_motivation"    => $req->post("gtk_motivation"),
-                    "gtk_how_coached"   => $req->post("gtk_how_coached"),
-                    "flag"              => $req->post("save_gtky_session"),
-                    "gtk_strength"      => $req->post("gtk_strength"),
-                    "gtk_improvement"   => $req->post("gtk_improvement"),
-                    "gtk_goals"         => $req->post("gtk_goals"),
-                    "gtk_others"        => $req->post("gtk_others"),
-                    "update"            => 1
-                ];
-                if($this->verifyGTKY($req) == 1)
-                    $this->processSaving($req);
-            }else{
-                // Process from Database
-                $obj = DB::select("
-                    SELECT 
-                        *,
-                        (SELECT 
-                                CONCAT(ei.first_name, ' ', ei.last_name)
-                            FROM
-                                employee_info AS ei
-                            WHERE
-                                ei.id = lm.lnk_linker
-                            LIMIT 1) AS lnk_linker_name,
-                        (SELECT 
-                                email
-                            FROM
-                                employee_info AS ei
-                            WHERE
-                                ei.id = lm.lnk_linker
-                            LIMIT 1) AS lnk_linker_email,
-                        (SELECT 
-                                CONCAT(ei.first_name, ' ', ei.last_name)
-                            FROM
-                                employee_info AS ei
-                            WHERE
-                                ei.id = lm.lnk_linkee
-                            LIMIT 1) AS lnk_linkee_name,
-                        (SELECT 
-                                email
-                            FROM
-                                employee_info AS ei
-                            WHERE
-                                ei.id = lm.lnk_linkee
-                            LIMIT 1) AS lnk_linkee_email
-                    FROM
-                        gtky
-                            LEFT JOIN
-                        linking_master AS lm ON lm.lnk_id = gtky.gtk_link_id
-                    WHERE
-                        gtky.gtk_com_num = '$id'
-                    LIMIT 1;
-                ");
-                $gtky = $obj[0];
-                $object = [
-                    "lnk_date"          => $gtky->lnk_date, 
-                    "lnk_linker"        => $gtky->lnk_linker, 
-                    "lnk_linker_name"   => $gtky->lnk_linker_name, 
-                    "lnk_linker_email"  => $gtky->lnk_linker_email, 
-                    "lnk_linkee"        => $gtky->lnk_linkee, 
-                    "lnk_linkee_name"   => $gtky->lnk_linkee_name,
-                    "lnk_linkee_email"  => $gtky->lnk_linkee_email,
-                    "lnk_type"          => $gtky->lnk_type,
-                    "gtk_link_id"       => $gtky->gtk_link_id,
-                    "gtk_com_num"       => $gtky->gtk_com_num,
-                    "gtk_address"       => $gtky->gtk_address,
-                    "gtk_bday"          => $gtky->gtk_bday,
-                    "gtk_bplace"        => $gtky->gtk_bplace,
-                    "gtk_mobile"        => $gtky->gtk_mobile,
-                    "gtk_email"         => $gtky->gtk_email,
-                    "gtk_civil_stat"    => $gtky->gtk_civil_stat,
-                    "gtk_fav_thing"     => $gtky->gtk_fav_thing,
-                    "gtk_fav_color"     => $gtky->gtk_fav_color,
-                    "gtk_fav_movie"     => $gtky->gtk_fav_movie,
-                    "gtk_fav_song"      => $gtky->gtk_fav_song,
-                    "gtk_fav_food"      => $gtky->gtk_fav_food,
-                    "gtk_allergic_food" => $gtky->gtk_allergic_food,
-                    "gtk_allergic_med"  => $gtky->gtk_allergic_med,
-                    "gtk_learn_style"   => $gtky->gtk_learn_style,
-                    "gtk_social_style"  => $gtky->gtk_social_style,
-                    "gtk_motivation"    => $gtky->gtk_motivation,
-                    "gtk_how_coached"   => $gtky->gtk_how_coached,
-                    "flag"              => 1,
-                    "gtk_strength"      => $gtky->gtk_strength,
-                    "gtk_improvement"   => $gtky->gtk_improvement,
-                    "gtk_goals"         => $gtky->gtk_goals,
-                    "gtk_others"        => $gtky->gtk_others,
-                    "update"            => 1
-                ];
-            }
-            
-            return view('coaching.gtky')
-                ->with("obj",$object)
-                ->with("management",$this->isManagement());
+        if($req->post("update")){
+            $object = [
+                "lnk_date"          => $req->post("lnk_date"), 
+                "lnk_linker"        => $req->post("lnk_linker"), 
+                "lnk_linker_name"   => $req->post("lnk_linker_name"), 
+                "lnk_linker_email"  => $req->post("lnk_linker_email"), 
+                "lnk_linkee"        => $req->post("lnk_linkee"), 
+                "lnk_linkee_name"   => $req->post("lnk_linkee_name"),
+                "lnk_linkee_email"  => $req->post("lnk_linkee_email"),
+                "lnk_type"          => $req->post("lnk_type"),
+                "gtk_link_id"       => $req->post("gtk_link_id"),
+                "gtk_com_num"       => $req->post("gtk_com_num"),
+                "gtk_address"       => $req->post("gtk_address"),
+                "gtk_bday"          => $req->post("gtk_bday"),
+                "gtk_bplace"        => $req->post("gtk_bplace"),
+                "gtk_mobile"        => $req->post("gtk_mobile"),
+                "gtk_email"         => $req->post("gtk_email"),
+                "gtk_civil_stat"    => $req->post("gtk_civil_stat"),
+                "gtk_fav_thing"     => $req->post("gtk_fav_thing"),
+                "gtk_fav_color"     => $req->post("gtk_fav_color"),
+                "gtk_fav_movie"     => $req->post("gtk_fav_movie"),
+                "gtk_fav_song"      => $req->post("gtk_fav_song"),
+                "gtk_fav_food"      => $req->post("gtk_fav_food"),
+                "gtk_allergic_food" => $req->post("gtk_allergic_food"),
+                "gtk_allergic_med"  => $req->post("gtk_allergic_med"),
+                "gtk_learn_style"   => $req->post("gtk_learn_style"),
+                "gtk_social_style"  => $req->post("gtk_social_style"),
+                "gtk_motivation"    => $req->post("gtk_motivation"),
+                "gtk_how_coached"   => $req->post("gtk_how_coached"),
+                "flag"              => $req->post("save_gtky_session"),
+                "gtk_strength"      => $req->post("gtk_strength"),
+                "gtk_improvement"   => $req->post("gtk_improvement"),
+                "gtk_goals"         => $req->post("gtk_goals"),
+                "gtk_others"        => $req->post("gtk_others"),
+                "update"            => 1
+            ];
+            if($this->verifyGTKY($req) == 1)
+                $this->processSaving($req);
         }else{
-	  $result = DB::table('linking_master')->where('lnk_id', $id)->update(['lnk_acknw' => 1]);
-            return back();
-	}
-           // return "You have no access to perform this action";
+            // Process from Database
+            $obj = DB::select("
+                SELECT 
+                    *,
+                    (SELECT 
+                            CONCAT(ei.first_name, ' ', ei.last_name)
+                        FROM
+                            employee_info AS ei
+                        WHERE
+                            ei.id = lm.lnk_linker
+                        LIMIT 1) AS lnk_linker_name,
+                    (SELECT 
+                            email
+                        FROM
+                            employee_info AS ei
+                        WHERE
+                            ei.id = lm.lnk_linker
+                        LIMIT 1) AS lnk_linker_email,
+                    (SELECT 
+                            CONCAT(ei.first_name, ' ', ei.last_name)
+                        FROM
+                            employee_info AS ei
+                        WHERE
+                            ei.id = lm.lnk_linkee
+                        LIMIT 1) AS lnk_linkee_name,
+                    (SELECT 
+                            email
+                        FROM
+                            employee_info AS ei
+                        WHERE
+                            ei.id = lm.lnk_linkee
+                        LIMIT 1) AS lnk_linkee_email
+                FROM
+                    gtky
+                        LEFT JOIN
+                    linking_master AS lm ON lm.lnk_id = gtky.gtk_link_id
+                WHERE
+                    gtky.gtk_com_num = '$id'
+                LIMIT 1;
+            ");
+            $gtky = $obj[0];
+            $object = [
+                "lnk_date"          => $gtky->lnk_date, 
+                "lnk_linker"        => $gtky->lnk_linker, 
+                "lnk_linker_name"   => $gtky->lnk_linker_name, 
+                "lnk_linker_email"  => $gtky->lnk_linker_email, 
+                "lnk_linkee"        => $gtky->lnk_linkee, 
+                "lnk_linkee_name"   => $gtky->lnk_linkee_name,
+                "lnk_linkee_email"  => $gtky->lnk_linkee_email,
+                "lnk_type"          => $gtky->lnk_type,
+                "gtk_link_id"       => $gtky->gtk_link_id,
+                "gtk_com_num"       => $gtky->gtk_com_num,
+                "gtk_address"       => $gtky->gtk_address,
+                "gtk_bday"          => $gtky->gtk_bday,
+                "gtk_bplace"        => $gtky->gtk_bplace,
+                "gtk_mobile"        => $gtky->gtk_mobile,
+                "gtk_email"         => $gtky->gtk_email,
+                "gtk_civil_stat"    => $gtky->gtk_civil_stat,
+                "gtk_fav_thing"     => $gtky->gtk_fav_thing,
+                "gtk_fav_color"     => $gtky->gtk_fav_color,
+                "gtk_fav_movie"     => $gtky->gtk_fav_movie,
+                "gtk_fav_song"      => $gtky->gtk_fav_song,
+                "gtk_fav_food"      => $gtky->gtk_fav_food,
+                "gtk_allergic_food" => $gtky->gtk_allergic_food,
+                "gtk_allergic_med"  => $gtky->gtk_allergic_med,
+                "gtk_learn_style"   => $gtky->gtk_learn_style,
+                "gtk_social_style"  => $gtky->gtk_social_style,
+                "gtk_motivation"    => $gtky->gtk_motivation,
+                "gtk_how_coached"   => $gtky->gtk_how_coached,
+                "flag"              => 1,
+                "gtk_strength"      => $gtky->gtk_strength,
+                "gtk_improvement"   => $gtky->gtk_improvement,
+                "gtk_goals"         => $gtky->gtk_goals,
+                "gtk_others"        => $gtky->gtk_others,
+                "update"            => 1
+            ];
+        }
+
+        return view('coaching.gtky')
+            ->with("obj",$object)
+            ->with("management",$this->isManagement());
+
+       // return "You have no access to perform this action";
     }
     
     public function viewGS(Request $req, $id){

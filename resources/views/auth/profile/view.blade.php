@@ -315,4 +315,9 @@ Employee Information
 @endif
     </div>
 </div>
+<script type="text/javascript">
+$(document).ready(function(){
+    activeMenu($('#menu-separated-employees'));
+});
+</script>
 @endsection
