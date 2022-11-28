@@ -18,12 +18,14 @@
                 Attendance
             </a>
         </li>
+
         <li>
             <a id="menu-company-directives" class="menu-child-item" target="_blank" href="{{ url('/./attachment/directives.pdf') }}">
                 <em class="fa fa-circle-o">&nbsp;</em>
                 Company Directives
             </a>
         </li>
+
         <li>
             <a id="menu-dress-code" class="menu-child-item" target="_blank" href="{{ url('/./attachment/dresscode.pdf') }}">
                 <em class="fa fa-circle-o">&nbsp;</em>
@@ -46,6 +48,7 @@
                 Active Employees
             </a>
         </li>
+
         <li>
             <a id="menu-separated-employees" class="menu-child-item" href="{{url('employees/separated')}}">
                 <em class="fa fa-circle-o">&nbsp;</em>
@@ -72,12 +75,14 @@
                 @endif
             </a>
         </li>
+
         <li>
             <a id="menu-overtime" class="menu-child-item" href="{{url('overtime')}}">
                 <em class="fa fa-circle-o">&nbsp;</em>
                 Overtime
             </a>
         </li>
+
         <li>
             <a id="menu-undertime" class="menu-child-item" href="{{url('undertime')}}">
                 <em class="fa fa-circle-o">&nbsp;</em>
@@ -100,12 +105,14 @@
                 Activities
             </a>
         </li>
+
         <li>
             <a id="menu-events" class="menu-child-item" href="{{url('events')}}">
                 <em class="fa fa-circle-o">&nbsp;</em>
                 Events
             </a>
         </li>
+
         <li>
             <a id="menu-hr-progress" class="menu-child-item" href="{{url('posts')}}">
                 <em class="fa fa-circle-o">&nbsp;</em>
@@ -122,22 +129,22 @@
     </a>
 </li>
 
-<li <?php echo \Request::url() == url('time-keeping') ? 'class="active"' : ''; ?>>
-    <a href="{{url('time-keeping')}}">
+<li>
+    <a id="menu-offline-break-logger" href="{{url('time-keeping')}}">
         <em class="fa fa-clock-o">&nbsp;</em>
         Offline Break Logger
     </a>
 </li>
 
-<li <?php echo \Request::url() == url('sup-view') ? 'class="active"' : ''; ?>>
-    <a href="{{url('sup-view')}}">
+<li>
+    <a id="menu-break-management" href="{{url('sup-view')}}">
        <em class="fa fa-clock-o">&nbsp;</em>
        Break Management 
     </a>
 </li>
 
-<li <?php echo \Request::url() == url('coaching-session') ? 'class="active"' : ''; ?>>
-    <a href="{{url('coaching-session')}}">
+<li>
+    <a id="menu-linking-sessions" href="{{url('coaching-session')}}">
         <em class="fa fa-cogs">&nbsp;</em>
         Linking Sessions
     </a>
@@ -157,22 +164,22 @@
     </a>
 </li>
 
-<li <?php echo \Request::url() == url('setting') ? 'class="active"' : ''; ?>>
-    <a href="{{url('setting')}}">
+<li>
+    <a id="menu-setting" href="{{url('setting')}}">
         <em class="fa fa-cog">&nbsp;</em> 
         Setting
     </a>
 </li>
 
 <li>
-   <a target="_blank" href="{{ url('/./img/company-hierarchy.jpeg') }}">
+   <a id="menu-employee-hierarchy" target="_blank" href="{{ url('/./img/company-hierarchy.jpeg') }}">
         <em class="fa fa-sitemap">&nbsp;</em>
-        Employee hierarchy
+        Employee Hierarchy
     </a>
 </li>
 
 <li>
-    <a href="{{ route('logout')}}">
+    <a id="menu-logout" href="{{ route('logout')}}">
         <em class="fa fa-power-off">&nbsp;</em>
         Logout
     </a>

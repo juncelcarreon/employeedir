@@ -1,12 +1,9 @@
 @extends('layouts.main')
 @section('title')
-Edit Profile
-@endsection
-@section('pagetitle')
-Employee Information / Edit
+Employee > Edit Employee Profile
 @endsection
 @section('content')
-<link rel="stylesheet" href="{{asset('public/css/custom-bootstrap.css')}}">
+<link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
 <style type="text/css">
     .card-title{
         font-size: 16px;
@@ -32,118 +29,247 @@ Employee Information / Edit
     .col-md-9 hr{
         margin: 0px;
     }
+    .section-header h4 {
+        display: inline-block;
+    }
+    .section-subheading{
+        background: #5bc0de !important;
+    }
 </style>
 <br>
 {{ Form::open(array('url' => 'employee_info/' . $employee->id,'files' => true ,'id' => 'edit_employee_form')) }}
 {{ Form::hidden('_method', 'PUT') }}
 {{ csrf_field() }}
-    <div col-md-12>
-        <div class="col-md-3" style="padding-left: 10px !important; padding-right: 10px;">
-            <div class="section-header">
-                <h4>Profile Picture</h4>
+    <div class="col-md-3" style="padding-left: 10px !important; padding-right: 10px;">
+        <div class="section-header">
+            <h4>Profile Picture</h4>
+        </div>
+        <div class="panel panel-container">
+            <div class="row no-padding">
+                <div class="text-center">
+                    <img alt="Profile Image" id="profile_image" style="width: 150px;margin-top: 30px;" src="{{ $employee->profile_img }}">
+                    <br> 
+                    <br>
+                    <label id="bb" class="btn btn-default" style="margin:0 auto;"> Upload Photo
+                        <input id="image_uploader" type="file" class="btn btn-small" value="" onchange="previewFile()"  name="profile_image"/>
+                    </label>    
+                    <h4 class="card-title m-t-10"><?= $employee->fullname() ?></h4>
+                    <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
+                    <h6 class="card-subtitle"><?= $employee->team_name ?></h6>
+                    <hr>
+                </div>
+                <span class="pull-left label-profile">date hired: <i><?= $employee->prettydatehired() ?></i></span>
+                <br>
+                <br>
             </div>
-            <div class="panel panel-container">
-                <div class="row no-padding">
-                    <center>
-                        <img alt="Profile Image" id="profile_image" style="width: 150px;margin-top: 30px;" src="{{ $employee->profile_img }}">
-                        <br> 
-                        <br>
-                        <label id="bb" class="btn btn-default"> Upload Photo
-                            <input id="image_uploader" type="file" class="btn btn-small" value="" onchange="previewFile()"  name="profile_image"/>
-                        </label>    
-                        <h4 class="card-title m-t-10">{{ $employee->fullname() }}</h4>
-                        <h6 class="card-subtitle">{{ $employee->position_name }}</h6>
-                        <h6 class="card-subtitle">{{ $employee->team_name }}</h6>
-                        <hr>
-                    </center>
-                    <span class="pull-left label-profile">date hired: <i>{{ $employee->prettydatehired() }}</i></span>
-                    <br>
-                    <br>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="section-header">
+            <h4>Employee Information</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.personal')
+        </div>
+        <div class="section-header section-subheading">
+            <h4>Other Information</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Father's Name</label>
+                        <input class="form-control" name="fathers_name" value="<?= isset($details->fathers_name) ? $details->fathers_name : "" ?>">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Father's Birthday</label>
+                        <input class="form-control" name="fathers_bday" value="<?= isset($details->fathers_bday) ? date("m/d/Y", strtotime($details->fathers_bday )) : "" ?>" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Complete Mother's Maiden Name</label>
+                        <input class="form-control" name="mothers_name" value="<?= isset($details->mothers_name) ? $details->mothers_name : "" ?>">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Mother's Birthday</label>
+                        <input class="form-control" name="mothers_bday" value="<?= isset($details->mothers_bday) ? date("m/d/Y", strtotime($details->mothers_bday )) : "" ?>" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Spouse's Name</label>
+                        <input class="form-control" placeholder="Spouse's Name" name="spouse_name" value="<?= isset($details->spouse_name) ? $details->spouse_name : "" ?>">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Spouse's Birthday</label>
+                        <input class="form-control" placeholder="Spouse's Birthday" name="spouse_bday" value="<?= $details->spouse_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->spouse_bday )) ?>" autocomplete="off">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
-            <div class="section-header">
-                <h4>Employee Information</h4>
+        <div class="section-header section-subheading">
+            <h4>Dependents Information</h4>
+        </div>
+        <div class="panel panel-body mb-0" id="dependentsDiv">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Dependent's Name</label>
+                        <input class="form-control" name="dependent_name[]" value="<?php echo count($dependents) > 0 ? $dependents[0]->dependent : "" ?>">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Birthday</label>
+                        <input class="form-control datepicker" name="dependent_bday[]" value="<?php echo count($dependents) > 0 ? date("m/d/Y",strtotime($dependents[0]->bday)) : "" ?>" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Generali Number</label>
+                        <input class="form-control" name="generali_num[]" value="<?php echo count($dependents) > 0 ? $dependents[0]->generali_num : "" ?>" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>&nbsp;</label><br>
+                        <button class="btn btn-primary add-dependent">Add Dependent</button>
+                    </div>
+                </div>
             </div>
-            <div class="panel panel-container" style="padding-top: 0px">
-                <div class="panel-body"> 
-                    <label>Personal
-                    <small class="asterisk-required" style="margin-left: 15px;font-size: 11px;">
-                        required fields
-                    </small></label>
-                    <hr>    
-                    <br> 
-                    <div class="col-md-12">
-                        @include('employee.fields.personal')
-                        <br>
-                        <br>
+        </div>
+        <div class="section-header section-subheading">
+            <h4>In Case of Emergency</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>In case of emergency please contact.</label>
+                        <input type="text" name="em_con_name" class="form-control" value="<?= @$details->em_con_name ?>">
                     </div>
-                    <div class="col-md-12">
-                        <br>
-                        <br>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Relationship</label>
+                        <input type="text" name="em_con_rel" class="form-control" value="<?= @$details->em_con_rel ?>">
                     </div>
-                    <br>
-                    <br>
-                    <label>User Access</label>
-                    <hr>
-                    <br>
-                    <div class="col-md-12">
-                        @include('employee.fields.user_access')
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="text" name="em_con_num" class="form-control" value="<?= @$details->em_con_num ?>">
                     </div>
-                    <label>Job Related</label>
-                    <hr>
-                    <br>
-                    <div class="col-md-12">
-                        @include('employee.fields.job_related')
-                        <br>
-                        <br>
-                        <br>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea name="em_con_address" class="form-control" rows="4"><?= @$details->em_con_address ?></textarea>
                     </div>
-                    <div class="col-md-12">
-                    </div>
-                    <label>Government Numbers</label>
-                    <hr>
-                    <br>
-                    <div class="col-md-12 no-padding" >
-                        @include('employee.fields.government')
-                        <br>
-                        <br>
-                    </div>
-                    <div class="col-md-12" id="">
-                        <br>
-                    </div>
-                    <label>Login Credentials</label>
-                    <hr>
-                    <br>
-                    <br>
-                    <div class="col-md-12">
-                        @include('employee.fields.login')
-                        <br>
-                    </div>
-                    <div class="col-md-12">
-                        <br>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <input type="submit" class="btn btn-primary" value="Save" />
-                                                 
-                                </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-header section-subheading">
+            <h4>User Access</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.user_access')
+        </div>
+        <div class="section-header section-subheading">
+            <h4>Linkees</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="my-2 d-flex gap-2 p-2" style="width: 100%;flex-wrap: wrap;" id="linkees">
+                        <?php
+                        foreach($linkees as $linkee) {
+                        ?>
+                            <div class="border border-success rounded-pill p-1" id="linkee-<?= $linkee->id ?>" style="font-size: 12px; min-width:100px;">
+                                <input type="hidden" name="linkee-<?= $linkee->id ?>" value="<?= $linkee->id ?>">
+                                <span class="ms-2"><?= $linkee->last_name ?>, <?= $linkee->first_name ?></span>
+                                <button type="button" class="btn btn-sm" onclick="deleteNodeAndData(document.getElementById('linkee-<?= $linkee->id ?>'))">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </button>
                             </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                    <div class="d-flex gap-2" style="max-width: 80%;">
+                    <?php
+                    if(Auth::user()->isAdmin() || Auth::user()->isHR()) {
+                    ?>
+                        <select name="adtl_linkees" id="linkees_list" data-val="1" class="select2 process_linkee form-control">
+                            <option value="">Select a Linkee</option>
+                            <?php
+                            foreach($supervisors as $s) {
+                            ?>
+                                <option value="<?= $s->id ?>"><?= $s->fullname() ?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                        <div>
+                            <button type="button" id="addLinkeeBtn" class="btn btn-primary ">Add a Linkee</button>
+                        </div>
+                    <?php
+                    }
+                    ?>
+                    </div>
+                    <template id="linkee_template">
+                        <div class="border border-success rounded-pill p-2" id="linkee-" style="font-size: 12px; min-width:100px;">
+                            <input type="hidden" name="linkee-" value="">
+                            <span></span>
+                            <button type="button" class="btn btn-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <div class="section-header section-subheading">
+            <h4>Job Related</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.job_related')
+        </div>
+        <div class="section-header section-subheading">
+            <h4>Government Numbers</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.government')
+        </div>
+        <div class="section-header section-subheading">
+            <h4>Login Credentials</h4>
+        </div>
+        <div class="panel panel-body">
+            @include('employee.fields.login')
+            <div class="col-md-12">
+                <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary" value="Save" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</form>
-
+{{ Form::close() }}
 <!-- Modal -->
 <div class="modal fade" id="modalMovements" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -197,7 +323,6 @@ Employee Information / Edit
 </div>
 @endsection
 @section('scripts')
-
 <script id="tmpl_rowMvmt" type="text/template">
     <tr>
         <td scope="row">~mv_transfer_date~</td>
@@ -205,31 +330,26 @@ Employee Information / Edit
         <td>~mv_position~</td>
     </tr>
 </script>
-
 <script id="tmpl_addDependents" type="text/template">
     <div id="dep_~id~" class="row">
         <div class="col-md-3 form-group">
             <label>Dependent's Name</label>
-            <br>
             <input id="dep_name_~id~" class="form-control" name="dependent_name[]" value="">
         </div>
         <div class="col-md-3 form-group">
             <label>Birthday</label>
-            <br>
             <input id="dep_bday_~id~" class="form-control datepicker" name="dependent_bday[]" value="" autocomplete="off">
         </div>
         <div class="col-md-3 form-group">
             <label>Generali Number</label>
-            <br>
-            <input class="form-control" name="generali_num[]" value="<?php echo count($dependents) > 0 ? $dependents[0]->generali_num : "" ?>" autocomplete="off">
+            <input class="form-control" name="generali_num[]" value="" autocomplete="off">
         </div>
         <div class="col-md-3 form-group" style="vertical-align: middle;">
-            <br>
+            <label>&nbsp;</label><br>
             <a href="#dependentsDiv" class="btn btn-danger" data-id="~id~" onclick="removeThisDependent(this)">Remove Dependent</a>
         </div>
     </div>
 </script>
-
 <script id="tmpl_addLinkee" type="text/template">
     <div id="linkee_row_~id~" class="row">
         <div class="col-md-5">
@@ -237,11 +357,11 @@ Employee Information / Edit
                 <select id="sl_linkee_~id~" data-val="~id~" name="adtl_linkees[]" class="select2 process_linkee form-control">
                     <option value="0">Select a Linkee</option>
                     <?php
-                    foreach($supervisors as $s):
+                    foreach($supervisors as $s) {
                     ?>
-                    <option value="{{ $s->id }}">{{$s->fullname()}}</option>
+                    <option value="<?= $s->id ?>"><?= $s->fullname() ?></option>
                     <?php
-                    endforeach;
+                    }
                     ?>
                 </select>
                 <input type="hidden" id="hidden_id_~id~" value="">
@@ -252,59 +372,149 @@ Employee Information / Edit
         </div>
     </div>
 </script>
+<script type="text/javascript">
+var changed = false;
+var ctr = 1;
+var emp_no = {{ @$employee->id }};
+var csrf_token = $('meta[name="csrf-token"]').attr('content');
+var ctr_linkee = 2;
 
- <script type="text/javascript">
-    var changed = false;
-    var ctr = 1;
-    var emp_no = {{ @$employee->id }};
-    var csrf_token = $('meta[name="csrf-token"]').attr('content');
-    var ctr_linkee = 2;
+$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+    if (options.type.toLowerCase() === "post") {
+        options.data = options.data || "";
+        options.data += options.data?"&":"";
+        options.data += "_token=" + encodeURIComponent(csrf_token);
+    }
+});
 
+window.onbeforeunload = function(){
+    if(changed){
+        return '';
+    }
+}
+
+const createNodeUsingTemplate = ({data}) => {
+    let cloneTemplate = document.getElementById('linkee_template').content.cloneNode(true)
+    let app = document.getElementById('linkees');
+
+    let div = cloneTemplate.querySelector('div');
+    let span = cloneTemplate.querySelector('span');
+    let button = cloneTemplate.querySelector('button');
+    let input = cloneTemplate.querySelector('input');
+
+    div.id = "linkee-"+data.id
+    input.name = "linkee-"+data.id
+    input.value = data.id
+    span.innerText = data.last_name +" "+data.first_name
+    app.appendChild(cloneTemplate)
+    button.setAttribute("onclick",`deleteNodeAndData(document.getElementById('${div.id}'))`)
+}
+
+const deleteNodeAndData = async(node) => {
+    let input = node.querySelector('input')
+
+    let confirmmed = confirm('Are you sure you would like to remove this linkee?')
+    if(confirmmed){
+        let response = await fetch('{{route('remove-linkees')}}',{
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                '_token': '{{csrf_token()}}',
+                'adtl_linkee': input.value,
+                'adtl_linker': '{{$employee->id}}'
+            })
+        });
+
+        response = await response.json()
+        if(response.data){
+            node.remove();
+        }
+    }
+}
+
+document.getElementById('addLinkeeBtn').addEventListener('click', async(e) => {
+    e.preventDefault();
+
+    let linkee = document.getElementById('linkees_list').value;
+    let response = await fetch('{{route('add-linkees')}}', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            '_token': '{{csrf_token()}}',
+            'adtl_linker': '{{$employee->id}}',
+            'adtl_linkee': linkee,
+            'adtl_row': '1',
+        })
+    });
+
+    response = await response.json()
+    if(response.data){
+        createNodeUsingTemplate(response)
+    }
+});
+
+function removeThisLinkee(id){
+    console.log(id);
+}
+
+function removeThisDependent(obj){
+    
+    var id = $(obj).data('id');
+    $("#dep_" + id).remove();
+}
+
+function addDep(){
+    var template = document.getElementById("tmpl_addDependents").innerHTML;
+    var js_tmpl = "";
+    js_tmpl = template.replace(/~id~/g,ctr);
+    $("#dependentsDiv").append(js_tmpl);
+    console.log('You Clicked Here');
+    $("#dep_bday_" + ctr).datepicker({
+        changeYear  : true,
+        changeMonth : true,
+        yearRange   : "1930:<?php echo date("Y") ?>"
+    });
+    ctr++;
+}
+$(function(){
     activeMenu($('#menu-active-employees'));
 
-    $.ajaxPrefilter(function(options, originalOptions, jqXHR){
-        if (options.type.toLowerCase() === "post") {
-            options.data = options.data || "";
-            options.data += options.data?"&":"";
-            options.data += "_token=" + encodeURIComponent(csrf_token);
+<?php
+    if(count($dependents) > 1) {
+        for($i = 1; $i < count($dependents); $i++) {
+        ?>
+        addDep();
+        $("#dep_name_" + <?php echo $i ?>).val("<?php echo $dependents[$i]->dependent ?>");
+        $("#dep_bday_" + <?php echo $i ?>).val("<?php echo date("m/d/Y",strtotime($dependents[$i]->bday)) ?>")
+        <?php
         }
+    }
+?>
+
+    $("#_team_name").change(function(){
+        var val = $(this).find(':selected').data('_dept_code');
+        $("#_dept_code").val(val);
     });
-    
-    $(function(){
-    <?php
-        if(count($dependents) > 1):
-            for($i = 1; $i < count($dependents); $i++):
-            ?>
-                addDep();
-                $("#dep_name_" + <?php echo $i ?>).val("<?php echo $dependents[$i]->dependent ?>");
-                $("#dep_bday_" + <?php echo $i ?>).val("<?php echo date("m/d/Y",strtotime($dependents[$i]->bday)) ?>")
-            <?php
-            endfor;
-        endif;
-    ?>
-    });
-        $("#_team_name").change(function(){
-            var val = $(this).find(':selected').data('_dept_code');
-            $("#_dept_code").val(val);
-        });
-        
-        $("#btnViewMovments").click(function(x){
+
+    $("#btnViewMovments").click(function(x){
         x.preventDefault();
         $.get('/browse-transfer',{emp_no  : emp_no},function(data){
             var template = document.getElementById("tmpl_rowMvmt").innerHTML;
             var js_tmpl = "";
             $.each(data,function(key,val){
                 js_tmpl += template
-                            .replace(/~mv_transfer_date~/g,val.mv_transfer_date)
-                            .replace(/~department_name~/g,val.department_name)
-                            .replace(/~mv_position~/g,val.mv_position);
+                    .replace(/~mv_transfer_date~/g,val.mv_transfer_date)
+                    .replace(/~department_name~/g,val.department_name)
+                    .replace(/~mv_position~/g,val.mv_position);
             });
             $("#mdl_bodyMvmt").html(js_tmpl);
-                
-            console.log(data);
         },'json');
     });
-    
+
     $("#savingOption").click(function(x){
         x.preventDefault();
         var obj = {
@@ -319,8 +529,8 @@ Employee Information / Edit
             location.reload();
         },'json');
     });
-    
-     $('#edit_employee_form').validate({
+
+    $('#edit_employee_form').validate({
         ignore: [], 
         rules : {
             first_name: {
@@ -339,123 +549,22 @@ Employee Information / Edit
                 maxlength: 50
             }
         }
-     });
+    });
 
-     $('#image_uploader').change(function(){
+    $('#image_uploader').change(function(){
         changed = true;
-     });
+    });
 
-     $('input').change(function(){
+    $('input').change(function(){
         changed = true;
-     });
+    });
 
-     $('select').change(function(){
+    $('select').change(function(){
         changed = true;
-     });
-     $('#edit_employee_form').submit(function(){
+    });
+
+    $('#edit_employee_form').submit(function(){
         changed = false;
-     });
-     
-     window.onbeforeunload = function(){
-        if(changed){
-            return '';
-        }
-     }
-    //  $('input[name=employee_type]').change(function(){
-    //     switch($(this).val()){
-    //         case '2':
-    //              $('select[name=supervisor_id]').parent().parent().show();
-    //              $('select[name=manager_id]').parent().parent().show();
-    //              $('input[name=all_access]').parent().parent().show();
-    //         break;
-    //         case '3':
-    //             console.log('sulod');
-    //             $('select[name=supervisor_id]').parent().parent().hide();
-    //              $('input[name=all_access]').parent().parent().show();
-    //         break;
-    //         case '4':
-    //              $('select[name=supervisor_id]').parent().parent().hide();
-    //              $('select[name=manager_id]').parent().parent().hide();
-    //              $('input[name=all_access]').parent().parent().show();
-    //         break;
-    //         case '1':
-    //              $('select[name=supervisor_id]').parent().parent().show();
-    //              $('select[name=manager_id]').parent().parent().show();
-    //              $('input[name=all_access]').parent().parent().hide();
-    //         break;
-    //     }
-    // });
-    // $('input[name=employee_type]').trigger('change');
-
-   const createNodeUsingTemplate = ({data}) => {
-        let cloneTemplate = document.getElementById('linkee_template').content.cloneNode(true)
-        let app = document.getElementById('linkees');
-
-        let div = cloneTemplate.querySelector('div');
-        let span = cloneTemplate.querySelector('span');
-        let button = cloneTemplate.querySelector('button');
-        let input = cloneTemplate.querySelector('input');
-
-        div.id = "linkee-"+data.id
-        input.name = "linkee-"+data.id
-        input.value = data.id
-        span.innerText = data.last_name +" "+data.first_name
-        app.appendChild(cloneTemplate)
-        button.setAttribute("onclick",`deleteNodeAndData(document.getElementById('${div.id}'))`)
-        // button.addEventListener('click', deleteNodeAndData(document.getElementById(div.id)))
-    }
-
-const deleteNodeAndData = async(node) => {
-        let input = node.querySelector('input')
-
-        let confirmmed = confirm('Are you sure you would like to remove this linkee?')
-        if(confirmmed){
-            let response = await fetch('{{route('remove-linkees')}}',{
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                '_token': '{{csrf_token()}}',
-                'adtl_linkee': input.value,
-                'adtl_linker': '{{$employee->id}}'
-            })
-        });
-
-            response = await response.json()
-            console.log(response);
-            if(response.data){
-                node.remove();
-            }
-        }
-        
-
-        // node.remove()
-    }
-
-    document.getElementById('addLinkeeBtn').addEventListener('click', async(e) => {
-        e.preventDefault();
-
-        let linkee = document.getElementById('linkees_list').value;
-
-        let response = await fetch('{{route('add-linkees')}}', {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                '_token': '{{csrf_token()}}',
-                'adtl_linker': '{{$employee->id}}',
-                'adtl_linkee': linkee,
-                'adtl_row': '1',
-            })
-        });
-
-        response = await response.json()
-        if(response.data){
-            createNodeUsingTemplate(response)
-            // console.log(true)
-        }
     });
 
     $(".is_reg_event").change(function(){
@@ -471,75 +580,28 @@ const deleteNodeAndData = async(node) => {
         $(".reg_div_").show();
     else
         $(".reg_div_").hide();
-    
+
     $(".add-dependent").click(function(e){
         e.preventDefault();
         console.log(ctr);
         addDep();
     });
-    
+
     $(".datepicker").datepicker({
         changeYear  : true,
         changeMonth : true,
         yearRange   : "1930:<?php echo date("Y") ?>"
     });
-    
+
     $(".is_reg_event").change(function(){
         var val = $(this).val();
-        console.log('type event triggered ' + val);
         if(parseInt(val) == 1)
             $(".reg_div_").show();
         else
             $(".reg_div_").hide();
     });
-    
+
     $(".reg_div_").hide();
-    
-   // $(".add-linkee").click(function(e){
-   //     var template = document.getElementById("tmpl_addLinkee").innerHTML;
-   //     var js_tmpl = "";
-   //     js_tmpl = template.replace(/~id~/g,ctr_linkee);
-   //     $("#u_access-div").append(js_tmpl);
-   //     $("#sl_linkee_" + ctr_linkee).select2();
-   //     console.log('You Clicked Here');
-   //     ctr_linkee++;
-   //     e.preventDefault();
-   // });
-    
-   // $(document).on('change', '.process_linkee', function() {
-     //   var emp = $("#active-employee-id").val();
-    //    var val = $(this).val();
-    //    var row = $(this).data('val');
-    //    var obj = {adtl_linker : emp, adtl_linkee : val, adtl_row: row};
-        
-    //    $.get("/process-linkee",obj,function(data){
-    //        console.log(data);
-    //    },"json");
-    //    console.log(obj);
-   // });
-    
-    function removeThisLinkee(id){
-        console.log(id);
-    }
-    
-    function removeThisDependent(obj){
-        
-        var id = $(obj).data('id');
-        $("#dep_" + id).remove();
-    }
-    
-    function addDep(){
-        var template = document.getElementById("tmpl_addDependents").innerHTML;
-        var js_tmpl = "";
-        js_tmpl = template.replace(/~id~/g,ctr);
-        $("#dependentsDiv").append(js_tmpl);
-        console.log('You Clicked Here');
-        $("#dep_bday_" + ctr).datepicker({
-            changeYear  : true,
-            changeMonth : true,
-            yearRange   : "1930:<?php echo date("Y") ?>"
-        });
-        ctr++;
-    }
- </script>
+});
+</script>
 @endsection

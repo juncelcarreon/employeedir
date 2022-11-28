@@ -82,9 +82,8 @@
     }
 
     /* Report Date*/
-    .row.report-date-box div {
-        margin: 0px;
-        padding: 0px;
+    .report-date-box {
+        padding: 10px;
     }
     input[name=report_date] {
         text-align: center;
@@ -133,4 +132,12 @@
 
 .panel-subheading{
     background: #5bc0de !important;
+}
+
+#leave_credits_table_wrapper{
+    margin: 0 auto 30px !important;
+}
+
+#leave_credits_table_filter, #leave_credits_table_info, #leave_credits_table_paginate {
+    display: none !important;
 }

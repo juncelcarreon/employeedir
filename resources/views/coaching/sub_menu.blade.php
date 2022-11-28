@@ -2,26 +2,26 @@
     <?php
     if($management == 1):
     ?>
-    <a href="/coaching-session" style="color: white;">New Linking</a>  |
-    <a href="/linkee-pending" style="color: white;">Pending</a>  |
+    <a href="<?= url('coaching-session') ?>" style="color: white;">New Linking</a>  |
+    <a href="<?= url('linkee-pending') ?>" style="color: white;">Pending</a>  |
     <?php
     else:
     ?>
-    <a href="/coaching-session" style="color: white;">Pending</a> | 
+    <a href="<?= url('coaching-session') ?>" style="color: white;">Pending</a> | 
     <?php
     endif;
     ?>
-    <a href="/gtky-list" style="color: white;">GTKY</a> |
-    <a href="/gs-list" style="color: white;">GS</a> |
-    <a href="/sb-list" style="color: white;">SB</a> |
-    <a href="/sda-list" style="color: white;">SDA</a> |
-    <a href="/view-ql" style="color: white;">QL</a> | 
-    <a href="/list-ce" style="color: white;">CE</a> | 
-    <a href="/acc-list" style="color: white;">AS</a>
+    <a href="<?= url('gtky-list') ?>" style="color: white;">GTKY</a> |
+    <a href="<?= url('gs-list') ?>" style="color: white;">GS</a> |
+    <a href="<?= url('sb-list') ?>" style="color: white;">SB</a> |
+    <a href="<?= url('sda-list') ?>" style="color: white;">SDA</a> |
+    <a href="<?= url('view-ql') ?>" style="color: white;">QL</a> | 
+    <a href="<?= url('list-ce') ?>" style="color: white;">CE</a> | 
+    <a href="<?= url('acc-list') ?>" style="color: white;">AS</a>
     <?php
     if($management == 1):
     ?>
-    | <a href="/own-linking" style="color: white;">Personal</a>
+    | <a href="<?= url('own-linking') ?>" style="color: white;">Personal</a>
     <?php
     endif;
     ?>

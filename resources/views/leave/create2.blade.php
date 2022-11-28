@@ -287,8 +287,6 @@
 </script>
 @endsection
 @section('scripts')
-<!-- <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
-<script>tinymce.init({ selector:'textarea', forced_root_block : 'p' });</script> -->
 <script type="text/javascript">
 var leave_credits = Math.floor({{ $credits->current_credit }});
 var usePay = 0;

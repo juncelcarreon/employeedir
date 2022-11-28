@@ -1,21 +1,27 @@
 @extends('layouts.main')
+@section('title')
+Linking Sessions > Accountability Setting > New Session
+@endsection
+<style>
+.dataTables_wrapper{margin:0 !important;}
+</style>
 @section('content')
 <div class="container-fluid">
     <div class="panel panel-primary">
         @include('coaching.sub_menu')
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-12" style="padding: 12px;"><b style="color: #0000FF; font-size: 16px;"><?php echo $obj['update'] ? "VIEW/UPDATE" : "NEW" ?> Accountability Setting Linking Session</b></div>
+                <div class="col-md-12" style="padding: 12px;"><b style="color: #0000FF; font-size: 16px;"><?= $obj['update'] ? "VIEW/UPDATE" : "NEW" ?> Accountability Setting Linking Session</b></div>
             </div>
             <div class="row">
-                <div class="col-md-6"><!-- Left Panel -->
+                <div class="col-md-6">
                     <form id="form_quick_link" autocomplete="off">
                         <div class="row">
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
                                 <div class="mb-3">
                                     <label for="staffName" class="form-label">Staff</label>
-                                    <input type="text" class="form-control" id="staffName" name="lnk_linkee_name" aria-describedby="Staff" readonly="1" value="<?php echo $obj['lnk_linkee_name'] ?>">
+                                    <input type="text" class="form-control" id="staffName" name="lnk_linkee_name" aria-describedby="Staff" readonly="1" value="<?= $obj['lnk_linkee_name'] ?>">
                                 </div>
                             </div>
                         </div>
@@ -25,7 +31,7 @@
                             <div class="col-md-10">
                                 <div class="mb-3">
                                     <label for="exampleInputDate" class="form-label">Date</label>
-                                    <input type="text" class="form-control" id="exampleInputDate" aria-describedby="Coaching Date" readonly="1" value="<?php echo $obj['lnk_date'] ?>">
+                                    <input type="text" class="form-control" id="exampleInputDate" aria-describedby="Coaching Date" readonly="1" value="<?= $obj['lnk_date'] ?>">
                                 </div>
                             </div>
                         </div>
@@ -38,11 +44,11 @@
                                     <select id="focus_Name" name="ac_focus" class="form-control select2" aria-label="Select a Focus" aria-describedby="rf_focusHelp">
                                         <option value="0" selected>Select a Focus</option>
                                         <?php
-                                        foreach($obj['sel_focus'] as $ss):
+                                        foreach($obj['sel_focus'] as $ss) {
                                         ?>
-                                        <option value="<?php echo $ss->fc_id ?>" <?php echo $obj['ac_focus'] == $ss->fc_id ? " selected" : ""?>><?php echo $ss->fc_desc ?></option>
+                                        <option value="<?= $ss->fc_id ?>" <?= $obj['ac_focus'] == $ss->fc_id ? " selected" : ""?>><?= $ss->fc_desc ?></option>
                                         <?php
-                                        endforeach;
+                                        }
                                         ?>
                                     </select>
                                     <div id="se_focusHelp" class="form-text" style="color: red; display: none;">* Focus is required and necessary.</div>
@@ -55,7 +61,7 @@
                             <div class="col-md-10">
                                 <div class="mb-3">
                                     <label for="exampleInputSkill" class="form-label">Behavior/Skill</label>
-                                    <input type="text" name="ac_skill" class="form-control" value="<?php echo $obj['ac_skill'] ?>">
+                                    <input type="text" name="ac_skill" class="form-control" value="<?= $obj['ac_skill'] ?>">
                                     <div id="se_skillHelp" class="form-text" style="color: red; display: none;">* Behavior/Skill is required and necessary.</div>
                                 </div>
                             </div>
@@ -145,95 +151,97 @@
                             </div>
                         </div>
                     </form>
-                </div><!-- Left Panel End-->
-                <div class="col-md-6"><!-- Right Panel -->
+                </div>
+                <div class="col-md-6">
                 <?php
-                if(isset($obj['linkee_listing'])):
+                if(isset($obj['linkee_listing'])) {
                 ?>
                     <table class="table table-bordered table-hover table-striped">
-                        <tr>
-                            <th>Date</th>
-                            <th>Linker</th>
-                            <th>Focus</th>
-                            <th>Status</th>
-                            <th>View Coaching</th>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Linker</th>
+                                <th>Focus</th>
+                                <th>Status</th>
+                                <th>View Coaching</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         <?php
-                        foreach($obj['linkee_listing'] as $lk):
+                        foreach($obj['linkee_listing'] as $lk) {
                         ?>
-                        <tr>
-                            <td><?php echo date("F d, Y", strtotime($lk->lnk_date)) ?></td>
-                            <td><?php echo $lk->linker ?></td>
-                            <td><?php echo $lk->ac_focus ?></td>
-                            <td><?php echo $lk->status ?></td>
-                            <td><a href="<?php echo $lk->link ?>" class="link-primary" target="_blank">View</a> </td>
-                        </tr>
-                        <?php    
-                        endforeach;
+                            <tr>
+                                <td><?= date("F d, Y", strtotime($lk->lnk_date)) ?></td>
+                                <td><?= $lk->linker ?></td>
+                                <td><?= $lk->ac_focus ?></td>
+                                <td><?= $lk->status ?></td>
+                                <td><a href="<?= url($lk->link) ?>" class="link-primary" target="_blank">View</a> </td>
+                            </tr>
+                        <?php
+                        }
                         ?>
+                        </tbody>
                     </table>
                 <?php
-                endif;
+                }
                 ?>
-                </div><!-- Right Panel -->
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    $(function(){
-        initVals();
-    });
-    
-    function initVals(){ //se_when_use
-        $("#ac_expectation_date").datepicker({
-            changeMonth : true,
-            changeYear  : true
-        });
-        
-        var focus = <?php echo $obj['ac_focus'] ? 1 : 0 ?>;
-        var se_skill = <?php echo $obj['ac_skill'] ? 1 : 0 ?>;
-        var se_when_use = <?php echo $obj['ac_when_use'] ? 1 : 0 ?>;
-        var se_why_use = <?php echo $obj['ac_why_use'] ? 1 : 0 ?>;
-        var se_expectations = <?php echo $obj['ac_expectations'] ? 1 : 0 ?>;
-        var ac_expectation_date = <?php echo $obj['ac_expectation_date'] ? 1 : 0 ?>;
-        var comments = <?php echo $obj['ac_comments'] ? 1 : 0 ?>;
-        var flag = <?php echo $obj['flag'] ? 1 : 0 ?>;
-        
-        if(flag && se_skill == 0){
-            $("#se_skillHelp").show();
-        }
-    
-        if(flag && se_when_use == 0){
-            $("#se_skillWhenHelp").show();
-        }
-        
-        if(flag && se_how_use == 0){
-            $("#se_skillHowHelp").show();
-        }
-        
-        if(flag && se_why_use == 0){
-            $("#se_WhyUseHelp").show();
-        }
-        
-        if(flag && se_expectations == 0){
-            $("#se_ExpectationsHelp").show();
-        }
+function initVals(){
+    var focus = <?= $obj['ac_focus'] ? 1 : 0 ?>;
+    var se_skill = <?= $obj['ac_skill'] ? 1 : 0 ?>;
+    var se_when_use = <?= $obj['ac_when_use'] ? 1 : 0 ?>;
+    var se_why_use = <?= $obj['ac_why_use'] ? 1 : 0 ?>;
+    var se_expectations = <?= $obj['ac_expectations'] ? 1 : 0 ?>;
+    var ac_expectation_date = <?= $obj['ac_expectation_date'] ? 1 : 0 ?>;
+    var comments = <?= $obj['ac_comments'] ? 1 : 0 ?>;
+    var flag = <?= $obj['flag'] ? 1 : 0 ?>;
 
-        if(flag && ac_expectation_date == 0){
-            $("#ac_expectation_dateHelp").show();
-        }
-    
-        if(flag && focus == 0){
-            $("#se_focusHelp").show();
-        }
-        
-        if(flag && comments == 0){
-            $("#rf_commentsHelp").show();
-        }
-        
-        console.log({focus : focus, comments : comments, flag : flag});
-
+    if(flag && se_skill == 0){
+        $("#se_skillHelp").show();
     }
+
+    if(flag && se_when_use == 0){
+        $("#se_skillWhenHelp").show();
+    }
+
+    if(flag && se_how_use == 0){
+        $("#se_skillHowHelp").show();
+    }
+
+    if(flag && se_why_use == 0){
+        $("#se_WhyUseHelp").show();
+    }
+
+    if(flag && se_expectations == 0){
+        $("#se_ExpectationsHelp").show();
+    }
+
+    if(flag && ac_expectation_date == 0){
+        $("#ac_expectation_dateHelp").show();
+    }
+
+    if(flag && focus == 0){
+        $("#se_focusHelp").show();
+    }
+
+    if(flag && comments == 0){
+        $("#rf_commentsHelp").show();
+    }
+}
+$(function(){
+    activeMenu($('#menu-linking-sessions'));
+
+    $("#ac_expectation_date").datepicker({
+        changeMonth : true,
+        changeYear  : true
+    });
+
+    initVals();
+});
 </script>
 @endsection

@@ -1,10 +1,10 @@
 @extends('layouts.main')
 @section('title')
-Linking Form - New
+Linking Sessions > Skill Building > New Session
 @endsection
-@section('pagetitle')
-Linking Form - Supervisor/Manager
-@endsection
+<style>
+.dataTables_wrapper{margin:0 !important;}
+</style>
 @section('content')
 <div class="container-fluid">
     <div class="panel panel-primary">
@@ -21,7 +21,7 @@ Linking Form - Supervisor/Manager
                             <div class="col-md-11">
                                 <div class="mb-3">
                                     <label for="staffName" class="form-label">Staff</label>
-                                    <input type="text" class="form-control" id="staffName" name="lnk_linkee_name" aria-describedby="Staff" readonly="1" value="<?php echo $obj['lnk_linkee_name'] ?>">
+                                    <input type="text" class="form-control" id="staffName" name="lnk_linkee_name" aria-describedby="Staff" readonly="1" value="<?= $obj['lnk_linkee_name'] ?>">
                                 </div>
                             </div>
                         </div>
@@ -31,7 +31,7 @@ Linking Form - Supervisor/Manager
                             <div class="col-md-11">
                                 <div class="mb-3">
                                     <label for="exampleInputDate" class="form-label">Date</label>
-                                    <input type="text" class="form-control" id="exampleInputDate" aria-describedby="Coaching Date" readonly="1" value="<?php echo $obj['lnk_date'] ?>">
+                                    <input type="text" class="form-control" id="exampleInputDate" aria-describedby="Coaching Date" readonly="1" value="<?= $obj['lnk_date'] ?>">
                                 </div>
                             </div>
                         </div>
@@ -126,92 +126,94 @@ Linking Form - Supervisor/Manager
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <br>
-                                    <input type="hidden" name="sb_com_num" value="<?php echo $obj['sb_com_num'] ?>">
-                                    <input type="hidden" name="lnk_linker" value="<?php echo $obj['lnk_linker'] ?>">
-                                    <input type="hidden" name="lnk_linkee" value="<?php echo $obj['lnk_linkee'] ?>">
-                                    <input type="hidden" name="lnk_linkee_email" value="<?php echo $obj['lnk_linkee_email'] ?>">
-                                    <input type="hidden" name="lnk_date" value="<?php echo $obj['lnk_date'] ?>">
-                                    <input type="hidden" name="lnk_type" value="<?php echo $obj['lnk_type'] ?>">
-                                    <input type="hidden" name="lnk_linker_email" value="<?php echo $obj['lnk_linker_email'] ?>">
+                                    <input type="hidden" name="sb_com_num" value="<?= $obj['sb_com_num'] ?>">
+                                    <input type="hidden" name="lnk_linker" value="<?= $obj['lnk_linker'] ?>">
+                                    <input type="hidden" name="lnk_linkee" value="<?= $obj['lnk_linkee'] ?>">
+                                    <input type="hidden" name="lnk_linkee_email" value="<?= $obj['lnk_linkee_email'] ?>">
+                                    <input type="hidden" name="lnk_date" value="<?= $obj['lnk_date'] ?>">
+                                    <input type="hidden" name="lnk_type" value="<?= $obj['lnk_type'] ?>">
+                                    <input type="hidden" name="lnk_linker_email" value="<?= $obj['lnk_linker_email'] ?>">
                                     <input type="submit" name="save_SB_linking" id="btn-process_submit" class="btn btn-lg btn-primary" value="SAVE SKILL BUILDING SESSION">
                                 </div>
                             </div>
                         </div>
                     </form>
-                </div><!-- Left Panel End -->
-                <div class="col-md-6"><!-- Right Panel Begin -->
+                </div>
+                <div class="col-md-6">
                     <table class="table table-bordered table-hover table-striped">
-                        <tr>
-                            <th>Date</th>
-                            <th>Linker</th>
-                            <th>Focus</th>
-                            <th>Status</th>
-                            <th>View Coaching</th>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Linker</th>
+                                <th>Focus</th>
+                                <th>Status</th>
+                                <th>View Coaching</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         <?php
-                        foreach($obj['linkee_listing'] as $lk):
+                        foreach($obj['linkee_listing'] as $lk) {
                         ?>
-                        <tr>
-                            <td><?php echo date("F d, Y", strtotime($lk->lnk_date)) ?></td>
-                            <td><?php echo $lk->linker ?></td>
-                            <td><?php echo $lk->sb_focus ?></td>
-                            <td><?php echo $lk->status ?></td>
-                            <td><a href="<?php echo $lk->link ?>" class="link-primary" target="_blank">View</a> </td>
-                        </tr>
-                        <?php    
-                        endforeach;
+                            <tr>
+                                <td><?= date("F d, Y", strtotime($lk->lnk_date)) ?></td>
+                                <td><?= $lk->linker ?></td>
+                                <td><?= $lk->sb_focus ?></td>
+                                <td><?= $lk->status ?></td>
+                                <td><a href="<?= url($lk->link) ?>" class="link-primary" target="_blank">View</a> </td>
+                            </tr>
+                        <?php
+                        }
                         ?>
+                        </tbody>
                     </table>
-                </div><!-- Right Panel End -->
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    $(function(){
-        initVals();
-    });
-    
-    function initVals(){
-        var focus = <?php echo $obj['sb_focus'] ? 1 : 0 ?>;
-        var sb_takeaway = <?php echo $obj['sb_takeaway'] ? 1 : 0 ?>;
-        var sb_skill = <?php echo $obj['sb_skill'] ? 1 : 0 ?>;
-        var sb_timeframe = <?php echo $obj['sb_timeframe'] ? 1 : 0 ?>;
-        var sb_when_skill = <?php echo $obj['sb_when_skill'] ? 1 : 0 ?>;
-        var sb_how_skill = <?php echo $obj['sb_how_skill'] ? 1 : 0 ?>;
-        var sb_why_skill = <?php echo $obj['sb_why_skill'] ? 1 : 0 ?>;
-        var flag = <?php echo $obj['flag'] ? 1 : 0 ?>;
-        
-        if(flag && focus == 0){
-            $("#sb_focusHelp").show();
-        }
-        
-        if(flag && sb_takeaway == 0){
-            $("#sb_takeawayHelp").show();
-        }
-        
-        if(flag && sb_skill == 0){
-            $("#sb_skillHelp").show();
-        }
-        
-        if(flag && sb_timeframe == 0){
-            $("#sb_timeframeHelp").show();
-        }
-        
-        if(flag && sb_when_skill == 0){
-            $("#sb_when_skillHelp").show();
-        }
-        
-        if(flag && sb_how_skill == 0){
-            $("#sb_how_skillHelp").show();
-        }
-        
-        if(flag && sb_why_skill == 0){
-            $("#sb_why_skillHelp").show();
-        }
-        
-        console.log({focus : focus, comments : comments, flag : flag});
+function initVals(){
+    var focus = <?= $obj['sb_focus'] ? 1 : 0 ?>;
+    var sb_takeaway = <?= $obj['sb_takeaway'] ? 1 : 0 ?>;
+    var sb_skill = <?= $obj['sb_skill'] ? 1 : 0 ?>;
+    var sb_timeframe = <?= $obj['sb_timeframe'] ? 1 : 0 ?>;
+    var sb_when_skill = <?= $obj['sb_when_skill'] ? 1 : 0 ?>;
+    var sb_how_skill = <?= $obj['sb_how_skill'] ? 1 : 0 ?>;
+    var sb_why_skill = <?= $obj['sb_why_skill'] ? 1 : 0 ?>;
+    var flag = <?= $obj['flag'] ? 1 : 0 ?>;
 
+    if(flag && focus == 0){
+        $("#sb_focusHelp").show();
     }
+
+    if(flag && sb_takeaway == 0){
+        $("#sb_takeawayHelp").show();
+    }
+
+    if(flag && sb_skill == 0){
+        $("#sb_skillHelp").show();
+    }
+
+    if(flag && sb_timeframe == 0){
+        $("#sb_timeframeHelp").show();
+    }
+
+    if(flag && sb_when_skill == 0){
+        $("#sb_when_skillHelp").show();
+    }
+
+    if(flag && sb_how_skill == 0){
+        $("#sb_how_skillHelp").show();
+    }
+
+    if(flag && sb_why_skill == 0){
+        $("#sb_why_skillHelp").show();
+    }
+}
+$(function(){
+    activeMenu($('#menu-linking-sessions'));
+
+    initVals();
+});
 </script>
 @endsection

@@ -1,9 +1,6 @@
 @extends('layouts.main')
 @section('title')
-Linking Form - New
-@endsection
-@section('pagetitle')
-Linking Form - Supervisor/Manager
+Linking Sessions > Skill Building > View Session
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -21,7 +18,7 @@ Linking Form - Supervisor/Manager
                             <div class="col-md-11">
                                 <div class="mb-3">
                                     <label for="staffName" class="form-label">Staff</label>
-                                    <input type="text" class="form-control" id="staffName" name="lnk_linkee_name" aria-describedby="Staff" readonly="1" value="<?php echo $obj['lnk_linkee_name'] ?>">
+                                    <input type="text" class="form-control" id="staffName" name="lnk_linkee_name" aria-describedby="Staff" readonly="1" value="<?= $obj['lnk_linkee_name'] ?>">
                                 </div>
                             </div>
                         </div>
@@ -31,7 +28,7 @@ Linking Form - Supervisor/Manager
                             <div class="col-md-11">
                                 <div class="mb-3">
                                     <label for="exampleInputDate" class="form-label">Date</label>
-                                    <input type="text" class="form-control" id="exampleInputDate" aria-describedby="Coaching Date" readonly="1" value="<?php echo $obj['lnk_date'] ?>">
+                                    <input type="text" class="form-control" id="exampleInputDate" aria-describedby="Coaching Date" readonly="1" value="<?= $obj['lnk_date'] ?>">
                                 </div>
                             </div>
                         </div>
@@ -41,12 +38,12 @@ Linking Form - Supervisor/Manager
                             <div class="col-md-11">
                                 <div class="mb-3">
                                     <label for="focus_Name" class="form-label">Focus</label>
-                                    <select id="focus_Name" name="sb_focus" class="form-control select2" aria-label="Select a Focus" aria-describedby="rf_focusHelp" <?php echo intval($obj['update']) == 2 ? 'readonly="1"' : "" ?>>
+                                    <select id="focus_Name" name="sb_focus" class="form-control select2" aria-label="Select a Focus" aria-describedby="rf_focusHelp" <?= intval($obj['update']) == 2 ? 'readonly="1"' : "" ?>>
                                         <option value="0" selected>Select a Focus</option>
                                         <?php
                                         foreach($obj['sel_focus'] as $ss):
                                         ?>
-                                        <option value="<?php echo $ss->fc_id ?>" <?php echo $obj['sb_focus'] == $ss->fc_id ? " selected" : ""?>><?php echo $ss->fc_desc ?></option>
+                                        <option value="<?= $ss->fc_id ?>" <?= $obj['sb_focus'] == $ss->fc_id ? " selected" : ""?>><?= $ss->fc_desc ?></option>
                                         <?php
                                         endforeach;
                                         ?>
@@ -176,50 +173,48 @@ Linking Form - Supervisor/Manager
     </div>
 </div>
 <script type="text/javascript">
-    $(function(){
-        initVals();
-    });
-    
-    function initVals(){
-        var focus = <?php echo $obj['sb_focus'] ? 1 : 0 ?>;
-        var sb_takeaway = <?php echo $obj['sb_takeaway'] ? 1 : 0 ?>;
-        var sb_skill = <?php echo $obj['sb_skill'] ? 1 : 0 ?>;
-        var sb_timeframe = <?php echo $obj['sb_timeframe'] ? 1 : 0 ?>;
-        var sb_when_skill = <?php echo $obj['sb_when_skill'] ? 1 : 0 ?>;
-        var sb_how_skill = <?php echo $obj['sb_how_skill'] ? 1 : 0 ?>;
-        var sb_why_skill = <?php echo $obj['sb_why_skill'] ? 1 : 0 ?>;
-        var flag = <?php echo $obj['flag'] ? 1 : 0 ?>;
-        
-        if(flag && focus == 0){
-            $("#sb_focusHelp").show();
-        }
-        
-        if(flag && sb_takeaway == 0){
-            $("#sb_takeawayHelp").show();
-        }
-        
-        if(flag && sb_skill == 0){
-            $("#sb_skillHelp").show();
-        }
-        
-        if(flag && sb_timeframe == 0){
-            $("#sb_timeframeHelp").show();
-        }
-        
-        if(flag && sb_when_skill == 0){
-            $("#sb_when_skillHelp").show();
-        }
-        
-        if(flag && sb_how_skill == 0){
-            $("#sb_how_skillHelp").show();
-        }
-        
-        if(flag && sb_why_skill == 0){
-            $("#sb_why_skillHelp").show();
-        }
-        
-        console.log({focus : focus, comments : comments, flag : flag});
+function initVals(){
+    var focus = <?= $obj['sb_focus'] ? 1 : 0 ?>;
+    var sb_takeaway = <?= $obj['sb_takeaway'] ? 1 : 0 ?>;
+    var sb_skill = <?= $obj['sb_skill'] ? 1 : 0 ?>;
+    var sb_timeframe = <?= $obj['sb_timeframe'] ? 1 : 0 ?>;
+    var sb_when_skill = <?= $obj['sb_when_skill'] ? 1 : 0 ?>;
+    var sb_how_skill = <?= $obj['sb_how_skill'] ? 1 : 0 ?>;
+    var sb_why_skill = <?= $obj['sb_why_skill'] ? 1 : 0 ?>;
+    var flag = <?= $obj['flag'] ? 1 : 0 ?>;
 
+    if(flag && focus == 0){
+        $("#sb_focusHelp").show();
     }
+
+    if(flag && sb_takeaway == 0){
+        $("#sb_takeawayHelp").show();
+    }
+
+    if(flag && sb_skill == 0){
+        $("#sb_skillHelp").show();
+    }
+
+    if(flag && sb_timeframe == 0){
+        $("#sb_timeframeHelp").show();
+    }
+
+    if(flag && sb_when_skill == 0){
+        $("#sb_when_skillHelp").show();
+    }
+
+    if(flag && sb_how_skill == 0){
+        $("#sb_how_skillHelp").show();
+    }
+
+    if(flag && sb_why_skill == 0){
+        $("#sb_why_skillHelp").show();
+    }
+}
+$(function(){
+    activeMenu($('#menu-linking-sessions'));
+
+    initVals();
+});
 </script>
 @endsection

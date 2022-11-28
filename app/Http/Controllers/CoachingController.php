@@ -25,15 +25,13 @@ use App\Mail\SkillBuildingNotification;
 use App\Mail\GTKYMailNotification;
 use App\Mail\GoalSettingNotification;
 
-/*
- * http://gtk.php.net/
-    $2y$10$B0Apm5lKLQznyK2f3YwT2uaNd1TFemdeA9ky6/67nTzvnOAdx0pZ6
- */
-class CoachingController extends Controller{
-    
+class CoachingController extends Controller
+{
+
     private $active_user;
-    
-    public function sendNotify(){
+
+    public function sendNotify()
+    {
         $list = [];
         
         if($this->isManagement()):
@@ -94,12 +92,11 @@ class CoachingController extends Controller{
         
         return $list;
     }
-    
-    public function listCEs(){
+
+    public function listCEs()
+    {
         $_id = $this->getActiveUser();
-        
         $sub_q = $this->isManagement() ? " lm.lnk_linker " : " lm.lnk_linkee ";
-        
         $obj = DB::select("
             SELECT 
                 lm.lnk_id,
@@ -148,10 +145,12 @@ class CoachingController extends Controller{
                 lm.lnk_acknw = 1
                     AND $sub_q = $_id;
         ");
+
         return view("coaching.ce_list")->with("linking",$obj)->with("management",$this->isManagement());
     }
-    
-    public function thisLink(){
+
+    public function thisLink()
+    {
         if($this->isManagement()):
             $the_id = $this->getActiveUser();
             $_obj = DB::select("
@@ -339,9 +338,10 @@ class CoachingController extends Controller{
             return "No access for thisLink()";
         endif;
     }
-    
-    public function listGTKYs(){
-        if($this->isManagement()){
+
+    public function listGTKYs()
+    {
+        if($this->isManagement()) {
             $active_user = $this->getActiveUser();
             $obj = DB::select(" 
                 SELECT
@@ -373,11 +373,12 @@ class CoachingController extends Controller{
                     lm.lnk_type = 5 AND lm.lnk_linker = $active_user;"
             );
             return view("coaching.gtky_list")->with("gtky",$obj)->with("management",1);
-        }else
+        } else
             return "You have no access for this feature";
     }
-    
-    public function listGSs(){
+
+    public function listGSs()
+    {
         $active_user = $this->getActiveUser();
         $sql = $this->isManagement() ? " and lm.lnk_linker = $active_user " : " and lm.lnk_linkee = $active_user ";
         $obj = DB::select("
@@ -409,10 +410,12 @@ class CoachingController extends Controller{
             WHERE
                 lm.lnk_acknw = 1 AND lm.lnk_status = 1 $sql;
         ");
+
          return view("coaching.gs_list")->with("linking",$obj)->with("management",$this->isManagement());
     }
-    
-    public function listSBs(){
+
+    public function listSBs()
+    {
         $active_user = $this->getActiveUser();
         $sql = $this->isManagement() ? " and lm.lnk_linker = $active_user " : " and lm.lnk_linkee = $active_user ";
         $obj = DB::select("
@@ -450,10 +453,12 @@ class CoachingController extends Controller{
             WHERE
                 lm.lnk_acknw = 1 AND lm.lnk_status = 1 $sql;
         ");
+
          return view("coaching.sb_list")->with("linking",$obj)->with("management",$this->isManagement());
     }
-    
-    public function listACCs(){
+
+    public function listACCs()
+    {
         $active_user = $this->getActiveUser();
         $sql = $this->isManagement() ? " and lm.lnk_linker = $active_user " : " and lm.lnk_linkee = $active_user ";
         $obj = DB::select("
@@ -494,8 +499,9 @@ class CoachingController extends Controller{
         
         return view("coaching.acc_list")->with("linking",$obj)->with("management",$this->isManagement());
     }
-    
-    public function listSDAs(){
+
+    public function listSDAs()
+    {
         $main_id = $this->getActiveUser();
         $flag = 0;
         
@@ -547,8 +553,9 @@ class CoachingController extends Controller{
         
         return view("coaching.sda_list")->with("linking",$obj)->with("management",$flag)->with("label",$label);
     }
-    
-    public function listQLs(){
+
+    public function listQLs()
+    {
         $main_id = $this->getActiveUser();
         $flag = 0;
         
@@ -589,11 +596,12 @@ class CoachingController extends Controller{
                 lm.lnk_acknw = 1 AND lm.lnk_status = 1 and lm.lnk_type = 1
                     AND $sql;
         ");
-        
+
         return view("coaching.ql_list")->with("linking",$obj)->with("management",$flag)->with("label",$label);
     }
-    
-    public function viewACC(Request $req, $id){
+
+    public function viewACC(Request $req, $id)
+    {
         if($req->post("save_ac_linking")){
             $this->processSaving($req);
             return redirect("/coaching-session");
@@ -706,11 +714,11 @@ class CoachingController extends Controller{
         if($obj['lnk_linker']  == $this->getActiveUser() && $obj['lnk_acknw'] == 0){
             return view("coaching.accst")->with('obj',$obj)->with("management",$this->isManagement());
         }else
-            return "Restricted Access";
-            
+            return "Restricted Access";       
     }
-    
-    public function viewGTKY(Request $req,$id){
+
+    public function viewGTKY(Request $req,$id)
+    {
         if($req->post("update")){
             $object = [
                 "lnk_date"          => $req->post("lnk_date"), 
@@ -834,8 +842,9 @@ class CoachingController extends Controller{
 
        // return "You have no access to perform this action";
     }
-    
-    public function viewGS(Request $req, $id){
+
+    public function viewGS(Request $req, $id)
+    {
         if($req->post("update_goal_setting_session")){
         /* Display Goal Setting from Post Values */
             $obj = [
@@ -983,12 +992,13 @@ class CoachingController extends Controller{
                 "acknowledge"       => $gs->lnk_linkee == $this->getActiveUser() ? 1 : 0
             ];
         }//end of else part
-        return view("coaching.gs_view")                
+        return view("coaching.gs_view")
             ->with("obj",$obj)
             ->with("management",$this->isManagement());
     }
-    
-    public function viewSDA(Request $req, $id){
+
+    public function viewSDA(Request $req, $id)
+    {
         $active_user = $this->getActiveUser();
         
         if($req->post("save_sda_linking")){
@@ -1116,12 +1126,12 @@ class CoachingController extends Controller{
                 return view('coaching.sda_ack')->with("obj",$obj)->with("management",$this->isManagement());
             endif;
         }//end query from database
-    
-        
+
         return view('coaching.sda')->with("obj",$obj)->with("management",$this->isManagement());
     }
 
-    public function viewCE(Request $req, $id){
+    public function viewCE(Request $req, $id)
+    {
         $focus = DB::select("
             SELECT 
                 fc_id, fc_desc
@@ -1263,8 +1273,9 @@ class CoachingController extends Controller{
             return view('coaching.se')
                 ->with("obj",$obj)->with("management",$this->isManagement());
     }
-    
-    public function viewSB(Request $req, $id){
+
+    public function viewSB(Request $req, $id)
+    {
         $focus = DB::select("
             SELECT 
                 fc_id, fc_desc
@@ -1374,14 +1385,14 @@ class CoachingController extends Controller{
                 "sel_focus"         => $focus,
             ];
         }
-   
+
         return view("coaching.sb_view")                
         ->with("obj",$array)
         ->with("management",$this->isManagement());
     }
-    
-    public function viewQL(Request $req, $id){
 
+    public function viewQL(Request $req, $id)
+    {
         if($req->post("lnk_linkee") && $req->post("rf_focus") && $req->post("rf_comments") && $req->post("update_linking")):
             LinkingMaster::where('lnk_id',$id)
                 ->update(['lnk_linkee' => $req->post("lnk_linkee")]);
@@ -1489,8 +1500,9 @@ class CoachingController extends Controller{
                 return "No Access or No Action in viewQL();";
         endif;
     }
-    
-    public function forAcknowledgement(){
+
+    public function forAcknowledgement()
+    {
         $linker = Auth::user()->id;
         $pending = DB::select("
             SELECT 
@@ -1648,11 +1660,12 @@ class CoachingController extends Controller{
                lm.lnk_acknw = 0 AND lm.lnk_status = 1
                    AND lm.lnk_linker = $linker
         ");
-        
+
         return view("coaching.pending")->with("pending",$pending)->with("management",$this->isManagement());
     }
-    
-    public function mainCoaching(Request $req){
+
+    public function mainCoaching(Request $req)
+    {
         if($req->post("lnk_type") && ($req->post("save_linking") || $req->post("save_ce_linking") || $req->post("save_sda_linking") || $req->post("save_ac_linking") || $req->post("save_gtky_session") || $req->post("save_SB_linking") || $req->post("save_goal_setting_session") )){
             if($this->verifyQuickLink($req) || $this->verifySE($req) || $this->verifySDA($req) || $this->verifyACC($req) || $this->verifyGTKY($req) || $this->verifySB($req) || $this->verifyGS($req)  )
                 /* Create or Update Linking */
@@ -1669,12 +1682,14 @@ class CoachingController extends Controller{
         else
             return $this->viewStaff ();
     }
-    
-    public function testLinking(){
+
+    public function testLinking()
+    {
         return $this->getLinking();
     }
-    
-    public function downloadLinking(){
+
+    public function downloadLinking()
+    {
         $writesheet = new Spreadsheet();
         $writer = IOFactory::createWriter($writesheet, "Xlsx");
         $sheet = $writesheet->getActiveSheet();
@@ -1707,8 +1722,9 @@ class CoachingController extends Controller{
         $writer->setOffice2003Compatibility(true);
         $writer->save('php://output');
     }
-    
-    public function downloadLinking2(){
+
+    public function downloadLinking2()
+    {
         $writesheet = new Spreadsheet();
         $writer = IOFactory::createWriter($writesheet, "Xlsx");
         $sheet = $writesheet->getActiveSheet();
@@ -1757,7 +1773,7 @@ class CoachingController extends Controller{
                     $o = $obj[0];
     		    array_push($body,$o->ac_comments ?? "");
 		}
-       //             array_push($body,$o->ac_skill,$o->ac_when_use,$o->ac_how_use,$o->ac_why_use,$o->ac_expectations,$o->ac_expectation_date,$o->ac_comments,$o->ac_feedback);
+        //             array_push($body,$o->ac_skill,$o->ac_when_use,$o->ac_how_use,$o->ac_why_use,$o->ac_expectations,$o->ac_expectation_date,$o->ac_comments,$o->ac_feedback);
                 break;
             
                 case 4:
@@ -1786,7 +1802,7 @@ class CoachingController extends Controller{
                     $o = $obj[0];
 			array_push($body,$o->sb_feedback ?? "");
 			}
-     //               array_push($body,$o->sb_skill,$o->sb_when_skill,$o->sb_how_skill,$o->sb_why_skill,$o->sb_takeaway,$o->sb_timeframe,$o->sb_feedback);
+        //               array_push($body,$o->sb_skill,$o->sb_when_skill,$o->sb_how_skill,$o->sb_why_skill,$o->sb_takeaway,$o->sb_timeframe,$o->sb_feedback);
                 break;
                 case 7:
                     $link_id = $lk->lnk_id;
@@ -1795,15 +1811,15 @@ class CoachingController extends Controller{
                     $o = $obj[0];
 		  array_push($body, $o->gs_feedback ?? "");
 		}
-     //               array_push($body,$o->gs_accmpl,$o->gs_metric_01,$o->gs_metric_02,$o->gs_metric_03,$o->gs_metric_04,$o->gs_metric_05,
-    //                   $o->gs_target_01, $o->gs_target_02, $o->gs_target_03, $o->gs_target_04, $o->gs_target_05,
-    //                    $o->gs_prev_01, $o->gs_prev_02, $o->gs_prev_03, $o->gs_prev_04, $o->gs_prev_05,
-    //                    $o->gs_curr_01, $o->gs_curr_02, $o->gs_curr_03, $o->gs_curr_04, $o->gs_curr_05,
-    //                   $o->gs_tip, $o->gs_com, $o->gs_feedback
-   //                    );
+         //               array_push($body,$o->gs_accmpl,$o->gs_metric_01,$o->gs_metric_02,$o->gs_metric_03,$o->gs_metric_04,$o->gs_metric_05,
+        //                   $o->gs_target_01, $o->gs_target_02, $o->gs_target_03, $o->gs_target_04, $o->gs_target_05,
+        //                    $o->gs_prev_01, $o->gs_prev_02, $o->gs_prev_03, $o->gs_prev_04, $o->gs_prev_05,
+        //                    $o->gs_curr_01, $o->gs_curr_02, $o->gs_curr_03, $o->gs_curr_04, $o->gs_curr_05,
+        //                   $o->gs_tip, $o->gs_com, $o->gs_feedback
+       //                    );
                 break;
             endswitch;
-	 array_push($body, $lk->status ?? "",$lk->link??"");
+	   array_push($body, $lk->status ?? "",$lk->link??"");
             $sheet->fromArray([$body], NULL, 'A'.$i); 
             $i++;
         endforeach;
@@ -1816,29 +1832,20 @@ class CoachingController extends Controller{
         $writer->setOffice2003Compatibility(true);
         $writer->save('php://output');
     }
-    
-    
-    private function getLinking2(){
+
+    private function getLinking2()
+    {
         $sql = "";
         $user = $this->getActiveUser();
-        /*
-         * 3487 - Sir Brian
-         * 2972 - Sir Dodge
-         * 2797 - Madam Leah
-         * 3422 - Madam Jane
-         * 3581 - Madam GilFranz
-         */
         if(!Auth::user()->isAdmin())
             $sql = "
-                
                 AND
-                    lm.lnk_linker = $user
-                        
+                    lm.lnk_linker = $user         
             ";
         
         if($user == 3487 || $user == 2972 || $user == 2792 || $user == 3422 || $user == 3581)
             $sql = "";
-        
+
         return DB::select("
             SELECT 
                 lm.lnk_date,
@@ -1870,17 +1877,16 @@ class CoachingController extends Controller{
         ");
     }
     
-    private function getLinking(){
+    private function getLinking()
+    {
         $sql = "";
         $user = $this->getActiveUser();
         if(!Auth::user()->isAdmin() && $user != 3487)
             $sql = "
-                
                 WHERE
                     lm.lnk_linker = $user
-                        
             ";
-        
+
         return DB::select("
             SELECT 
                 lm.lnk_date,
@@ -1907,8 +1913,9 @@ class CoachingController extends Controller{
             ORDER BY lm.lnk_date DESC;
         ");
     }
-    
-    private function verifyGTKY($req){
+
+    private function verifyGTKY($req)
+    {
         if($req->post("gtk_address") && $req->post("gtk_bday") && $req->post("gtk_bplace") && $req->post("gtk_mobile") && $req->post("gtk_email") && $req->post("gtk_civil_stat")
             && $req->post("gtk_fav_thing") && $req->post("gtk_fav_color") && $req->post("gtk_fav_movie") && $req->post("gtk_fav_song") && $req->post("gtk_allergic_food") &&
             $req->post("gtk_allergic_med") && $req->post("gtk_learn_style") && $req->post("gtk_social_style") && $req->post("gtk_motivation") && $req->post("gtk_how_coached") &&
@@ -1918,8 +1925,9 @@ class CoachingController extends Controller{
         else
             return 0;
     }
-    
-    private function verifyACC($req){
+
+    private function verifyACC($req)
+    {
         if(
             $req->post("ac_focus") &&
             $req->post("ac_skill") &&
@@ -1934,15 +1942,17 @@ class CoachingController extends Controller{
         else
             return 0;
     }
-    
-    private function getActiveUser(){
+
+    private function getActiveUser()
+    {
         if(!$this->active_user)
             $this->active_user = Auth::user()->id;
-        
+
         return $this->active_user;
     }
-    
-    private function verifySDA($req){
+
+    private function verifySDA($req)
+    {
         if( $req->post("sda_type") &&
             $req->post("sda_date_call") &&
             $req->post("sda_call_sel") &&
@@ -1955,9 +1965,9 @@ class CoachingController extends Controller{
         else
             return 0;
     }
-    
-    private function verifySE($req){
 
+    private function verifySE($req)
+    {
         if( $req->post("se_focus") && 
             $req->post("se_skill") && 
             $req->post("se_when_use") && 
@@ -1969,8 +1979,9 @@ class CoachingController extends Controller{
         else
             return 0;
     }
-    
-    private function verifyGS($req){
+
+    private function verifyGS($req)
+    {
         if( $req->post("gs_accmpl") &&
             $req->post("gs_metric_01") &&
             $req->post("gs_target_01") &&
@@ -1982,8 +1993,9 @@ class CoachingController extends Controller{
         else
             return 0;
     }
-    
-    private function verifySB($req){
+
+    private function verifySB($req)
+    {
         if( $req->post("sb_focus") && 
             $req->post("sb_skill") &&
             $req->post("sb_when_skill") &&
@@ -1995,12 +2007,12 @@ class CoachingController extends Controller{
             return 1;
         else
             return 0;
-        
     }
-    
-    private function isManagement(){
-	$linkees = DB::table('adtl_linkees')->where('adtl_linker', Auth::user()->id)->get();
-	 $allowedUsers = [
+
+    private function isManagement()
+    {
+        $linkees = DB::table('adtl_linkees')->where('adtl_linker', Auth::user()->id)->get();
+        $allowedUsers = [
             // add your allowed users here
             3655
         ];
@@ -2010,23 +2022,26 @@ class CoachingController extends Controller{
         else 
             return 0;
     }
-    
-    private function acknowldedgeQL($res){
+
+    private function acknowldedgeQL($res)
+    {
         LinkingMaster::where('lnk_id',$res->post("lnk_id"))
             ->update(["lnk_acknw" => 1]);
         QuickLink::where("rf_lnk_id",$res->post("lnk_id"))
             ->update(["rf_feedback" => $res->post("rf_feedback")]);
     }
-    
-    private function verifyQuickLink($req){
+
+    private function verifyQuickLink($req)
+    {
         if($req->post("rf_comments") && $req->post("rf_focus"))
             return 1;
         else
             return 0;
     }
-    
-    private function viewManagement($req){
-    # Main Coaching Function
+
+    private function viewManagement($req)
+    {
+        # Main Coaching Function
         $main_id = Auth::user()->id;
         /* original queries
         $main_names = DB::select("
@@ -2065,14 +2080,16 @@ class CoachingController extends Controller{
             WHERE
                 lt_status = 1
             ORDER BY lt_order ASC;");
+
         return view('coaching.supervisor')
             ->with("management",$this->isManagement())
             ->with("names",$main_names)
             ->with("lt_types",$lt_types)
             ->with("lastVal",["lnk_type" => $req->post("lnk_type"), "lnk_linkee" => $req->post("lnk_linkee"), "lnk_linkee_name" => $req->post("lnk_linkee_name"), "lnk_linkee_email" => $req->post("lnk_linkee_email"), "flag" => $req->post("process_linking"), "lnk_linker_name" => $req->post("lnk_linker_name"), "lnk_linker_email" => $req->post("lnk_linker_email")]);
     }
-    
-    private function viewStaff(){
+
+    private function viewStaff()
+    {
         $main_id = Auth::user()->id;
         $obj = DB::select("
             SELECT 
@@ -2236,11 +2253,14 @@ class CoachingController extends Controller{
                     AND lm.lnk_status = 1
             ORDER BY lm.lnk_id DESC;
         ");
+
         return view('coaching.staff')->with('linking',$obj)->with("management",$this->isManagement());
     }
-    
-    private function processLinking($req){
+
+    private function processLinking($req)
+    {
         $type = $req->post("lnk_type");
+        $linkee = $req->post("lnk_linkee");
         $focus = DB::select("
             SELECT 
                 fc_id, fc_desc
@@ -2250,8 +2270,7 @@ class CoachingController extends Controller{
                 fc_status = 1
             ORDER BY fc_id ASC;
         ");
-        
-        $linkee = $req->post("lnk_linkee");
+
         switch(intval($type)):
             case 1: 
                 $list = DB::select("
@@ -2286,20 +2305,20 @@ class CoachingController extends Controller{
                 ");
                 return view('coaching.quick_link')
                 ->with("obj",[
-                    "lnk_date" => $req->post("lnk_date"),
-                    "lnk_linkee" => $linkee, 
-                    "lnk_linkee_name" => $req->post("lnk_linkee_name"), 
-                    "lnk_linkee_email" => $req->post("lnk_linkee_email"), 
-                    "lnk_linker" => $req->post("lnk_linker"), 
-                    "lnk_linker_name" => $req->post("lnk_linker_name"), 
-                    "lnk_linker_email" => $req->post("lnk_linker_email"), 
-                    "lnk_type" => $req->post("lnk_type"), 
-                    "rf_focus" => $req->post("rf_focus"), 
-                    "rf_comments" => $req->post("rf_comments"), 
-                    "lnk_linkee" => $req->post("lnk_linkee"), 
-                    "flag" => $req->post("save_linking"), 
-                    "sel_focus" => $focus,
-                    "linkee_listing" => $list
+                    "lnk_date"          => $req->post("lnk_date"),
+                    "lnk_linkee"        => $linkee, 
+                    "lnk_linkee_name"   => $req->post("lnk_linkee_name"), 
+                    "lnk_linkee_email"  => $req->post("lnk_linkee_email"), 
+                    "lnk_linker"        => $req->post("lnk_linker"), 
+                    "lnk_linker_name"   => $req->post("lnk_linker_name"), 
+                    "lnk_linker_email"  => $req->post("lnk_linker_email"), 
+                    "lnk_type"          => $req->post("lnk_type"), 
+                    "rf_focus"          => $req->post("rf_focus"), 
+                    "rf_comments"       => $req->post("rf_comments"), 
+                    "lnk_linkee"        => $req->post("lnk_linkee"), 
+                    "flag"              => $req->post("save_linking"), 
+                    "sel_focus"         => $focus,
+                    "linkee_listing"    => $list
                 ])
                 ->with("management",$this->isManagement()); 
             break;
@@ -2512,7 +2531,6 @@ class CoachingController extends Controller{
                 ])
                 ->with("management",$this->isManagement());
             break;
-        
             case 6:
                 $list = DB::select("
                     SELECT 
@@ -2570,7 +2588,6 @@ class CoachingController extends Controller{
                 ])
                 ->with("management",$this->isManagement());
             break;
-        
             case 7:
                 $list = DB::select("
                     SELECT 
@@ -2646,13 +2663,18 @@ class CoachingController extends Controller{
                 ])
                 ->with("management",$this->isManagement());
             break;
-        
+
             default: return "We Are Still Working In This Linking Session Type.";
         endswitch;
     }
-    
-    private function processSaving($req){
+
+    private function processSaving($req)
+    {
         $type = $req->post("lnk_type");
+        $email = $req->post("lnk_linkee_email");
+        $data['emp_name'] = strtoupper($req->post("lnk_linkee_name"));
+        $data['leaders_name'] = Auth::user()->first_name." ".Auth::user()->last_name;
+
         switch(intval($type)):
             case 1: 
                 $lm = new LinkingMaster();
@@ -2669,27 +2691,23 @@ class CoachingController extends Controller{
                 $ql->rf_comments = $req->post("rf_comments");
                 $ql->save();
 
-                $data =[
-                    "emp_name"      => strtoupper($req->post("lnk_linkee_name")),
-                    "leaders_name"  => Auth::user()->first_name." ".Auth::user()->last_name,
-                    "id"            => $lm->id
-                ];
+                $data['id'] = $lm->id;
 
-                //Mail::to($req->post("lnk_linkee_email"))->cc('juncelcarreon@elink.com.ph')->send(new QuickLinkNotification($data));
+                // Mail::to($email)->send(new QuickLinkNotification($data));
             break;
             case 2: 
-                if($req->post("update")){
-                    CementingExpectations::where("se_com_id",$req->post("se_com_id"))
-                        ->update([
-                            "se_focus"          => $req->post("se_focus"),
-                            "se_skill"          => $req->post("se_skill"),
-                            "se_when_use"       => $req->post("se_when_use"),
-                            "se_how_use"        => $req->post("se_how_use"),
-                            "se_why_use"        => $req->post("se_why_use"),
-                            "se_expectations"   => $req->post("se_expectations"),
-                            "se_comments"       => $req->post("se_comments"),
-                        ]);
-                }else{//create-start
+                if($req->post("update")) {
+                    CementingExpectations::where("se_com_id", $req->post("se_com_id"))
+                    ->update([
+                        "se_focus"          => $req->post("se_focus"),
+                        "se_skill"          => $req->post("se_skill"),
+                        "se_when_use"       => $req->post("se_when_use"),
+                        "se_how_use"        => $req->post("se_how_use"),
+                        "se_why_use"        => $req->post("se_why_use"),
+                        "se_expectations"   => $req->post("se_expectations"),
+                        "se_comments"       => $req->post("se_comments"),
+                    ]);
+                } else {
                     $lm = new LinkingMaster();
                     $lm->lnk_date = date("Y-m-d", strtotime($req->post("lnk_date")));
                     $lm->lnk_linker = Auth::user()->id;
@@ -2711,29 +2729,25 @@ class CoachingController extends Controller{
                     $cm->se_comments = $req->post("se_comments");
                     $cm->save();
 
-                    $data =[
-                        "emp_name"      => strtoupper($req->post("lnk_linkee_name")),
-                        "leaders_name"  => Auth::user()->first_name." ".Auth::user()->last_name,
-                        "id"          => $cm->se_com_id
-                    ];
+                    $data['id'] = $cm->se_com_id;
 
-                    //Mail::to($req->post("lnk_linkee_email"))->cc('juncelcarreon@elink.com.ph')->send(new CEMailNotification($data));
-                }//create-stop
+                    // Mail::to($email)->send(new CEMailNotification($data));
+                }
             break;
             case 3: 
-                if($req->post("update")){
+                if($req->post("update")) {
                     AccountabilitySession::where("ac_com_id",$req->post("ac_com_id"))
-                        ->update([
-                            "ac_focus"              => $req->post("ac_focus"),
-                            "ac_skill"              => $req->post("ac_skill"),
-                            "ac_when_use"           => $req->post("ac_when_use"),
-                            "ac_how_use"            => $req->post("ac_how_use"),
-                            "ac_why_use"            => $req->post("ac_why_use"),
-                            "ac_expectations"       => $req->post("ac_expectations"),
-                            "ac_expectation_date"   => date("Y-m-d",strtotime($req->post("ac_expectation_date"))),
-                            "ac_comments"           => $req->post("ac_comments")
-                        ]);
-                }else{
+                    ->update([
+                        "ac_focus"              => $req->post("ac_focus"),
+                        "ac_skill"              => $req->post("ac_skill"),
+                        "ac_when_use"           => $req->post("ac_when_use"),
+                        "ac_how_use"            => $req->post("ac_how_use"),
+                        "ac_why_use"            => $req->post("ac_why_use"),
+                        "ac_expectations"       => $req->post("ac_expectations"),
+                        "ac_expectation_date"   => date("Y-m-d",strtotime($req->post("ac_expectation_date"))),
+                        "ac_comments"           => $req->post("ac_comments")
+                    ]);
+                } else {
                     $lm = new LinkingMaster();
                     $lm->lnk_date = date("Y-m-d", strtotime($req->post("lnk_date")));
                     $lm->lnk_linker = Auth::user()->id;
@@ -2756,29 +2770,25 @@ class CoachingController extends Controller{
                     $acc->ac_feedback = "";
                     $acc->save();
 
-                    $data =[
-                        "emp_name"      => strtoupper($req->post("lnk_linkee_name")),
-                        "leaders_name"  => Auth::user()->first_name." ".Auth::user()->last_name,
-                        "id"            => $acc->ac_com_id
-                    ];
+                    $data['id'] = $acc->ac_com_id;
 
-                    //Mail::to($req->post("lnk_linkee_email"))->cc('juncelcarreon@elink.com.ph')->send(new ACCMailNotification($data));
+                    // Mail::to($email)->send(new ACCMailNotification($data));
                 }
             break;
             case 4: 
-                if($req->post("update")){
+                if($req->post("update")) {
                     SkillsDevelopment::where("sda_com_id",$req->post("sda_com_id"))
-                        ->update([
-                            "sda_type"          => $req->post("sda_type"),
-                            "sda_date_call"     => date("Y-m-d", strtotime($req->post("sda_date_call"))),
-                            "sda_call_sel"      => $req->post("sda_call_sel"),
-                            "sda_www_u_said"    => $req->post("sda_www_u_said"),
-                            "sda_www_i_said"    => $req->post("sda_www_i_said"),
-                            "sda_wcm_u_said"    => $req->post("sda_wcm_u_said"),
-                            "sda_wcm_i_said"    => $req->post("sda_wcm_i_said"),
-                            "sda_comments"      => $req->post("sda_comments")
-                        ]);
-                }else{//create-sda
+                    ->update([
+                        "sda_type"        => $req->post("sda_type"),
+                        "sda_date_call"   => date("Y-m-d", strtotime($req->post("sda_date_call"))),
+                        "sda_call_sel"    => $req->post("sda_call_sel"),
+                        "sda_www_u_said"  => $req->post("sda_www_u_said"),
+                        "sda_www_i_said"  => $req->post("sda_www_i_said"),
+                        "sda_wcm_u_said"  => $req->post("sda_wcm_u_said"),
+                        "sda_wcm_i_said"  => $req->post("sda_wcm_i_said"),
+                        "sda_comments"    => $req->post("sda_comments")
+                    ]);
+                } else {
                     $lm = new LinkingMaster();
                     $lm->lnk_date = date("Y-m-d", strtotime($req->post("lnk_date")));
                     $lm->lnk_linker = Auth::user()->id;
@@ -2786,32 +2796,28 @@ class CoachingController extends Controller{
                     $lm->lnk_type = $req->post("lnk_type");
                     $lm->lnk_acknw = 0;
                     $lm->save();
-                    
+
                     $sda = new SkillsDevelopment();
-                    $sda->sda_lnk_id        = $lm->id;
-                    $sda->sda_com_id        = sha1($lm->id);
-                    $sda->sda_type          = $req->post("sda_type");
-                    $sda->sda_date_call     = date("Y-m-d", strtotime($req->post("sda_date_call")));
-                    $sda->sda_call_sel      = $req->post("sda_call_sel");
-                    $sda->sda_www_u_said    = $req->post("sda_www_u_said");
-                    $sda->sda_www_i_said    = $req->post("sda_www_i_said");
-                    $sda->sda_wcm_u_said    = $req->post("sda_wcm_u_said");
-                    $sda->sda_wcm_i_said    = $req->post("sda_wcm_i_said");
-                    $sda->sda_comments      = $req->post("sda_comments");
-                    $sda->sda_feedback      = "";
+                    $sda->sda_lnk_id      = $lm->id;
+                    $sda->sda_com_id      = sha1($lm->id);
+                    $sda->sda_type        = $req->post("sda_type");
+                    $sda->sda_date_call   = date("Y-m-d", strtotime($req->post("sda_date_call")));
+                    $sda->sda_call_sel    = $req->post("sda_call_sel");
+                    $sda->sda_www_u_said  = $req->post("sda_www_u_said");
+                    $sda->sda_www_i_said  = $req->post("sda_www_i_said");
+                    $sda->sda_wcm_u_said  = $req->post("sda_wcm_u_said");
+                    $sda->sda_wcm_i_said  = $req->post("sda_wcm_i_said");
+                    $sda->sda_comments    = $req->post("sda_comments");
+                    $sda->sda_feedback    = "";
                     $sda->save();
 
-                    $data =[
-                        "emp_name"      => strtoupper($req->post("lnk_linkee_name")),
-                        "leaders_name"  => Auth::user()->first_name." ".Auth::user()->last_name,
-                        "id"            => $sda->sda_com_id
-                    ];
+                    $data['id'] = $sda->sda_com_id;
 
-                    //Mail::to($req->post("lnk_linkee_email"))->cc('juncelcarreon@elink.com.ph')->send(new SDAMailNotification($data));
-                }//end-create
+                    // Mail::to($email)->send(new SDAMailNotification($data));
+                }
             break;
             case 5:
-                if($req->post("update")){
+                if($req->post("update")) {
                     $id = $req->post("gtk_com_num");
                     $object = [
                         "gtk_address"       => $req->post("gtk_address"),
@@ -2836,9 +2842,9 @@ class CoachingController extends Controller{
                         "gtk_goals"         => $req->post("gtk_goals"),
                         "gtk_others"        => $req->post("gtk_others"),
                     ];
+
                     DB::table("gtky")->where("gtk_com_num",$id)->update($object);
-                }else{
-                    //Create Linking Master Session
+                } else {
                     $lm = new LinkingMaster();
                     $lm->lnk_date = date("Y-m-d", strtotime($req->post("lnk_date")));
                     $lm->lnk_linker = Auth::user()->id;
@@ -2849,7 +2855,6 @@ class CoachingController extends Controller{
 
                     $encryted_id = sha1($lm->id);
 
-                    //Create GTKY or Save GTKY Session
                     DB::table("gtky")->insert([
                         "gtk_link_id"       => $lm->id,
                         "gtk_com_num"       => $encryted_id,
@@ -2876,37 +2881,31 @@ class CoachingController extends Controller{
                         "gtk_others"        => $req->post("gtk_others"),
                     ]);
 
-                    $data =[
-                        "emp_name"      => strtoupper($req->post("lnk_linkee_name")),
-                        "leaders_name"  => Auth::user()->first_name." ".Auth::user()->last_name,
-                        "id"            => $encryted_id
-                    ];
+                    $data['id'] = $encryted_id;
 
-                    //Mail::to($req->post("lnk_linkee_email"))->cc('juncelcarreon@elink.com.ph')->send(new GTKYMailNotification($data));
+                    // Mail::to($email)->send(new GTKYMailNotification($data));
                 }
             break;
             case 6:
-                if($req->post("update")){
-                //Update Skill Building Session
+                if($req->post("update")) {
                     SkillBuilding::where("sb_com_num",$req->post("sb_com_num"))->update([
-                        "sb_focus"      => $req->post("sb_focus"),
-                        "sb_skill"      => $req->post("sb_skill"),
-                        "sb_when_skill" => $req->post("sb_when_skill"),
-                        "sb_why_skill"  => $req->post("sb_why_skill"),
-                        "sb_how_skill"  => $req->post("sb_how_skill"),
-                        "sb_takeaway"   => $req->post("sb_takeaway"),
-                        "sb_timeframe"  => $req->post("sb_timeframe")
+                    "sb_focus"      => $req->post("sb_focus"),
+                    "sb_skill"      => $req->post("sb_skill"),
+                    "sb_when_skill" => $req->post("sb_when_skill"),
+                    "sb_why_skill"  => $req->post("sb_why_skill"),
+                    "sb_how_skill"  => $req->post("sb_how_skill"),
+                    "sb_takeaway"   => $req->post("sb_takeaway"),
+                    "sb_timeframe"  => $req->post("sb_timeframe")
                     ]);
-                }else{
-                //Save Skill Building Session
+                } else {
                     $lm = new LinkingMaster();
                     $lm->lnk_date = date("Y-m-d", strtotime($req->post("lnk_date")));
                     $lm->lnk_linker = Auth::user()->id;
                     $lm->lnk_linkee = $req->post("lnk_linkee");
                     $lm->lnk_type = $req->post("lnk_type");
                     $lm->lnk_acknw = 0;
-                    // $lm->save();
-                    
+                    $lm->save();
+
                     $sb = new SkillBuilding();
                     $sb->sb_link_id = $lm->id;
                     $sb->sb_com_num = sha1($lm->id);
@@ -2917,55 +2916,49 @@ class CoachingController extends Controller{
                     $sb->sb_how_skill = $req->post("sb_how_skill");
                     $sb->sb_takeaway = $req->post("sb_takeaway");
                     $sb->sb_timeframe = $req->post("sb_timeframe");
-                    // $sb->save();
+                    $sb->save();
 
-                    $data =[
-                        "emp_name"      => strtoupper($req->post("lnk_linkee_name")),
-                        "leaders_name"  => Auth::user()->first_name." ".Auth::user()->last_name,
-                        "id"            => $sb->sb_com_num
-                    ];
+                    $data['id'] = $sb->sb_com_num;
 
-                    //Mail::to($req->post("lnk_linkee_email"))->cc('juncelcarreon@elink.com.ph')->send(new SkillBuildingNotification($data));
+                    // Mail::to($email)->send(new SkillBuildingNotification($data));
                 }
             break;
             case 7:
-                if($req->post("update")){
-                /* Update Goal Setting Session */    
+                if($req->post("update")) {
                     GoalSetting::where("gs_com_id",$req->post("gs_com_id"))->update([
-                        "gs_accmpl"         => $req->post("gs_accmpl"),
-                        "gs_metric_01"      => $req->post("gs_metric_01"),
-                        "gs_metric_02"      => $req->post("gs_metric_02"),
-                        "gs_metric_03"      => $req->post("gs_metric_03"),
-                        "gs_metric_04"      => $req->post("gs_metric_04"),
-                        "gs_metric_05"      => $req->post("gs_metric_05"),
-                        "gs_metric_06"      => $req->post("gs_metric_06"),
-                        "gs_metric_07"      => $req->post("gs_metric_07"),
-                        "gs_target_01"      => $req->post("gs_target_01"),
-                        "gs_target_02"      => $req->post("gs_target_02"),
-                        "gs_target_03"      => $req->post("gs_target_03"),
-                        "gs_target_04"      => $req->post("gs_target_04"),
-                        "gs_target_05"      => $req->post("gs_target_05"),
-                        "gs_target_06"      => $req->post("gs_target_06"),
-                        "gs_target_07"      => $req->post("gs_target_07"),
-                        "gs_prev_01"        => $req->post("gs_prev_01"),
-                        "gs_prev_02"        => $req->post("gs_prev_02"),
-                        "gs_prev_03"        => $req->post("gs_prev_03"),
-                        "gs_prev_04"        => $req->post("gs_prev_04"),
-                        "gs_prev_05"        => $req->post("gs_prev_05"),
-                        "gs_prev_06"        => $req->post("gs_prev_06"),
-                        "gs_prev_07"        => $req->post("gs_prev_07"),
-                        "gs_curr_01"        => $req->post("gs_curr_01"),
-                        "gs_curr_02"        => $req->post("gs_curr_02"),
-                        "gs_curr_03"        => $req->post("gs_curr_03"),
-                        "gs_curr_04"        => $req->post("gs_curr_04"),
-                        "gs_curr_05"        => $req->post("gs_curr_05"),
-                        "gs_curr_06"        => $req->post("gs_curr_06"),
-                        "gs_curr_07"        => $req->post("gs_curr_07"),
-                        "gs_tip"            => $req->post("gs_tip"),
-                        "gs_com"            => $req->post("gs_com")
+                        "gs_accmpl"     => $req->post("gs_accmpl"),
+                        "gs_metric_01"  => $req->post("gs_metric_01"),
+                        "gs_metric_02"  => $req->post("gs_metric_02"),
+                        "gs_metric_03"  => $req->post("gs_metric_03"),
+                        "gs_metric_04"  => $req->post("gs_metric_04"),
+                        "gs_metric_05"  => $req->post("gs_metric_05"),
+                        "gs_metric_06"  => $req->post("gs_metric_06"),
+                        "gs_metric_07"  => $req->post("gs_metric_07"),
+                        "gs_target_01"  => $req->post("gs_target_01"),
+                        "gs_target_02"  => $req->post("gs_target_02"),
+                        "gs_target_03"  => $req->post("gs_target_03"),
+                        "gs_target_04"  => $req->post("gs_target_04"),
+                        "gs_target_05"  => $req->post("gs_target_05"),
+                        "gs_target_06"  => $req->post("gs_target_06"),
+                        "gs_target_07"  => $req->post("gs_target_07"),
+                        "gs_prev_01"    => $req->post("gs_prev_01"),
+                        "gs_prev_02"    => $req->post("gs_prev_02"),
+                        "gs_prev_03"    => $req->post("gs_prev_03"),
+                        "gs_prev_04"    => $req->post("gs_prev_04"),
+                        "gs_prev_05"    => $req->post("gs_prev_05"),
+                        "gs_prev_06"    => $req->post("gs_prev_06"),
+                        "gs_prev_07"    => $req->post("gs_prev_07"),
+                        "gs_curr_01"    => $req->post("gs_curr_01"),
+                        "gs_curr_02"    => $req->post("gs_curr_02"),
+                        "gs_curr_03"    => $req->post("gs_curr_03"),
+                        "gs_curr_04"    => $req->post("gs_curr_04"),
+                        "gs_curr_05"    => $req->post("gs_curr_05"),
+                        "gs_curr_06"    => $req->post("gs_curr_06"),
+                        "gs_curr_07"    => $req->post("gs_curr_07"),
+                        "gs_tip"        => $req->post("gs_tip"),
+                        "gs_com"        => $req->post("gs_com")
                     ]);
-                }else{
-                /* Create Goal Setting Session */
+                } else {
                     $lm = new LinkingMaster();
                     $lm->lnk_date = date("Y-m-d", strtotime($req->post("lnk_date")));
                     $lm->lnk_linker = Auth::user()->id;
@@ -3010,18 +3003,13 @@ class CoachingController extends Controller{
                     $gs->gs_com = $req->post("gs_com");
                     $gs->save();
 
-                    $data =[
-                        "emp_name"      => strtoupper($req->post("lnk_linkee_name")),
-                        "leaders_name"  => Auth::user()->first_name." ".Auth::user()->last_name,
-                        "id"            => $gs->gs_com_id
-                    ];
+                    $data['id'] = $gs->gs_com_id;
 
-                    //Mail::to($req->post("lnk_linkee_email"))->cc('juncelcarreon@elink.com.ph')->send(new GoalSettingNotification($data));
+                    // Mail::to($email)->send(new GoalSettingNotification($data));
                 }
             break;
         endswitch;
-        
+
         return redirect('/coaching-session');
     }
-    
-}//end-class
+}

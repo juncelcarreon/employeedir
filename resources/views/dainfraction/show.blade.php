@@ -6,9 +6,6 @@
 		font-weight: bold;
 		text-align: center;
 	}
-	small.leave-success{
-		color: green;
-	}
 	object{
 		width:100%;
 		height:400px;
@@ -17,6 +14,10 @@
 		width:100%;
 		height:100%;
 		border:0;
+	}
+	small{
+		display: block;
+		font-size: 75% !important;
 	}
 </style>
 <div class="panel panel-default">
@@ -72,9 +73,20 @@
 				<label>Filed by:</label>
 				<p><?= $filer->first_name.' '.$filer->last_name ?></p>
 			</div>
+			<?php
+            $status = 'Not Acknowledged';
+            switch($infraction->status) {
+                case 1:
+                $status = 'Acknowledged';
+                    break;
+                case 2:
+                $status = 'Acknowledged <small>(Pending Explanation)</small>';
+                    break;
+            }
+			?>
 			<div class="col-md-4">
 				<label>Status:</label>
-				<p><?= ($infraction->status == 1) ? 'Acknowledged' : 'Not Acknowledged' ?></p>
+				<p><?= $status ?></p>
 			</div>
 			<div class="col-md-12">&nbsp;</div>
 			<div class="col-md-12">

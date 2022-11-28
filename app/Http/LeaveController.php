@@ -491,9 +491,9 @@ class LeaveController extends Controller
 	public function displayReport(Request $r)
 	{
 		$tar = [
-			'from'  => date("Y-m-d", strtotime($r->get('from'))),
-			'to'    => date("Y-m-d", strtotime($r->get('to'))),
-			'type'  => $r->get('type')
+			'from'      => date("Y-m-d", strtotime($r->get('from'))),
+			'to'        => date("Y-m-d", strtotime($r->get('to'))),
+			'type'      => $r->get('type')
 		];
 		$from = $tar['from'];
 		$to = $tar['to'];
@@ -517,18 +517,16 @@ class LeaveController extends Controller
 				lr.approve_status_id as status
 			FROM
 				elink_employee_directory.leave_request_details AS lrd
-			INNER JOIN
+			LEFT JOIN
 				leave_request AS lr ON lr.id = lrd.leave_id
-			INNER JOIN
+			LEFT JOIN
 				employee_info AS ei ON ei.id = lr.employee_id
 			WHERE
 				lrd.date >= '$from'
 				AND lrd.date <= '$to'
 				AND ei.employee_category $type
-				AND ei.deleted_at IS NULL
-				AND ei.status = 1
-				AND lrd.status = 1
-				AND lr.approve_status_id = 1; 
+				and lrd.status = 1
+				and lr.approve_status_id = 1;
 		");
 
 		return view("leave.reports",["obj" => $obj, "target" => $tar]);
@@ -571,17 +569,15 @@ class LeaveController extends Controller
 				lrd.date >= '$from'
 				AND lrd.date <= '$to'
 				AND ei.employee_category $type
-				AND ei.deleted_at IS NULL
-				AND ei.status = 1
-				AND lrd.status = 1
-				AND lr.approve_status_id = 1;
+				and lrd.status = 1
+				and lr.approve_status_id = 1;
 		");
 		$writesheet = new Spreadsheet();
 		$writer = IOFactory::createWriter($writesheet, "Xlsx");
 		$sheet = $writesheet->getActiveSheet();
 		$i = 1;
 		$past = date('Y') - 1;
-		$header = array("Leave ID", "EE Number", "EE Name", "Start", "End", "VL", "SL", "EL", "CTO", "BL", "PL", "VLWOP", "SLWOP", "ELWOP", "BLWOP", "PLWOP");
+		$header = array("Leave ID", "EE Number", "EE Name", "Start", "End", "VL", "SL", "EL", "VLWOP", "SLWOP", "ELWOP");
 		$sheet->fromArray([$header], NULL, 'A'.$i); 
 		$i++;
 		$leave_id = isset($obj[0]) ? $obj[0]->leave_id : 0;
@@ -595,14 +591,9 @@ class LeaveController extends Controller
 		$vl = 0;
 		$sl = 0;
 		$el = 0;
-		$cto = 0;
-		$bl = 0;
-		$pl = 0;
 		$vlwop = 0;
 		$slwop = 0;
 		$elwop = 0;
-		$blwop = 0;
-		$plwop = 0;
 		foreach($obj as $o){
 			if($leave_id != $o->leave_id) {
 				$body = [
@@ -614,11 +605,6 @@ class LeaveController extends Controller
 					$vl,
 					$sl,
 					$el,
-					$cto,
-					$bl,
-					$pl,
-					$blwop,
-					$plwop,
 					$vlwop,
 					$slwop,
 					$elwop
@@ -628,14 +614,9 @@ class LeaveController extends Controller
 				$vl = 0;
 				$sl = 0;
 				$el = 0;
-				$cto = 0;
-				$bl = 0;
-				$pl = 0;
 				$vlwop = 0;
 				$slwop = 0;
 				$elwop = 0;
-				$blwop = 0;
-				$plwop = 0;
 				$leave_id = $o->leave_id;
 				$ename = $o->emp_name;
 				$eid = $o->eid;
@@ -644,12 +625,9 @@ class LeaveController extends Controller
 				$start = $o->date;
 			}
 			switch($o->leave_type_id) {
-				case 1: $o->pay_type == 1 ? $bl+=$o->length : $blwop+=$o->length; break;
-				case 2: $o->pay_type == 1 ? $pl+=$o->length : $plwop+=$o->length; break;
 				case 4: $o->pay_type == 1 ? $sl+=$o->length : $slwop+=$o->length; break;
 				case 5: $o->pay_type == 1 ? $vl+=$o->length : $vlwop+=$o->length; break;
 				case 6: $o->pay_type == 1 ? $el+=$o->length : $elwop+=$o->length; break;
-				default: $cto+=$o->length; break;
 			}
 			$stop = $o->date;
 		}
@@ -663,11 +641,6 @@ class LeaveController extends Controller
 				$vl,
 				$sl,
 				$el,
-				$cto,
-				$bl,
-				$pl,
-				$blwop,
-				$plwop,
 				$vlwop,
 				$slwop,
 				$elwop
@@ -1033,7 +1006,7 @@ class LeaveController extends Controller
 	public function creditIncrement()
 	{
 		$obj = DB::select("
-			SELECT
+			SELECT 
 				*
 			FROM
 				employee_info
@@ -1045,7 +1018,7 @@ class LeaveController extends Controller
 		foreach($obj as $e) {
 			$id = $e->id;
 			$det = DB::select("
-				SELECT
+				SELECT 
 					id
 				FROM
 					leave_credits
@@ -1331,8 +1304,8 @@ class LeaveController extends Controller
 		$today->day = 31;
 		$lastHalfYearEnd = $today->format('Y-m-d');
 
-		$sql = "
-			SELECT
+		$sql = "  
+			SELECT 
 				`employee_info`.`id`,
 				`employee_info`.`eid`,
 				CONCAT(`employee_info`.`first_name`, ' ', `employee_info`.`last_name`) AS `employee_name`,
@@ -1460,7 +1433,7 @@ class LeaveController extends Controller
 	private function pastQuery($id = NULL)
 	{
 		$sql = "
-			SELECT
+			SELECT 
 				eid,
 				id,
 				CONCAT(e.first_name, ' ', e.last_name) AS employee_name,
@@ -1468,7 +1441,7 @@ class LeaveController extends Controller
 				e.position_name,
 				0 as used_credit,
 				0 as total_credits,
-				IFNULL((SELECT
+				IFNULL((SELECT 
 						sum(credit)
 					FROM
 						leave_credits
@@ -1478,7 +1451,7 @@ class LeaveController extends Controller
 						AND leave_credits.status = 1
 					LIMIT 1),
 				0) AS expired_credit,
-				IFNULL((SELECT
+				IFNULL((SELECT 
 						credit
 					FROM
 						leave_credits
@@ -1488,7 +1461,7 @@ class LeaveController extends Controller
 						AND leave_credits.status = 1
 					LIMIT 1),
 				0) AS past_credit,
-				IFNULL((SELECT
+				IFNULL((SELECT 
 						credit
 					FROM
 						leave_credits
@@ -1498,7 +1471,7 @@ class LeaveController extends Controller
 						AND leave_credits.status = 1
 					LIMIT 1),
 				0) AS conversion_credit,
-				IFNULL((SELECT
+				IFNULL((SELECT 
 						credit
 					FROM
 						leave_credits
@@ -1508,7 +1481,7 @@ class LeaveController extends Controller
 						AND leave_credits.status = 1
 					LIMIT 1),
 				0) AS loa,
-				IFNULL((SELECT
+				IFNULL((SELECT 
 						SUM(credit)
 					FROM
 						leave_credits
@@ -1517,7 +1490,7 @@ class LeaveController extends Controller
 						AND leave_credits.status = 1
 						AND employee_id = e.id),
 				0) AS current_credit,
-				IFNULL((SELECT
+				IFNULL((SELECT 
 						SUM(lrd.length)
 					FROM
 						elink_employee_directory.leave_request AS lr
@@ -1531,7 +1504,7 @@ class LeaveController extends Controller
 						AND lrd.status = 1
 						AND lr.approve_status_id = 1),
 				0) AS used_jan_to_jun,
-				IFNULL((SELECT
+				IFNULL((SELECT 
 						SUM(lrd.length)
 					FROM
 						elink_employee_directory.leave_request AS lr
@@ -1548,8 +1521,7 @@ class LeaveController extends Controller
 			FROM
 				elink_employee_directory.employee_info AS e
 			WHERE
-				e.status = 1
-				AND e.deleted_at IS NULL
+				e.status = 1 AND e.deleted_at IS NULL
 				AND eid LIKE 'ESCC-%'";
 
 		if($id) {
@@ -1568,7 +1540,7 @@ class LeaveController extends Controller
 				CONCAT(e.first_name, ' ', e.last_name) AS employee_name,
 				e.prod_date,
 				e.position_name,
-				@past:=IFNULL((SELECT
+				@past:=IFNULL((SELECT 
 						credit
 					FROM
 						leave_credits
@@ -1577,7 +1549,7 @@ class LeaveController extends Controller
 						AND employee_id = e.id AND leave_credits.status = 1
 					LIMIT 1),
 				0) AS past_credit,
-				@conversion:=IFNULL((SELECT
+				@conversion:=IFNULL((SELECT 
 						credit
 					FROM
 						leave_credits
@@ -1586,7 +1558,7 @@ class LeaveController extends Controller
 						AND employee_id = e.id AND leave_credits.status = 1
 					LIMIT 1),
 				0) AS conversion_credit,
-				IFNULL((SELECT
+				IFNULL((SELECT 
 						credit
 					FROM
 						leave_credits
@@ -1595,7 +1567,7 @@ class LeaveController extends Controller
 						AND employee_id = e.id AND leave_credits.status = 1
 					LIMIT 1),
 				0) AS loa,
-				@current:=IFNULL((SELECT
+				@current:=IFNULL((SELECT 
 						SUM(credit)
 					FROM
 						leave_credits
@@ -1603,7 +1575,7 @@ class LeaveController extends Controller
 						year = YEAR(NOW()) AND type = 1 AND leave_credits.status = 1
 						AND employee_id = e.id),
 				0) AS current_credit,
-				@used:=IFNULL((SELECT
+				@used:=IFNULL((SELECT 
 						SUM(credit)
 					FROM
 						leave_credits
@@ -1615,8 +1587,7 @@ class LeaveController extends Controller
 			FROM
 				elink_employee_directory.employee_info AS e
 			WHERE
-				e.status = 1
-				AND e.deleted_at IS NULL
+				e.status = 1 AND e.deleted_at IS NULL
 				AND eid LIKE 'ESCC-%'";
 
 		if($id) {
@@ -1633,10 +1604,10 @@ class LeaveController extends Controller
 		$year = date('Y');
 		$employees = DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id_obj} OR `employee_info`.`supervisor_id`={$id_obj})");
 		$credits = (object) [
-			'past_credit'     => 0,
-			'current_credit'  => 0,
-			'used_credit'     => 0,
-			'total_credits'   => 0
+			'past_credit'       => 0,
+			'current_credit'    => 0,
+			'used_credit'       => 0,
+			'total_credits'     => 0
 		];
 
 		if(count($obj) > 0) {

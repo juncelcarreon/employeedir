@@ -2,6 +2,11 @@
 @section('title')
 <?= ($dashboard) ? 'Dashboard' : 'Home' ?>
 @endsection
+<style>
+.engagement { cursor: pointer; margin: 10px auto; border-bottom: 1px solid #ccc; padding: 10px; }
+.engagement:hover { color: #30A5FF; }
+.engagement:last-child { border: 0; }
+</style>
 @section('content')
 <?php
 if(count($posts) > 0) {
@@ -252,39 +257,40 @@ if(count($posts) > 0) {
 
             <span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span>
         </div>
-        <div class="panel-body timeline-container text-center">
+        <div class="panel-body timeline-container">
             <?php
             foreach($engagements as $engagement) {
             ?>
-                <hr>
-                <b class="engagement_title" data-id="<?= $engagement->id ?>"><?= $engagement->title ?></b>
-                <br>
-                <small class="engagement_title" data-id="<?= $engagement->id ?>"><?= $engagement->subtitle ?></small>
-                <br>
-                <br>
-                <?php
-                if(isset($engagement->image_url) || $engagement->image_url != "") {
-                    if(pathinfo($engagement->image_url, PATHINFO_EXTENSION) == "mp4") {
-                ?>
-                        <video width="320" height="240" controls>
-                            <source src="<?= $engagement->image_url ?>" type="video/mp4">
-                            <source src="<?= $engagement->image_url ?>" type="video/ogg">
-                            Your browser does not support the video tag.
-                        </video>
-                <?php
-                    } else {
-                ?>
-                        <img class="engagement_title" data-id="<?= $engagement->id ?>" src="<?= $engagement->image_url ?>" alt="<= $engagement->title ?>" style="width: 100%;">
-                <?php
+                <div class="text-center engagement" data-img="<?= $engagement->image_url ?>">
+                    <b class="engagement_title" data-id="<?= $engagement->id ?>"><?= $engagement->title ?></b>
+                    <br>
+                    <small class="engagement_title" data-id="<?= $engagement->id ?>"><?= $engagement->subtitle ?></small>
+                    <br>
+                    <br>
+                    <?php
+                    if(isset($engagement->image_url) || $engagement->image_url != "") {
+                        if(pathinfo($engagement->image_url, PATHINFO_EXTENSION) == "mp4") {
+                    ?>
+                            <video width="320" height="240" controls>
+                                <source src="<?= $engagement->image_url ?>" type="video/mp4">
+                                <source src="<?= $engagement->image_url ?>" type="video/ogg">
+                                Your browser does not support the video tag.
+                            </video>
+                    <?php
+                        } else {
+                    ?>
+                            <img class="engagement_title" data-id="<?= $engagement->id ?>" src="<?= $engagement->image_url ?>" alt="<?= $engagement->title ?>" style="width: 100%;">
+                    <?php
+                        }
+                    ?>
+                        <br>
+                        <br>
+                    <?php
                     }
-                ?>
-                    <br>
-                    <br>
-                <?php
-                }
-                ?>
-                <p><?= $engagement->message ?></p>
-                <small style="margin-right: 20px;"><?= monthDay($engagement->activity_date) ?></small>
+                    ?>
+                    <p><?= $engagement->message ?></p>
+                    <small><?= monthDay($engagement->activity_date) ?></small>
+                </div>
             <?php
             }
             if(count($engagements) == 0) {
@@ -374,6 +380,12 @@ $(function() {
     $('.comment_form').submit(function(){
         console.log($(this).serialize());
         return false;
+    });
+
+    $('.engagement').click(function(e){
+        e.preventDefault();
+
+        window.open($(this).data('img'));
     });
 });
 </script>

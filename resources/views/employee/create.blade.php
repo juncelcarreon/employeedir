@@ -1,9 +1,6 @@
 @extends('layouts.main')
 @section('title')
-Add Employee
-@endsection
-@section('pagetitle')
-Employee / Add
+Employee | Add Employee
 @endsection
 @section('content') 
 <style type="text/css">
@@ -583,10 +580,14 @@ Employee / Add
     </div>
 </script>
 <script type="text/javascript">
+var ctr = 1;
+function removeThisDependent(obj) {
+    var id = $(obj).data('id');
+    $("#dep_" + id).remove();
+}
+$(function() {
     activeMenu($('#menu-active-employees'));
 
-    var ctr = 1;
-    
     $('#create_employee_form').validate({
         ignore: [], 
         rules : {
@@ -607,7 +608,7 @@ Employee / Add
             }
         }
     });
-    
+
     $("#_team_name").change(function(){
         var val = $(this).find(':selected').data('_dept_code');
         $("#_dept_code").val(val);
@@ -629,37 +630,12 @@ Employee / Add
         
         ctr++;
     });
-    
+
     $(".datepicker").datepicker({
         changeYear  : true,
         changeMonth : true,
         yearRange   : "1930:<?php echo date("Y") ?>"
     });
-    // $('input[name=employee_type]').change(function(){
-    //     switch($(this).val()){'
-    //         case '2':
-    //              $('select[name=supervisor_id]').parent().parent().show();
-    //              $('select[name=manager_id]').parent().parent().show();
-    //              $('input[name=all_access]').parent().parent().show();
-    //         break;
-    //         case '3':
-    //             console.log('sulod');
-    //             $('select[name=supervisor_id]').parent().parent().hide();
-    //              $('input[name=all_access]').parent().parent().show();
-    //         break;
-    //         case '4':
-    //              $('select[name=supervisor_id]').parent().parent().hide();
-    //              $('select[name=manager_id]').parent().parent().hide();
-    //              $('input[name=all_access]').parent().parent().show();
-    //         break;
-    //         case '1':
-    //              $('select[name=supervisor_id]').parent().parent().show();
-    //              $('select[name=manager_id]').parent().parent().show();
-    //              $('input[name=all_access]').parent().parent().hide();
-    //         break;
-    //     }
-    // });
-    // $('input[name=employee_type]').trigger('change');
 
     $(".is_reg_event").change(function(){
         var val = $(this).val();
@@ -669,12 +645,8 @@ Employee / Add
         else
             $(".reg_div_").hide();
     });
+
     $(".reg_div_").hide();
-    
-    function removeThisDependent(obj){
-        
-        var id = $(obj).data('id');
-        $("#dep_" + id).remove();
-    }
+});
 </script>
 @endsection

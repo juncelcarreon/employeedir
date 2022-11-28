@@ -2,9 +2,6 @@
 @section('title')
 Employees
 @endsection
-@section('pagetitle')
-Employees
-@endsection
 @section('content')
 <style type="text/css">
     .emp-profile{
@@ -59,65 +56,69 @@ Employees
 </style>
 <div class="col-md-12">
     <div class="header-container" style="margin-bottom: 5px;">
-        <ul class="alphabet-search" style="padding-left: 0px">
-            <li style="margin-left: 0px">
-                <form style="display: unset;">
-                    <input type="hidden" name="alphabet" value="{{ $request->alphabet }}">
-                    <input type="hidden" name="department" value="{{ $request->department }}">
-                    <input type="text" placeholder="Search by name" id="search_employee" name="keyword" value="{{ $request->keyword }}">
-                    <button class="btn btn-primary" style="height:  35px; margin-top: 1px;"><span class="fa fa-search"></span></button>
-                </form>
-            </li>
-        </ul>
-        <ul class="alphabet-search">
-            <li>
-                <a href="?alphabet=">All</a>
-            </li>   
-            @foreach (range('A', 'Z') as $letter)
-            <li>
-                <a <?php echo $request->alphabet == $letter ? "class='selected'" : '' ?> style="font-weight: 500;" href="?alphabet={{ $letter . "\n" . "&keyword=" . $request->keyword . "&department=" . $request->department }}" >{{ $letter . "\n" }}</a>
-            </li>
-            @endforeach
-        </ul>
-        <ul class="alphabet-search pull-right">
-            <li>
-                <span class="fa fa-filter" title="Filter By" style="color: #777777; font-size: 18px; padding: 5px"></span>
-                <select id="sort_option_list" style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;">
-                    <option value="1" {{ isset($request->department) ? "selected" : "" }}>Department</option>
-                    <option value="2" {{ isset($request->position) ? "selected" : "" }}>Position</option>
-                    <option value="3" {{ isset($request->birthmonth) ? "selected" : "" }}>Birth Month</option>
-                </select>
-            </li>
-            <li>
-                @if($request->department == '' && $request->position == '' && $request->birthmonth == '')
-                <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;" id="departments_list">
-                    <option disabled selected>Search by department:</option>
-                    @foreach( $departments as $department)
-                    <option <?php echo $request->department == $department->department_name ? "selected" : "";?> >{{ $department->department_name}}</option>
-                    @endforeach
-                </select>
-                @else
-                <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->department) ? '' : 'display: none;' }}" id="departments_list">
-                    <option disabled selected>Search by department:</option>
-                    @foreach( $departments as $department)
-                    <option <?php echo $request->department == $department->department_name ? "selected" : "";?> >{{ $department->department_name}}</option>
-                    @endforeach
+        <div class="flexbox" style="display: flex; justify-content: space-between;">
+            <ul class="alphabet-search" style="padding-left: 0px">
+                <li style="margin-left: 0px">
+                    <form style="display: unset;">
+                        <input type="hidden" name="alphabet" value="{{ $request->alphabet }}">
+                        <input type="hidden" name="department" value="{{ $request->department }}">
+                        <input type="text" placeholder="Search by name" id="search_employee" name="keyword" value="{{ $request->keyword }}">
+                        <button class="btn btn-primary" style="height:  35px; margin-top: 1px;"><span class="fa fa-search"></span></button>
+                    </form>
+                </li>
+            </ul>
+            <ul class="alphabet-search pull-right">
+                <li>
+                    <span class="fa fa-filter" title="Filter By" style="color: #777777; font-size: 18px; padding: 5px"></span>
+                    <select id="sort_option_list" style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;">
+                        <option value="1" {{ isset($request->department) ? "selected" : "" }}>Department</option>
+                        <option value="2" {{ isset($request->position) ? "selected" : "" }}>Position</option>
+                        <option value="3" {{ isset($request->birthmonth) ? "selected" : "" }}>Birth Month</option>
                     </select>
-                @endif
-                <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->position) ? '' : 'display: none;' }}" id="position_list">
-                    <option disabled selected>Search by Position:</option>
-                    @foreach( $positions as $position)
-                    <option <?php echo $request->position == $position->position_name ? "selected" : "";?> >{{ $position->position_name}}</option>
-                    @endforeach
-                </select>
-                <select style="width: 200px; border-color: #ddd; padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->birthmonth) ? '' : 'display: none;' }}" id="month_list">
-                    <option disabled selected>Search by Birth Month:</option>
-                    @for( $m = 1; $m <= 12 ; $m++)
-                    <option value="{{ $m }}" <?php echo $request->birthmonth == $m ? "selected" : "";?> >{{ date('F', mktime(0,0,0,$m, 1, date('Y'))) }}</option>
-                    @endfor
-                </select>
-           </li>
-        </ul>
+                </li>
+                <li>
+                    @if($request->department == '' && $request->position == '' && $request->birthmonth == '')
+                    <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;" id="departments_list">
+                        <option disabled selected>Search by department:</option>
+                        @foreach( $departments as $department)
+                        <option <?php echo $request->department == $department->department_name ? "selected" : "";?> >{{ $department->department_name}}</option>
+                        @endforeach
+                    </select>
+                    @else
+                    <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->department) ? '' : 'display: none;' }}" id="departments_list">
+                        <option disabled selected>Search by department:</option>
+                        @foreach( $departments as $department)
+                        <option <?php echo $request->department == $department->department_name ? "selected" : "";?> >{{ $department->department_name}}</option>
+                        @endforeach
+                        </select>
+                    @endif
+                    <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->position) ? '' : 'display: none;' }}" id="position_list">
+                        <option disabled selected>Search by Position:</option>
+                        @foreach( $positions as $position)
+                        <option <?php echo $request->position == $position->position_name ? "selected" : "";?> >{{ $position->position_name}}</option>
+                        @endforeach
+                    </select>
+                    <select style="width: 200px; border-color: #ddd; padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->birthmonth) ? '' : 'display: none;' }}" id="month_list">
+                        <option disabled selected>Search by Birth Month:</option>
+                        @for( $m = 1; $m <= 12 ; $m++)
+                        <option value="{{ $m }}" <?php echo $request->birthmonth == $m ? "selected" : "";?> >{{ date('F', mktime(0,0,0,$m, 1, date('Y'))) }}</option>
+                        @endfor
+                    </select>
+               </li>
+            </ul>
+        </div>
+        <div class="flexbox" style="display: flex; justify-content: center; text-align: center;">
+            <ul class="alphabet-search" style="padding: 0;">
+                <li style="margin:0 5px;">
+                    <a href="?alphabet=">All</a>
+                </li>   
+                @foreach (range('A', 'Z') as $letter)
+                <li style="margin:0 5px;">
+                    <a <?php echo $request->alphabet == $letter ? "class='selected'" : '' ?> style="font-weight: 500;" href="?alphabet={{ $letter . "\n" . "&keyword=" . $request->keyword . "&department=" . $request->department }}" >{{ $letter . "\n" }}</a>
+                </li>
+                @endforeach
+            </ul>
+        </div>
     </div>
 @if(count($employees) == 0)
     <br>
@@ -205,6 +206,8 @@ function rfc3986EncodeURIComponent (str) {
     return encodeURIComponent(str).replace(/[!'()*]/g, escape);
 }
 $(function() {
+    activeMenu($('#menu-active-employees'));
+
     $('#sort_option_list').change(function(){
         switch($(this).val()){
             case '1':

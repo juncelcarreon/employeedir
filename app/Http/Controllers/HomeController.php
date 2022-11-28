@@ -24,7 +24,7 @@ class HomeController extends Controller
         $data['new_hires'] = User::allExceptSuperAdmin()->orderBy('prod_date', 'DESC')->paginate(5);
         $data['employees'] = User::allExceptSuperAdmin()->get();
         $data['birthdays'] = User::whereRaw('MONTH(birth_date) = '.date('n'))->whereRaw('deleted_at is null')->where("status","=",1)->orderByRaw('DAYOFMONTH(birth_date) ASC')->get();
-        $data['engagements'] = ElinkActivities::thisMonth()->orderBy('created_at', 'DESC')->get();
+        $data['engagements'] = ElinkActivities::getActivities();
         $data['dashboard'] = 0;
 
         return view('home', $data);
@@ -36,7 +36,7 @@ class HomeController extends Controller
         $data['new_hires'] = User::allExceptSuperAdmin()->orderBy('prod_date', 'DESC')->paginate(5);
         $data['employees'] = User::allExceptSuperAdmin()->get();
         $data['birthdays'] = User::whereRaw('MONTH(birth_date) = '.date('n'))->whereRaw('deleted_at is null')->where("status","=",1)->orderByRaw('DAYOFMONTH(birth_date) ASC')->get();
-        $data['engagements'] = ElinkActivities::thisMonth()->orderBy('created_at', 'DESC')->get();
+        $data['engagements'] = ElinkActivities::getActivities();
         $data['dashboard'] = 1;
 
         return view('home', $data);

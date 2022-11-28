@@ -12,37 +12,45 @@ class LeaveRequest extends Model
 {
     protected $table = 'leave_request';
 
-    public function employee(){
+    public function employee()
+    {
     	return $this->belongsTo('App\User', 'employee_id');
     }
 
-    public function leave_type(){
+    public function leave_type()
+    {
     	return $this->belongsTo('App\LeaveType');
     }
 
-    public function pay_type(){
+    public function pay_type()
+    {
     	return $this->belongsTo('App\PayType');
     }
     
-    public function leave_details_from(){
+    public function leave_details_from()
+    {
         return $this->hasMany('App\LeaveRequestDetails',"leave_id")->orderBy("date","asc")->take(1);
 
     }
     
-    public function leave_details_to(){
+    public function leave_details_to()
+    {
         return $this->hasMany('App\LeaveRequestDetails',"leave_id")->orderBy("date","desc")->take(1);
     }
 
-    public function leave_details(){
+    public function leave_details()
+    {
         return $this->hasMany('App\LeaveRequestDetails',"leave_id");
     }
 
 
-    public function scopeUnapproved($query){
+    public function scopeUnapproved($query)
+    {
         return $query->where('approve_status_id', '=', 0)->orWhereNull('approve_status_id');
     }
 
-    public function recipients(){
+    public function recipients()
+    {
         $settings = Valuestore::make(storage_path('app/settings.json'));
 
         $main_recipients = json_decode($settings->get('leave_email_main_recipients'));
@@ -78,7 +86,8 @@ class LeaveRequest extends Model
         return array_values(array_filter(array_unique($email_recipients)));
     }
 
-    public function scopeManagedBy($query, $user){
+    public function scopeManagedBy($query, $user)
+    {
         $id = $user->id;
         return $query->whereHas('employee', function($q) use ($id){
             $q->where('supervisor_id', '=',$id);
@@ -87,12 +96,14 @@ class LeaveRequest extends Model
         });
     }
 
-    public function scopeMyLeaves($query,$user){
+    public function scopeMyLeaves($query,$user)
+    {
         $id = $user->id;
         return $query->where('employee_id','=',$id);
     }
 
-    public function scopeStatus(){
+    public function scopeStatus()
+    {
         if($this->approve_status == 1){
             return "Approved";
         } else if($this->approved_by_signed_date != NULL){
@@ -105,7 +116,9 @@ class LeaveRequest extends Model
             return "Not yet approved";
         }
     }
-    public function getApprovalStatus(){
+
+    public function getApprovalStatus()
+    {
         if($this->approve_status_id == 0){
             return '<span class="fa fa-refresh"></span> Waiting for response';
         } else if($this->approve_status_id == 1){
@@ -115,7 +128,9 @@ class LeaveRequest extends Model
         }
         return 'Waiting for response';
     }
-    public function scopeLeaveDays(){
+
+    public function scopeLeaveDays()
+    {
         if($this->number_of_days == 0.5){
             return "half day";
         } else if($this->number_of_days % 1 == 0.5){
@@ -127,34 +142,40 @@ class LeaveRequest extends Model
             return (int)$this->number_of_days . ' day';
         }
         else {
-             return (int)$this->number_of_days . ' days';
+            return (int)$this->number_of_days . ' days';
         }
     }
 
-    public function scopeIsForRecommend(){
+    public function scopeIsForRecommend()
+    {
         //return (Auth::user()->id == $this->employee->supervisor_id) && ($this->recommending_approval_by_signed_date == NULL && $this->approve_status_id != 2) || Auth::user()->isAdmin();
         return Auth::user()->id == $this->employee->supervisor_id && $this->recommending_approval_by_signed_date == NULL && $this->approve_status_id != 2;
     }
 
-    public function scopeIsForApproval(){
+    public function scopeIsForApproval()
+    {
         //return (Auth::user()->id == $this->employee->manager_id) && ($this->approved_by_signed_date == NULL && $this->approve_status_id != 2) || Auth::user()->isAdmin();
         return Auth::user()->id == $this->employee->manager_id && $this->approved_by_signed_date == NULL && $this->approve_status_id != 2;
     }
 
-    public function scopeIsForNoted(){
+    public function scopeIsForNoted()
+    {
         //return Auth::user()->isHR() && ($this->noted_by_signed_date == NULL && $this->approve_status_id != 2) || Auth::user()->isAdmin();
         return Auth::user()->isHR() && ($this->noted_by_signed_date == NULL && $this->approve_status_id != 2);
     }
 
-    public function scopeCanBeDeclined(){
+    public function scopeCanBeDeclined()
+    {
         return ($this->isForRecommend() || $this->isForApproval() || $this->isForNoted()) && $this->approve_status_id != 2;
     }
-    
-    public function getEmployeeName($id){
+
+    public function getEmployeeName($id)
+    {
         return DB::table('employee_info')->where('id', $id)->get();
     }
 
-    public static function getBlockedDates($dept){
+    public static function getBlockedDates($dept)
+    {
         if(Auth::user()->isManager())
             DB::select("
                 SELECT 
@@ -188,8 +209,9 @@ class LeaveRequest extends Model
                 ORDER BY d.date ASC
             ");
     }
-    
-    public static function getCWD(){
+
+    public static function getCWD()
+    {
         return DB::select("
             SELECT 
                 DATE_FORMAT(start_date, '%Y-%m-%d') AS cwd
@@ -200,7 +222,8 @@ class LeaveRequest extends Model
         );
     }
 
-    public static function getLeave($leave_type = 'pending', $id = null, $type = 'list'){
+    public static function getLeave($leave_type = 'pending', $id = null, $type = 'list', $is_separated = null)
+    {
         $query = "";
         switch ($leave_type) {
             case 'approve':
@@ -208,6 +231,9 @@ class LeaveRequest extends Model
                 break;
             case 'cancelled':
                 $query = "`leave_request`.`approve_status_id` = 2 ";
+                break;
+            case 'separated':
+                $query = "`leave_request`.`approve_status_id` IS NOT NULL ";
                 break;
             default:
                 $query = "(`leave_request`.`approve_status_id` = 0 OR `leave_request`.`approve_status_id` = 3) ";
@@ -220,6 +246,11 @@ class LeaveRequest extends Model
 
         if(!empty($id) && $type == 'team') {
             $query .= "AND (`employee_info`.`manager_id`={$id} OR `employee_info`.`supervisor_id`={$id})";
+        }
+
+        $query2 = "1";
+        if(empty($is_separated)) {
+            $query2 = "`employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1";
         }
 
         $data = DB::select("
@@ -238,8 +269,7 @@ class LeaveRequest extends Model
             WHERE
                 {$query} AND
                 `leave_request`.`status` = 1 AND
-                `employee_info`.`deleted_at` IS NULL AND
-                `employee_info`.`status` = 1
+                {$query2}
             ORDER BY 
                 `leave_request`.`date_filed` 
             DESC

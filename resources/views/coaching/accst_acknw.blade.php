@@ -1,4 +1,7 @@
 @extends('layouts.main')
+@section('title')
+Linking Sessions > Accountability Setting > Acknowledge Session
+@endsection
 @section('content')
 <div class="container-fluid">
     <div class="panel panel-primary">
@@ -158,64 +161,62 @@
     </div>
 </div>
 <script type="text/javascript">
-    $(function(){
-        initVals();
-    });
-    
-    function initVals(){ //se_when_use
-        $("#ac_expectation_date").datepicker({
-            changeMonth : true,
-            changeYear  : true
-        });
-        
-        var focus = <?php echo $obj['ac_focus'] ? 1 : 0 ?>;
-        var se_skill = <?php echo $obj['ac_skill'] ? 1 : 0 ?>;
-        var se_when_use = <?php echo $obj['ac_when_use'] ? 1 : 0 ?>;
-        var se_why_use = <?php echo $obj['ac_why_use'] ? 1 : 0 ?>;
-        var se_expectations = <?php echo $obj['ac_expectations'] ? 1 : 0 ?>;
-        var ac_expectation_date = <?php echo $obj['ac_expectation_date'] ? 1 : 0 ?>;
-        var comments = <?php echo $obj['ac_comments'] ? 1 : 0 ?>;
-        var feedback = <?php echo $obj['ac_feedback'] ? 1 : 0 ?>;
-        var flag = <?php echo $obj['flag'] ? 1 : 0 ?>;
-        
-        if(flag && se_skill == 0){
-            $("#se_skillHelp").show();
-        }
-    
-        if(flag && se_when_use == 0){
-            $("#se_skillWhenHelp").show();
-        }
-        
-        if(flag && se_how_use == 0){
-            $("#se_skillHowHelp").show();
-        }
-        
-        if(flag && se_why_use == 0){
-            $("#se_WhyUseHelp").show();
-        }
-        
-        if(flag && se_expectations == 0){
-            $("#se_ExpectationsHelp").show();
-        }
+function initVals(){
+    var focus = <?php echo $obj['ac_focus'] ? 1 : 0 ?>;
+    var se_skill = <?php echo $obj['ac_skill'] ? 1 : 0 ?>;
+    var se_when_use = <?php echo $obj['ac_when_use'] ? 1 : 0 ?>;
+    var se_why_use = <?php echo $obj['ac_why_use'] ? 1 : 0 ?>;
+    var se_expectations = <?php echo $obj['ac_expectations'] ? 1 : 0 ?>;
+    var ac_expectation_date = <?php echo $obj['ac_expectation_date'] ? 1 : 0 ?>;
+    var comments = <?php echo $obj['ac_comments'] ? 1 : 0 ?>;
+    var feedback = <?php echo $obj['ac_feedback'] ? 1 : 0 ?>;
+    var flag = <?php echo $obj['flag'] ? 1 : 0 ?>;
 
-        if(flag && ac_expectation_date == 0){
-            $("#ac_expectation_dateHelp").show();
-        }
-    
-        if(flag && focus == 0){
-            $("#se_focusHelp").show();
-        }
-        
-        if(flag && comments == 0){
-            $("#rf_commentsHelp").show();
-        }
-        
-        if(flag && feedback ==0){
-            $("#ac_feedbackHelp").show();
-        }
-        
-        console.log({focus : focus, comments : comments, flag : flag});
-
+    if(flag && se_skill == 0){
+        $("#se_skillHelp").show();
     }
+
+    if(flag && se_when_use == 0){
+        $("#se_skillWhenHelp").show();
+    }
+
+    if(flag && se_how_use == 0){
+        $("#se_skillHowHelp").show();
+    }
+
+    if(flag && se_why_use == 0){
+        $("#se_WhyUseHelp").show();
+    }
+
+    if(flag && se_expectations == 0){
+        $("#se_ExpectationsHelp").show();
+    }
+
+    if(flag && ac_expectation_date == 0){
+        $("#ac_expectation_dateHelp").show();
+    }
+
+    if(flag && focus == 0){
+        $("#se_focusHelp").show();
+    }
+
+    if(flag && comments == 0){
+        $("#rf_commentsHelp").show();
+    }
+
+    if(flag && feedback ==0){
+        $("#ac_feedbackHelp").show();
+    }
+}
+$(function(){
+    activeMenu($('#menu-linking-sessions'));
+
+    $("#ac_expectation_date").datepicker({
+        changeMonth : true,
+        changeYear  : true
+    });
+
+    initVals();
+});
 </script>
 @endsection

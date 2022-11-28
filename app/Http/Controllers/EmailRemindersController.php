@@ -41,14 +41,13 @@ class EmailRemindersController extends Controller
             $five_month_days_left = abs(round($five_month_difference / 86400));
             $five_month_evaluation = SentEmailArchives::where('employee_id', $employee->id)->where('mail_type', 'EVALUATION05')->first();
 
+            $data['emp_id'] = $employee->id;
+            $data['emp_name'] = strtoupper($employee->fullname());
+            $data['date_hired'] = date('Y-m-d', strtotime($employee->hired_date));
+
             if($three_month_days_left <= 15 && $three_month_difference >= 0) {
-                $data = [
-                    'emp_id' => $employee->id,
-                    'emp_name' => strtoupper($employee->fullname()),
-                    'date_hired' => date('Y-m-d', strtotime($employee->hired_date)),
-                    'date' => $three_month_date,
-                    'due_date' => $three_month_review_date->subDays(5)->format('Y-m-d')
-                ];
+                $data['date'] = $three_month_date;
+                $data['due_date'] = $three_month_review_date->subDays(5)->format('Y-m-d');
 
                 $supervisor = User::find($employee->supervisor_id);
                 if(!empty($supervisor)) {
@@ -59,26 +58,21 @@ class EmailRemindersController extends Controller
                         $archives->save();
 
                         $data['id'] = $archives->id;
-                        Mail::to($supervisor->email)->cc(['hrd@elink.com.ph','juncelcarreon@elink.com.ph'])->send(new ProbitionaryEmailNotificationA($data));
-                    } else{
+                        // Mail::to($supervisor->email)->cc('hrd@elink.com.ph')->send(new ProbitionaryEmailNotificationA($data));
+                    } else {
                         if($three_month_evaluation->status == 0 && date('Y-m-d', strtotime($three_month_evaluation->updated_at)) != date('Y-m-d')) {
                             $data['id'] = $three_month_evaluation->id;
 
                             SentEmailArchives::where('id', $three_month_evaluation->id)->update(['updated_at' => date('Y-m-d H:i:s')]);
-                            // Mail::to($supervisor->email)->cc(['hrd@elink.com.ph','juncelcarreon@elink.com.ph'])->send(new ProbitionaryEmailNotificationA($data));
+                            // Mail::to($supervisor->email)->cc('hrd@elink.com.ph')->send(new ProbitionaryEmailNotificationA($data));
                         }
                     }
                 }
             }
 
             if($five_month_days_left <= 15 && $five_month_difference >= 0) {
-                $data = [
-                    'emp_id' => $employee->id,
-                    'emp_name' => strtoupper($employee->fullname()),
-                    'date_hired' => date('Y-m-d', strtotime($employee->hired_date)),
-                    'date' => $five_month_date,
-                    'due_date' => $five_month_review_date->subDays(5)->format('Y-m-d')
-                ];
+                $data['date'] = $five_month_date;
+                $data['due_date'] = $five_month_review_date->subDays(5)->format('Y-m-d');
 
                 $supervisor = User::find($employee->supervisor_id);
                 if(!empty($supervisor)) {
@@ -89,13 +83,13 @@ class EmailRemindersController extends Controller
                         $archives->save();
 
                         $data['id'] = $archives->id;
-                        Mail::to($supervisor->email)->cc(['hrd@elink.com.ph','juncelcarreon@elink.com.ph'])->send(new ProbitionaryEmailNotificationB($data));
-                    } else{
+                        // Mail::to($supervisor->email)->cc('hrd@elink.com.ph')->send(new ProbitionaryEmailNotificationB($data));
+                    } else {
                         if($five_month_evaluation->status == 0 && date('Y-m-d', strtotime($five_month_evaluation->updated_at)) != date('Y-m-d')) {
                             $data['id'] = $five_month_evaluation->id;
 
                             SentEmailArchives::where('id', $five_month_evaluation->id)->update(['updated_at' => date('Y-m-d H:i:s')]);
-                            // Mail::to($supervisor->email)->cc(['hrd@elink.com.ph','juncelcarreon@elink.com.ph'])->send(new ProbitionaryEmailNotificationB($data));
+                            // Mail::to($supervisor->email)->cc('hrd@elink.com.ph')->send(new ProbitionaryEmailNotificationB($data));
                         }
                     }
                 }
@@ -107,13 +101,13 @@ class EmailRemindersController extends Controller
     {
         $reminder = SentEmailArchives::find($id);
 
-       if(Auth::user()->dept_code == 'HR01' || Auth::user()->id == 2797  || Auth::user()->isAdmin()){
+       if(!empty($reminder) && Auth::user()->isAdmin()) {
             SentEmailArchives::where('id', $reminder->id)->update(['status' => '1']);
 
             return 'Item Complete';
-       }else{
-            return 'Access Denied';
        }
+
+       return 'Access Denied';
     }
 
     public function reminderApproval()
@@ -126,10 +120,9 @@ class EmailRemindersController extends Controller
             $supervisor = User::find($request->supervisor_id);
             $manager = User::find($request->manager_id);
             $leave_archive = SentEmailArchives::where('employee_id', $request->employee_id)->where('mail_type', "APPROVAL{$request->id}")->where('status', 1)->first();
-            $data = [
-                'emp_name' => strtoupper($request->last_name .', '. $request->first_name),
-                'id' => $request->id
-            ];
+
+            $data['emp_name'] = strtoupper($request->last_name .', '. $request->first_name);
+            $data['id'] = $request->id;
 
             if($days >= 3 && empty($leave_archive->id)) {
                 $archives = new SentEmailArchives();
@@ -138,28 +131,26 @@ class EmailRemindersController extends Controller
                 $archives->status       = 1;
                 $archives->save();
 
-                $data_arr[$request->id]['name'] = 'add';
-
                 if (!empty($supervisor) && empty($request->recommending_approval_by_signed_date)) {
                     $data['leader_name'] = strtoupper($supervisor->first_name);
 
                     if(!empty($manager)) { 
                         if($manager->id != $supervisor->id) {
-                            // Mail::to($supervisor->email)->cc('juncelcarreon@elink.com.ph')->send(new LeaveReminder($data));
+                            // Mail::to($supervisor->email)->send(new LeaveReminder($data));
                         }
                     } else {
-                        // Mail::to($supervisor->email)->cc('juncelcarreon@elink.com.ph')->send(new LeaveReminder($data));
+                        // Mail::to($supervisor->email)->send(new LeaveReminder($data));
                     }
                 }
 
                 if (!empty($manager)) { 
                     $data['leader_name'] = strtoupper($manager->first_name); 
 
-                    // Mail::to($manager->email)->cc('juncelcarreon@elink.com.ph')->send(new LeaveReminder($data));
+                    // Mail::to($manager->email)->send(new LeaveReminder($data));
                 } else {
                     $data['leader_name'] = 'HR DEPARTMENT';
 
-                    // Mail::to('hrd@elink.com.ph')->cc('juncelcarreon@elink.com.ph')->send(new LeaveReminder($data));
+                    // Mail::to('hrd@elink.com.ph')->send(new LeaveReminder($data));
                 }
             }
         }
@@ -169,15 +160,13 @@ class EmailRemindersController extends Controller
     {
         ini_set('memory_limit', '-1');
 
-        $data_array = [];
         foreach(DAInfraction::getInfractions(0) as $infraction) {
             $difference = strtotime(now()) - strtotime($infraction->created_at);
             $days = abs(round($difference / 86400));
             $archive = SentEmailArchives::where('employee_id', $infraction->employee_id)->where('mail_type', "INFRACTION{$infraction->id}")->first();
-            $data = [
-                'emp_name' => strtoupper($infraction->first_name),
-                'url' => url("dainfraction/{$infraction->id}")
-            ];
+
+            $data['emp_name'] = strtoupper($infraction->first_name);
+            $data['url'] = url("dainfraction/{$infraction->id}");
 
             if($days >= 1) {
                 if(empty($archive->id)) {
@@ -187,13 +176,13 @@ class EmailRemindersController extends Controller
                     $archives->status       = 0;
                     $archives->save();
 
-                    // Mail::to('juncelcarreon@elink.com.ph')->send(new InfractionReminder($data));
+                    // Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new InfractionReminder($data));
                     // Mail::to($infraction->email)->send(new InfractionReminder($data));
                 } else {
                     if(date('Y-m-d', strtotime($archive->updated_at)) != date('Y-m-d')) {
                         SentEmailArchives::where('id', $archive->id)->update(['updated_at' => date('Y-m-d H:i:s')]);
 
-                        // Mail::to('juncelcarreon@elink.com.ph')->send(new InfractionReminder($data));
+                        // Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new InfractionReminder($data));
                         // Mail::to($infraction->email)->send(new InfractionReminder($data));
                     }
                 }
@@ -202,7 +191,7 @@ class EmailRemindersController extends Controller
     }
 
     public function remindTeamLeader()
-    {   
+    {
         $todayDate = now();
         $leaves =  LeaveRequest::where('status',1)->whereYear('created_at', '=', $todayDate->year)->where('approve_status_id',NULL)->orWhere('approve_status_id',0)->get();
 

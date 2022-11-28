@@ -24,7 +24,13 @@
 	<div class="panel-heading">
 		LEAVE REQUEST INFORMATION
 
-		<a href="<?= url('leave') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
+		<?php
+			$url = url('leave');
+			if(!empty($employee->deleted_at)) {
+				$url = url("profile/{$employee->id}");
+			}
+		?>
+		<a href="<?= $url ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
 	</div>
 	<div class="panel panel-body">
 		<div class="row" id="printable">
@@ -164,7 +170,7 @@
             </div>
 			<div class="col-md-6" style="direction: rtl">
             <?php
-        	if($leave_request->isForRecommend() && ($leave_request->approve_status_id == 0 || $leave_request->approve_status_id == 3)) {
+        	if(($leave_request->supervisor_id == Auth::user()->id && empty($leave_request->recommending_approval_by_signed_date)) && ($leave_request->approve_status_id == 0 || $leave_request->approve_status_id == 3)) {
             ?>
 				    <form action="<?= url('leave/recommend') ?>" method="POST" style="display: inline-flex;">
 				        {{ csrf_field() }}

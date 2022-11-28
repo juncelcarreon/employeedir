@@ -1,4 +1,7 @@
 @extends('layouts.main')
+@section('title')
+Linking Sessions > Goal Setting > View Session
+@endsection
 @section('content')
 <div class="container-fluid">
     <div class="panel panel-primary">
@@ -12,20 +15,20 @@
                 <?php
                 else:
                 ?>
-                <div class="col-md-12" style="padding: 12px;"><b style="color: #0000FF; font-size: 16px;"><?php echo $obj['update'] ? "UPDATE" : "VIEW" ?> Goal Setting Session</b></div>
+                <div class="col-md-12" style="padding: 12px;"><b style="color: #0000FF; font-size: 16px;"><?= $obj['update'] ? "UPDATE" : "VIEW" ?> Goal Setting Session</b></div>
                 <?php
                 endif;
                 ?>
                 
             </div>
             <form id="form_gtky_session" autocomplete="off">
-                <fieldset<?php echo $obj['readonly'] == 1 ? ' disabled="1"' : '' ?>>
+                <fieldset<?= $obj['readonly'] == 1 ? ' disabled="1"' : '' ?>>
                     <div class="row">
                         <div class="col-md-1"></div>
                         <div class="col-md-10">
                             <div class="mb-3">
                                 <label for="staffName" class="form-label">Staff</label>
-                                <input type="text" class="form-control" id="staffName" name="lnk_linkee_name" aria-describedby="Staff" readonly="1" value="<?php echo $obj['lnk_linkee_name'] ?>">
+                                <input type="text" class="form-control" id="staffName" name="lnk_linkee_name" aria-describedby="Staff" readonly="1" value="<?= $obj['lnk_linkee_name'] ?>">
                             </div>
                         </div>
                     </div>
@@ -35,7 +38,7 @@
                         <div class="col-md-10">
                             <div class="mb-3">
                                 <label for="exampleInputDate" class="form-label">Date</label>
-                                <input type="text" class="form-control" id="exampleInputDate" aria-describedby="Coaching Date" readonly="1" value="<?php echo $obj['lnk_date'] ?>">
+                                <input type="text" class="form-control" id="exampleInputDate" aria-describedby="Coaching Date" readonly="1" value="<?= $obj['lnk_date'] ?>">
                             </div>
                         </div>
                     </div>
@@ -45,11 +48,11 @@
                         <div class="col-md-10">
                             <div class="mb-3">
                                 <label for="exampleInputSkill" class="form-label">Accomplishments</label>
-                                <input type="text" name="gs_accmpl" class="form-control" value="<?php echo $obj['gs_accmpl'] ?>">
+                                <input type="text" name="gs_accmpl" class="form-control" value="<?= $obj['gs_accmpl'] ?>">
                                 <div id="gs_accmplHelp" class="form-text" style="color: red; display: none;">* Accomplishment is required and necessary.</div>
                             </div>
                         </div>
-                    </div
+                    </div>
                     <div>&nbsp;</div>
                       <div class="row">
                           <div class="col-md-1"></div>
@@ -65,63 +68,63 @@
                                   <tr>
                                       <th>1</th>
                                       <td>
-                                          <input id="Input_gtk_bday" type="text" name="gs_metric_01" class="form-control" value="<?php echo $obj['gs_metric_01'] ?>">
+                                          <input id="Input_gtk_bday" type="text" name="gs_metric_01" class="form-control" value="<?= $obj['gs_metric_01'] ?>">
                                           <div id="gs_metric_01Help" class="form-text" style="color: red; display: none;">* Required</div>
                                       </td>
                                       <td>
-                                          <input id="exampleInputSeHowUse" type="text" name="gs_target_01" class="form-control" value="<?php echo $obj['gs_target_01'] ?>">
+                                          <input id="exampleInputSeHowUse" type="text" name="gs_target_01" class="form-control" value="<?= $obj['gs_target_01'] ?>">
                                           <div id="gs_target_01Help" class="form-text" style="color: red; display: none;">* Required</div>
                                       </td>
                                       <td>
-                                          <input id="exampleInputSeWhyUse" type="text" name="gs_prev_01" class="form-control" value="<?php echo $obj['gs_prev_01'] ?>">
+                                          <input id="exampleInputSeWhyUse" type="text" name="gs_prev_01" class="form-control" value="<?= $obj['gs_prev_01'] ?>">
                                           <div id="gs_prev_01Help" class="form-text" style="color: red; display: none;">* Required</div>
                                       </td>
                                       <td>
-                                          <input id="exampleInputSeMyExpect" type="text" name="gs_curr_01" class="form-control" value="<?php echo $obj['gs_curr_01'] ?>">
+                                          <input id="exampleInputSeMyExpect" type="text" name="gs_curr_01" class="form-control" value="<?= $obj['gs_curr_01'] ?>">
                                           <div id="gs_curr_01Help" class="form-text" style="color: red; display: none;">* Required</div>
                                       </td>
                                   </tr>
                                   <tr>
                                       <th>2</th>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_02" class="form-control" value="<?php echo $obj['gs_metric_02'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_02" class="form-control" value="<?php echo $obj['gs_target_02'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_02" class="form-control" value="<?php echo $obj['gs_prev_02'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_02" class="form-control" value="<?php echo $obj['gs_curr_02'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_02" class="form-control" value="<?= $obj['gs_metric_02'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_02" class="form-control" value="<?= $obj['gs_target_02'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_02" class="form-control" value="<?= $obj['gs_prev_02'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_02" class="form-control" value="<?= $obj['gs_curr_02'] ?>"></td>
                                   </tr>
                                   <tr>
                                       <th>3</th>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_03" class="form-control" value="<?php echo $obj['gs_metric_03'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_03" class="form-control" value="<?php echo $obj['gs_target_03'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_03" class="form-control" value="<?php echo $obj['gs_prev_03'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_03" class="form-control" value="<?php echo $obj['gs_curr_03'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_03" class="form-control" value="<?= $obj['gs_metric_03'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_03" class="form-control" value="<?= $obj['gs_target_03'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_03" class="form-control" value="<?= $obj['gs_prev_03'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_03" class="form-control" value="<?= $obj['gs_curr_03'] ?>"></td>
                                   </tr>
                                   <tr>
                                       <th>4</th>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_04" class="form-control" value="<?php echo $obj['gs_metric_04'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_04" class="form-control" value="<?php echo $obj['gs_target_04'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_04" class="form-control" value="<?php echo $obj['gs_prev_04'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_04" class="form-control" value="<?php echo $obj['gs_curr_04'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_04" class="form-control" value="<?= $obj['gs_metric_04'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_04" class="form-control" value="<?= $obj['gs_target_04'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_04" class="form-control" value="<?= $obj['gs_prev_04'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_04" class="form-control" value="<?= $obj['gs_curr_04'] ?>"></td>
                                   </tr>
                                   <tr>
                                       <th>5</th>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_05" class="form-control" value="<?php echo $obj['gs_metric_05'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_05" class="form-control" value="<?php echo $obj['gs_target_05'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_05" class="form-control" value="<?php echo $obj['gs_prev_05'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_05" class="form-control" value="<?php echo $obj['gs_curr_05'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_05" class="form-control" value="<?= $obj['gs_metric_05'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_05" class="form-control" value="<?= $obj['gs_target_05'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_05" class="form-control" value="<?= $obj['gs_prev_05'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_05" class="form-control" value="<?= $obj['gs_curr_05'] ?>"></td>
                                   </tr>
                                   <tr>
                                       <th>6</th>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_06" class="form-control" value="<?php echo $obj['gs_metric_06'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_06" class="form-control" value="<?php echo $obj['gs_target_06'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_06" class="form-control" value="<?php echo $obj['gs_prev_06'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_06" class="form-control" value="<?php echo $obj['gs_curr_06'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_06" class="form-control" value="<?= $obj['gs_metric_06'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_06" class="form-control" value="<?= $obj['gs_target_06'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_06" class="form-control" value="<?= $obj['gs_prev_06'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_06" class="form-control" value="<?= $obj['gs_curr_06'] ?>"></td>
                                   </tr>
                                   <tr>
                                       <th>7</th>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_07" class="form-control" value="<?php echo $obj['gs_metric_07'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_07" class="form-control" value="<?php echo $obj['gs_target_07'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_07" class="form-control" value="<?php echo $obj['gs_prev_07'] ?>"></td>
-                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_07" class="form-control" value="<?php echo $obj['gs_curr_07'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_metric_07" class="form-control" value="<?= $obj['gs_metric_07'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_target_07" class="form-control" value="<?= $obj['gs_target_07'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_prev_07" class="form-control" value="<?= $obj['gs_prev_07'] ?>"></td>
+                                      <td><input id="Input_gtk_bday" type="text" name="gs_curr_07" class="form-control" value="<?= $obj['gs_curr_07'] ?>"></td>
                                   </tr>
                               </table>
                           </div>
@@ -132,7 +135,7 @@
                         <div class="col-md-10">
                             <div class="mb-3">
                                 <label for="ac_expectation_date" class="form-label">Tip for the Month</label>
-                                <textarea id="exampleSEComments" name="gs_tip" rows="3" class="form-control"><?php echo $obj['gs_tip'] ?></textarea>
+                                <textarea id="exampleSEComments" name="gs_tip" rows="3" class="form-control"><?= $obj['gs_tip'] ?></textarea>
                                 <div id="gs_tipHelp" class="form-text" style="color: red; display: none;">* Tip for the Month is required and necessary.</div>
                             </div>
                         </div>
@@ -143,7 +146,7 @@
                         <div class="col-md-10">
                             <div class="mb-3">
                                 <label for="exampleSEComments" class="form-label">Commitment</label>
-                                <textarea id="exampleSEComments" name="gs_com" rows="3" class="form-control"><?php echo $obj['gs_com'] ?></textarea>
+                                <textarea id="exampleSEComments" name="gs_com" rows="3" class="form-control"><?= $obj['gs_com'] ?></textarea>
                                 <div id="gs_comHelp" class="form-text" style="color: red; display: none;">* Commitment is required and necessary.</div>
                             </div>
                         </div>
@@ -202,49 +205,48 @@
     </div>
 </div>
 <script type="text/javascript">
-    $(function(){
-        initVals();
-    });
-    
-    function initVals(){ //se_when_use
-        
-        var gs_accmpl       = <?php echo $obj['gs_accmpl'] ? 1 : 0 ?>;
-        var gs_metric_01    = <?php echo $obj['gs_metric_01'] ? 1 : 0 ?>;
-        var gs_target_01    = <?php echo $obj['gs_target_01'] ? 1 : 0 ?>;
-        var gs_prev_01      = <?php echo $obj['gs_prev_01'] ? 1 : 0 ?>;
-        var gs_curr_01      = <?php echo $obj['gs_curr_01'] ? 1 : 0 ?>;
-        var gs_tip          = <?php echo $obj['gs_tip'] ? 1 : 0 ?>;
-        var gs_com          = <?php echo $obj['gs_com'] ? 1 : 0 ?>;        
-        var flag            = <?php echo $obj['flag'] ? 1 : 0 ?>;
-        
-        if(flag && gs_accmpl == 0){
-            $("#gs_accmplHelp").show();
-        }
-    
-        if(flag && gs_metric_01 == 0){
-            $("#gs_metric_01Help").show();
-        }
-        
-        if(flag && gs_target_01 == 0){
-            $("#gs_target_01Help").show();
-        }
-        
-        if(flag && gs_prev_01 == 0){
-            $("#gs_prev_01Help").show();
-        }
-        
-        if(flag && gs_curr_01 == 0){
-            $("#gs_curr_01Help").show();
-        }
+function initVals() {
+    var gs_accmpl       = <?= $obj['gs_accmpl'] ? 1 : 0 ?>;
+    var gs_metric_01    = <?= $obj['gs_metric_01'] ? 1 : 0 ?>;
+    var gs_target_01    = <?= $obj['gs_target_01'] ? 1 : 0 ?>;
+    var gs_prev_01      = <?= $obj['gs_prev_01'] ? 1 : 0 ?>;
+    var gs_curr_01      = <?= $obj['gs_curr_01'] ? 1 : 0 ?>;
+    var gs_tip          = <?= $obj['gs_tip'] ? 1 : 0 ?>;
+    var gs_com          = <?= $obj['gs_com'] ? 1 : 0 ?>;
+    var flag            = <?= $obj['flag'] ? 1 : 0 ?>;
 
-        if(flag && gs_tip == 0){
-            $("#gs_tipHelp").show();
-        }
-    
-        if(flag && gs_com == 0){
-            $("#gs_comHelp").show();
-        }
-                
+    if(flag && gs_accmpl == 0){
+        $("#gs_accmplHelp").show();
     }
+
+    if(flag && gs_metric_01 == 0){
+        $("#gs_metric_01Help").show();
+    }
+
+    if(flag && gs_target_01 == 0){
+        $("#gs_target_01Help").show();
+    }
+
+    if(flag && gs_prev_01 == 0){
+        $("#gs_prev_01Help").show();
+    }
+
+    if(flag && gs_curr_01 == 0){
+        $("#gs_curr_01Help").show();
+    }
+
+    if(flag && gs_tip == 0){
+        $("#gs_tipHelp").show();
+    }
+
+    if(flag && gs_com == 0){
+        $("#gs_comHelp").show();
+    }
+}
+$(function(){
+    activeMenu($('#menu-linking-sessions'));
+
+    initVals();
+});
 </script>
 @endsection

@@ -24,7 +24,7 @@
         <a href="<?= url('leave/create') ?>" class="btn btn-primary pull-right"><span class="fa fa-edit"></span>&nbsp; File A Leave</a>
         <?php
         if(Auth::check()) {
-            if(Auth::user()->dept_code == 'OE01') {
+            if(Auth::user()->dept_code == 'OE01' && !Auth::user()->isAdmin()) {
         ?>
                 <a href="<?= url('approved-lists') ?>" class="btn btn-success pull-right" style="margin-right:10px;"><span class="fa fa-check"></span>&nbsp; Approved Leaves</a>
         <?php

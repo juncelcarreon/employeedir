@@ -134,6 +134,7 @@
     <script type="text/javascript" src="{{ asset('./js/jquery.dataTables.js')}}"></script>
     <script type="text/javascript" src="{{ asset('./js/jquery.validate.min.js')}}"></script>
     <script type="text/javascript" src="{{ asset('./js/dataTables.responsive.js')}}"></script>
+    <script type="text/javascript" src="{{ asset('./js/dataTables.fixedColumns.js')}}"></script>
     <script type="text/javascript" src="{{ asset('./js/select2.full.js')}}"></script>
     <script type="text/javascript" src="{{ asset('./js/moment.js')}}"></script>
     <script type="text/javascript" src="{{ asset('./bootstrap/js/transition.js')}}"></script>

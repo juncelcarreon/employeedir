@@ -83,18 +83,18 @@ class OvertimeController extends Controller
 
         if(!empty($supervisor->id)) {
             $data['emp_name'] = strtoupper($supervisor->first_name);
-            // Mail::to($supervisor->email)->send(new OvertimeNotification($data));
+            // Mail::to($supervisor->email)->cc('ivybarria@elink.com.ph')->send(new OvertimeNotification($data));
         }
 
         if(!empty($manager->id)) {
             $data['emp_name'] = strtoupper($manager->first_name);
-            // Mail::to($manager->email)->send(new OvertimeNotification($data));
+            // Mail::to($manager->email)->cc('ivybarria@elink.com.ph')->send(new OvertimeNotification($data));
         }
 
-        Mail::to('juncelcarreon@elink.com.ph')->send(new OvertimeNotification($data));
-        Mail::to('juncelcarreon@elink.com.ph')->send(new OvertimeSelfNotification(['emp_name' => strtoupper(Auth::user()->first_name)]));
+        Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeNotification($data));
+        Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeSelfNotification(['emp_name' => strtoupper(Auth::user()->first_name)]));
 
-        // Mail::to(Auth::user()->email)->send(new OvertimeSelfNotification(['emp_name' => strtoupper(Auth::user()->first_name)]));
+        // Mail::to(Auth::user()->email)->cc('ivybarria@elink.com.ph')->send(new OvertimeSelfNotification(['emp_name' => strtoupper(Auth::user()->first_name)]));
 
         return redirect($data['url'])->with('success', 'Overtime Request Successfully Submitted!!');
     }
@@ -183,13 +183,13 @@ class OvertimeController extends Controller
             if(empty($manager)) {
                 $data['leader_name'] = 'HR DEPARTMENT';
 
-                // Mail::to('hrd@elink.com.ph')->send(new OvertimeReminder($data));
-                Mail::to('juncelcarreon@elink.com.ph')->send(new OvertimeReminder($data));
+                // Mail::to('hrd@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeReminder($data));
+                Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeReminder($data));
             } else {
                 $data['leader_name'] = strtoupper($manager->first_name); 
 
-                // Mail::to($manager->email)->send(new OvertimeReminder($data));
-                Mail::to('juncelcarreon@elink.com.ph')->send(new OvertimeReminder($data));
+                // Mail::to($manager->email)->cc('ivybarria@elink.com.ph')->send(new OvertimeReminder($data));
+                Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeReminder($data));
             }
 
             return back()->with('success', 'Overtime Request successfully recommended for approval.');
@@ -220,8 +220,8 @@ class OvertimeController extends Controller
         ];
 
         if($overtime->save()){
-            // Mail::to($employee->email)->send(new OvertimeApproved($data));
-            Mail::to('juncelcarreon@elink.com.ph')->send(new OvertimeApproved($data));
+            // Mail::to($employee->email)->cc('ivybarria@elink.com.ph')->send(new OvertimeApproved($data));
+            Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeApproved($data));
 
             return back()->with('success', 'Overtime Request successfully approved. . .');
         } else {
@@ -251,8 +251,8 @@ class OvertimeController extends Controller
         ];
 
         if($overtime->save()){
-            // Mail::to($employee->email)->send(new OvertimeDeclined($data));
-            Mail::to('juncelcarreon@elink.com.ph')->send(new OvertimeDeclined($data));
+            // Mail::to($employee->email)->cc('ivybarria@elink.com.ph')->send(new OvertimeDeclined($data));
+            Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeDeclined($data));
 
             return back()->with('success', 'Overtime Request successfully declined.');
         } else {
@@ -310,13 +310,13 @@ class OvertimeController extends Controller
             if(empty($manager)) {
                 $data['leader_name'] = 'HR DEPARTMENT';
 
-                // Mail::to('hrd@elink.com.ph')->send(new OvertimeVerification($data));
-                Mail::to('juncelcarreon@elink.com.ph')->send(new OvertimeVerification($data));
+                // Mail::to('hrd@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeVerification($data));
+                Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeVerification($data));
             } else {
                 $data['leader_name'] = strtoupper($manager->first_name); 
 
-                // Mail::to($manager->email)->send(new OvertimeVerification($data));
-                Mail::to('juncelcarreon@elink.com.ph')->send(new OvertimeVerification($data));
+                // Mail::to($manager->email)->cc('ivybarria@elink.com.ph')->send(new OvertimeVerification($data));
+                Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeVerification($data));
             }
 
             return redirect(url("overtime/{$overtime->id}"))->with('success', 'Overtime Timekeeping successfully updated.');
@@ -346,11 +346,11 @@ class OvertimeController extends Controller
         ];
 
         if($overtime->save()){
-            // Mail::to($employee->email)->send(new OvertimeCompleted(['emp_name'=>strtoupper($employee->first_name)]));
-            Mail::to('juncelcarreon@elink.com.ph')->send(new OvertimeCompleted(['emp_name'=>strtoupper($employee->first_name)]));
+            // Mail::to($employee->email)->cc('ivybarria@elink.com.ph')->send(new OvertimeCompleted(['emp_name'=>strtoupper($employee->first_name)]));
+            Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeCompleted(['emp_name'=>strtoupper($employee->first_name)]));
 
-            // Mail::to('timekeeping@elink.com.ph')->send(new OvertimeTimekeeping($data));
-            Mail::to('juncelcarreon@elink.com.ph')->send(new OvertimeTimekeeping($data));
+            // Mail::to('timekeeping@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeTimekeeping($data));
+            Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeTimekeeping($data));
 
             return back()->with('success', 'Overtime Request successfully completed. . .');
         } else {
@@ -377,8 +377,8 @@ class OvertimeController extends Controller
         ];
 
         if($overtime->save()){
-            // Mail::to($employee->email)->send(new OvertimeRevert($data));
-            Mail::to('juncelcarreon@elink.com.ph')->send(new OvertimeRevert($data));
+            // Mail::to($employee->email)->cc('ivybarria@elink.com.ph')->send(new OvertimeRevert($data));
+            Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new OvertimeRevert($data));
 
             return back()->with('success', 'Overtime Request successfully reverted.');
         } else {

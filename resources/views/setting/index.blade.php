@@ -1,4 +1,7 @@
 @extends('layouts.main')
+@section('title')
+Setting
+@endsection
 @section('content')
 <div class="col-md-4">
 	<div class="panel panel-default">
@@ -96,4 +99,9 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+$(function() {
+    activeMenu($('#menu-setting'));
+});
+</script>
 @endsection

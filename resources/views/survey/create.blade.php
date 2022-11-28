@@ -114,6 +114,31 @@
 <!-- <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
 <script>tinymce.init({ selector:'textarea', forced_root_block : 'p' });</script> -->
 <script type="text/javascript">
+function addChoices(obj) {
+    var parent = obj.closest('.multiple-content'),
+        entry = parent.find('.row-multiple:first'),
+        entry_last = parent.find('.row-multiple:last');
+
+    var new_entry = entry.clone().insertAfter(entry_last);
+        new_entry.find('.btn-add-multiple').html('<span class="fa fa-minus"></span>');
+        new_entry.find('.btn-add-multiple').removeClass('btn-add').addClass('btn-remove-multiple')
+        new_entry.find('input[type="text"]').val('');
+        new_entry.find('.btn-remove-multiple').click(function(e) {
+            e.preventDefault();
+
+            $(this).closest('.row-multiple').remove();
+
+            parent.find('.row-multiple').each(function(key) {
+                key = key + 1;
+                $(this).find('input').attr('placeholder', 'Choice #'+key);
+            });
+        });
+
+    parent.find('.row-multiple').each(function(key) {
+        key = key + 1;
+        $(this).find('input').attr('placeholder', 'Choice #'+key);
+    });
+}
 $(function(){
     $('.datepicker').datepicker({
         minDate: 0
@@ -135,7 +160,17 @@ $(function(){
             new_entry.find('input[type="text"]').val('');
             new_entry.find('input[type="number"]').val($('.row-entry[data-main="1"]').length);
             new_entry.find('select').val(0);
+            new_entry.find('.row-multiple').each(function(key) {
+                if(key != 0) {
+                    $(this).remove();
+                }
+            });
             new_entry.find('.select_item').removeAttr('readonly').removeAttr('style');
+            new_entry.find('.btn-add-multiple').click(function(e) {
+                e.preventDefault();
+
+                addChoices($(this));
+            });
             new_entry.find('.btn-remove').click(function(e) {
                 e.preventDefault();
                 $(this).closest('.row-entry').remove();
@@ -171,67 +206,7 @@ $(function(){
     $('.btn-add-multiple').click(function(e) {
         e.preventDefault();
 
-        var obj = $(this),
-            parent = obj.closest('.multiple-content'),
-            entry = parent.find('.row-multiple:first'),
-            entry_last = parent.find('.row-multiple:last');
-
-        var new_entry = entry.clone().insertAfter(entry_last);
-            new_entry.find('.btn-add-multiple').html('<span class="fa fa-minus"></span>');
-            new_entry.find('.btn-add-multiple').removeClass('btn-add').addClass('btn-remove-multiple')
-            new_entry.find('input[type="text"]').val('');
-            new_entry.find('.btn-remove-multiple').click(function(e) {
-                e.preventDefault();
-                $(this).closest('.row-multiple').remove();
-
-                $('.row-multiple').each(function(key) {
-                    key = key + 1;
-                    $(this).find('input').attr('placeholder', 'Choice #'+key);
-                });
-            });
-
-        parent.find('.row-multiple').each(function(key) {
-            key = key + 1;
-            $(this).find('input').attr('placeholder', 'Choice #'+key);
-        });
-    });
-
-    $('input[type="submit"]').click(function(e) {
-        e.preventDefault();
-
-        var obj = $(this),
-            form = obj.closest('form'),
-            result = true;
-
-        form.find('input[required], textarea[required], select[required]').each(function(e) {
-            if($(this).val() == ''){
-                $(this).focus();
-                $(this).css({'border':'1px solid #ff0000'});
-
-                result = false;
-
-                return false;
-            }
-            $(this).removeAttr('style');
-        });
-
-        if(result) {
-            $('body').css({'pointer-events':'none'});
-            obj.attr('disabled', true);
-            obj.val('Please wait');
-            form.submit();
-        }
-    });
-
-    $('input[type="reset"]').click(function(e) {
-        e.preventDefault();
-
-        var obj = $(this),
-            form = obj.closest('form');
-
-        form.find('input[required], textarea[required]').each(function() {
-            $(this).val('');
-        });
+        addChoices($(this));
     });
 });
 </script>

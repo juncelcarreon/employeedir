@@ -1,9 +1,6 @@
 @extends('layouts.main')
 @section('title')
-Employees
-@endsection
-@section('pagetitle')
-Employees
+Employees > Active Employees
 @endsection
 @section('content')
 <style type="text/css">
@@ -59,16 +56,16 @@ Employees
 </style>
 <div class="col-md-12">
     <div class="header-container" style="margin-bottom: 5px;">
-        <a href="{{url('employee_info/create')}}" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add Employee</a>
-        <a href="/download-filter?<?php //echo $_SERVER['QUERY_STRING'] ?>" class="btn btn-info" ><i class="glyphicon glyphicon-arrow-down"></i>&nbsp; Download Employee Information</a>
+        <a href="<?= url('employee_info/create') ?>" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add Employee</a>
+        <a href="/download-filter?<?= (empty($_SERVER['QUERY_STRING']) ? '' : $_SERVER['QUERY_STRING']) ?>" class="btn btn-info" ><i class="glyphicon glyphicon-arrow-down"></i>&nbsp; Download Employee Information</a>
         <br>
         <br>
         <ul class="alphabet-search" style="padding-left: 0px">
             <li style="margin-left: 0px">
                 <form style="display: unset;">
-                    <input type="hidden" name="alphabet" value="{{ $request->alphabet }}">
-                    <input type="hidden" name="department" value="{{ $request->department }}">
-                    <input type="text" placeholder="Search by name" id="search_employee" name="keyword" value="{{ $request->keyword }}">
+                    <input type="hidden" name="alphabet" value="<?= $request->alphabet ?>">
+                    <input type="hidden" name="department" value="<?= $request->department ?>">
+                    <input type="text" placeholder="Search by name" id="search_employee" name="keyword" value="<?= $request->keyword ?>">
                     <button class="btn btn-primary" style="height:  35px; margin-top: 1px;"><span class="fa fa-search"></span></button>
                 </form>
             </li>
@@ -76,62 +73,86 @@ Employees
                 &nbsp;
                 &nbsp;
                 <label>Inactive Employees</label>
-                <input type="radio" id="inactive_employees" {{ $request->inactive == 'true' ? 'checked' : '' }}>
+                <input type="radio" id="inactive_employees">
                 <br>
                 &nbsp;
                 &nbsp;
                 <label>No Profile Images</label>
-                <input type="radio" id="no_profile_images" {{ $request->no_profile_images == 'true' ? 'checked' : '' }}>
+                <input type="radio" id="no_profile_images" <?= $request->no_profile_images == 'true' ? 'checked' : '' ?>>
             </li>
             <li>
                 &nbsp;
                 &nbsp;
                 <label>Invalid Birthday</label>
-                <input type="radio" id="invalid_birth_date" {{ $request->invalid_birth_date == 'true' ? 'checked' : '' }}>
+                <input type="radio" id="invalid_birth_date" <?= $request->invalid_birth_date == 'true' ? 'checked' : '' ?>>
             </li>
             <li>
                 <span class="fa fa-filter" title="Filter By" style="color: #777777; font-size: 18px; padding: 5px"></span>
                 <select id="sort_option_list" style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;">
-                    <option value="1" {{ isset($request->department) ? "selected" : "" }}>Department</option>
-                    <option value="2" {{ isset($request->position) ? "selected" : "" }}>Position</option>
-                    <option value="3" {{ isset($request->birthmonth) ? "selected" : "" }}>Birth Month</option>
+                    <option value="1" <?= isset($request->department) ? "selected" : "" ?>>Department</option>
+                    <option value="2" <?= isset($request->position) ? "selected" : "" ?>>Position</option>
+                    <option value="3" <?= isset($request->birthmonth) ? "selected" : "" ?>>Birth Month</option>
                 </select>
             </li>
             <li>
-                @if($request->department == '' && $request->position == '' && $request->birthmonth == '')
+                <?php
+                if($request->department == '' && $request->position == '' && $request->birthmonth == '') {
+                ?>
                 <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;" id="departments_list">
                     <option disabled selected>Search by department:</option>
-                    @foreach( $departments as $department)
-                    <option <?php echo $request->department == $department->department_name ? "selected" : "";?> >{{ $department->department_name}}</option>
-                    @endforeach
-               </select>
-               @else
-                <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->department) ? '' : 'display: none;' }}" id="departments_list">
-                    <option disabled selected>Search by department:</option>
-                    @foreach( $departments as $department)
-                    <option <?php echo $request->department == $department->department_name ? "selected" : "";?> >{{ $department->department_name}}</option>
-                    @endforeach
+                    <?php
+                    foreach($departments as $department) {
+                    ?>
+                    <option<?= $request->department == $department->department_name ? " selected" : "";?> ><?= $department->department_name ?></option>
+                    <?php
+                    }
+                    ?>
                 </select>
-               @endif
-               <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->position) ? '' : 'display: none;' }}" id="position_list">
+                <?php
+                } else {
+                ?>
+                <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;<?= isset($request->department) ? '' : 'display: none;' ?>" id="departments_list">
+                    <option disabled selected>Search by department:</option>
+                    <?php
+                    foreach($departments as $department) {
+                    ?>
+                    <option<?= $request->department == $department->department_name ? " selected" : "";?> ><?= $department->department_name ?></option>
+                    <?php
+                    }
+                    ?>
+                </select>
+                <?php
+                }
+                ?>
+               <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;<?= isset($request->position) ? '' : 'display: none;' ?>" id="position_list">
                     <option disabled selected>Search by Position:</option>
-                    @foreach( $positions as $position)
-                    <option <?php echo $request->position == $position->position_name ? "selected" : "";?> >{{ $position->position_name}}</option>
-                    @endforeach
+                    <?php
+                    foreach($positions as $position) {
+                    ?>
+                    <option<?= $request->position == $position->position_name ? " selected" : "";?> ><?= $position->position_name ?></option>
+                    <?php
+                    }
+                    ?>
                </select>
-                <select style="width: 200px; border-color: #ddd; padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->birthmonth) ? '' : 'display: none;' }}" id="month_list">
+                <select style="width: 200px; border-color: #ddd; padding: 7px; border-radius: 0px !important; font-size: 11px !important;<?= isset($request->birthmonth) ? '' : 'display: none;' ?>" id="month_list">
                     <option disabled selected>Search by Birth Month:</option>
-                    @for( $m = 1; $m <= 12 ; $m++)
-                    <option value="{{ $m }}" <?php echo $request->birthmonth == $m ? "selected" : "";?> >{{ date('F', mktime(0,0,0,$m, 1, date('Y'))) }}</option>
-                    @endfor
+                    <?php
+                    for($m = 1; $m <= 12; $m++) {
+                    ?>
+                    <option value="<?= $m ?>"<?= $request->birthmonth == $m ? " selected" : "";?> ><?= date('F', mktime(0,0,0,$m, 1, date('Y'))) ?></option>
+                    <?php
+                    }
+                    ?>
                 </select>
             </li>
             <li>
-                <a href="{{url('employees')}}" class="btn btn-default" style="margin: 0px; height: 30px;">Clear Filter</a>
+                <a href="<?= url('employees') ?>" class="btn btn-default" style="margin: 0px; height: 30px;">Clear Filter</a>
             </li>
         </ul>
     </div>
-@if(count($employees) == 0)
+<?php
+if(count($employees) == 0) {
+?>
     <br>
     <br>
     <br>
@@ -139,78 +160,88 @@ Employees
     <br>
     <br>
     <br>
-    <center>
+    <div class="text-center">
         <h3>No results found.</h3>
-    </center>
-@endif
-@foreach($employees as $employee)
+    </div>
+<?php
+}
+foreach($employees as $employee) {
+?>
     <div class="col-md-12" style="padding-left: 0px; padding-right: 0px; ">
         <div class="emp-profile" style="padding: 10px; margin-bottom: 0px;">
             <div class="row">
                 <div class="col-md-1" style="float: left;">
-                    <div style="background-image: url({{$employee->profile_img}}); width: 60px; height: 60px;margin: 15px; background-size: cover; background-repeat: no-repeat; background-position: 50% 50%; border-radius: 50%;">
+                    <div style="background-image: url(<?= $employee->profile_img ?>); width: 60px; height: 60px;margin: 15px; background-size: cover; background-repeat: no-repeat; background-position: 50% 50%; border-radius: 50%;">
                     </div>
                 </div>
                 <div class="col-md-3">
                     <h4 class="timeline-title name-format" style="color: #444;font-weight: 500; font-size: 17px; margin-top: 10px; text-transform: uppercase;">
-                        <a href="{{url('employee_info/'. $employee->id)}}">{{$employee->fullname()}} </a>
+                        <a href="<?= url("employee_info/{$employee->id}") ?>"><?= $employee->fullname() ?></a>
                     </h4>
-                    <h5 style="color: #455;">{{ $employee->position_name}}</h5>
-                    <h6>{{$employee->team_name}} <?php echo isset($employee->account) ? "- ". $employee->account->account_name : "" ; ?></h6>
+                    <h5 style="color: #455;"><?= $employee->position_name ?></h5>
+                    <h6><?= $employee->team_name ?> <?= isset($employee->account) ? "- ". $employee->account->account_name : "" ; ?></h6>
                 </div>
                 <div class="col-md-3">
                     <h5>
                         <span class="fa fa-id-card" title="Employee ID"></span>
-                        <span class="employee-description">&nbsp;&nbsp;{{$employee->eid}}</span>
+                        <span class="employee-description">&nbsp;&nbsp;<?= $employee->eid ?></span>
                     </h5>
                     <h5>
                         <span class="fa fa-envelope" title="Email Address"></span>&nbsp;&nbsp;
-                        <span class="employee-description" style="color: #0c59a2;;">{{$employee->email}}</span>
+                        <span class="employee-description" style="color: #0c59a2;;"><?= $employee->email ?></span>
                     </h5>
-                    @if(isset($employee->ext) && $employee->ext != '--' && $employee->ext != '')
+                    <?php
+                    if(isset($employee->ext) && $employee->ext != '--' && $employee->ext != '') {
+                    ?>
                     <h5>
                         <span class="fa fa-phone" title="Extension Number"></span>
-                        <span class="employee-description" >&nbsp;&nbsp;{{$employee->ext}}</span>
+                        <span class="employee-description" >&nbsp;&nbsp;<?= $employee->ext ?></span>
                     </h5>
-                    @endif
-                    @if(isset($employee->alias) && $employee->alias != '--' && $employee->alias != '')
+                    <?php
+                    }
+                    if(isset($employee->alias) && $employee->alias != '--' && $employee->alias != '') {
+                    ?>
                     <h5>
                         <span class="fa fa-mobile" title="Phone Name"></span>
-                        <span class="employee-description" >&nbsp;&nbsp;{{$employee->alias}}</span>
+                        <span class="employee-description" >&nbsp;&nbsp;<?= $employee->alias ?></span>
                     </h5>
-                    @endif
+                    <?php
+                    }
+                    ?>
                 </div>
                 <div class="col-md-3">
-                    @if(isset($employee->supervisor_name))
                     <h5 style="font-size: 12px;">
                         <span class="fa fa-user" title="Supervisor"></span>
                         <span style="color: gray;">Immediate Superior: </span>
-                        <span class="name-format">{{ $employee->supervisor_name }}</span>
+                        <span class="name-format"><?= $employee->supervisor_name ?></span>
                     </h5>
-                    @endif
-                    @if(isset($employee->manager_name))
                     <h5 style="font-size: 12px;">
                         <span class="fa fa-user" title="Manager"></span>
                         <span style="color: gray;">Manager: </span>
-                        <span class="name-format">{{ $employee->manager_name }}</span>
+                        <span class="name-format"><?= $employee->manager_name ?></span>
                     </h5>
-                    @endif
                 </div>
                 <div class="col-md-2">
-                    <a href="{{ url('/employee_info/'. $employee->id)}}" title="View"><i class="fa fa-eye" style="color: #3A75FB;"></i></a>&nbsp;&nbsp;    
-                    <a href="{{ url('/employee_info/'. $employee->id . '/edit')}}" title="Edit"><i class="fa fa-pencil" style="color: #3A75FB;"></i></a>&nbsp;&nbsp;
-                    @if($employee->isActive())
-                    <a href="#"  class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Deactivate" data-id="{{$employee->id}}"><i class="fa fa-user-times" style="color: red;" ></i></a>
-                    @endif
+                    <a href="<?= url("employee_info/{$employee->id}") ?>" title="View">
+                        <i class="fa fa-eye" style="color: #3A75FB;"></i>
+                    </a>&nbsp;&nbsp;    
+                    <a href="<?= url("employee_info/{$employee->id}/edit") ?>" title="Edit">
+                        <i class="fa fa-pencil" style="color: #3A75FB;"></i>
+                    </a>&nbsp;&nbsp;
+                    <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Deactivate" data-id="<?= $employee->id ?>">
+                        <i class="fa fa-user-times" style="color: red;" ></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-@endforeach
+<?php
+}
+?>
 </div>
 <div class="col-md-12 header-container" style="margin-top: 0px;">
     <div class="pull-right">
-        {{ $employees->appends(Illuminate\Support\Facades\Input::except('page'))->links() }}
+        <?= $employees->appends(Illuminate\Support\Facades\Input::except('page'))->links() ?>
     </div>
 </div>
 @endsection
@@ -226,7 +257,7 @@ $(function() {
         $('#messageModal .modal-title').html('Delete Employee');
         $('#messageModal #message').html('Are you sure you want to delete the employee ?');
 
-        $('#messageModal .delete_form').attr('action', "{{ url('employee_info') }}/" + $(this).attr("data-id"));
+        $('#messageModal .delete_form').attr('action', "<?= url('employee_info') ?>/" + $(this).attr("data-id"));
     });
 
     $('#messageModal #yes').click(function(){

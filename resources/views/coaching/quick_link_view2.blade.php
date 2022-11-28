@@ -1,9 +1,6 @@
 @extends('layouts.main')
 @section('title')
-View Linking
-@endsection
-@section('pagetitle')
-View Linking
+Linking Sessions > Quick Link > View Session
 @endsection
 @section('content')
 <div class="container-fluid">
@@ -19,7 +16,7 @@ View Linking
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="lnk_linkee_name" class="form-label">Staff/Linkee</label>
-                            <input type="text" class="form-control" id="lnk_linkee_name" aria-describedby="Staff/Linkee" readonly="1" value="<?php echo $lnk_linkee_name ?>">
+                            <input type="text" class="form-control" id="lnk_linkee_name" aria-describedby="Staff/Linkee" readonly="1" value="<?= $lnk_linkee_name ?>">
                         </div>
                     </div>
                 </div>
@@ -28,7 +25,7 @@ View Linking
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="exampleInputDate" class="form-label">Date</label>
-                            <input type="text" class="form-control" id="exampleInputDate" aria-describedby="Coaching Date" readonly="1" value="<?php echo date("F d, Y",strtotime($info->lnk_date)) ?>">
+                            <input type="text" class="form-control" id="exampleInputDate" aria-describedby="Coaching Date" readonly="1" value="<?= date("F d, Y",strtotime($info->lnk_date)) ?>">
                         </div>
                     </div>
                 </div>
@@ -38,7 +35,7 @@ View Linking
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="focus_Name" class="form-label">Focus</label>
-                            <input type="text" name="rf_focus" value="<?php echo $info->fc_desc ?>" class="form-control" readonly="1">
+                            <input type="text" name="rf_focus" value="<?= $info->fc_desc ?>" class="form-control" readonly="1">
                         </div>
                     </div>
                 </div>
@@ -48,7 +45,7 @@ View Linking
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="exampleInputDate" class="form-label">Comments</label>
-                            <textarea name="rf_comments" rows="10" class="form-control" readonly="1"><?php echo $info->rf_comments ?></textarea>
+                            <textarea name="rf_comments" rows="10" class="form-control" readonly="1"><?= $info->rf_comments ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -58,7 +55,7 @@ View Linking
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="exampleInputDate" class="form-label">Feedback</label>
-                            <textarea name="rf_feedback" rows="10" class="form-control" readonly="1"><?php echo $info->rf_feedback ?></textarea>
+                            <textarea name="rf_feedback" rows="10" class="form-control" readonly="1"><?= $info->rf_feedback ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -67,12 +64,8 @@ View Linking
     </div>
 </div>
 <script type="text/javascript">
-    $(function(){
-        initVals();
-    });
-    
-    function initVals(){
-
-    }
+$(function(){
+    activeMenu($('#menu-linking-sessions'));
+});
 </script>
 @endsection

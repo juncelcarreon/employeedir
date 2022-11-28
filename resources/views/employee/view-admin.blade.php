@@ -1,9 +1,6 @@
 @extends('layouts.main')
 @section('title')
-Edit Profile
-@endsection
-@section('pagetitle')
-Employee Information / Edit
+Employee > View Profile
 @endsection
 @section('content')
 <style type="text/css">
@@ -31,6 +28,12 @@ Employee Information / Edit
     .col-md-9 hr{
         margin: 0px;
     }
+    .section-header h4 {
+        display: inline-block;
+    }
+    .section-subheading{
+        background: #5bc0de !important;
+    }
 </style>
 <br>
 {{ Form::open(array('url' => 'employee_info/' . $employee->id,'files' => true ,'id' => 'edit_employee_form')) }}
@@ -42,18 +45,18 @@ Employee Information / Edit
         </div>
         <div class="panel panel-container">
             <div class="row no-padding">
-                <center>
+                <div class="text-center">
                     <img alt="Profile Image" id="profile_image" style="width: 150px;margin-top: 30px;" src="<?= $employee->profile_img ?>">
                     <br> 
                     <br>
-                    <label id="bb" class="btn btn-default"> Upload Photo
+                    <label id="bb" class="btn btn-default" style="margin:0 auto;"> Upload Photo
                         <input id="image_uploader" type="file" class="btn btn-small" value="" onchange="previewFile()"  name="profile_image"/>
                     </label>    
                     <h4 class="card-title m-t-10"><?= $employee->fullname() ?></h4>
                     <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
                     <h6 class="card-subtitle"><?= $employee->team_name ?></h6>
                     <hr>
-                </center>
+                </div>
                 <span class="pull-left label-profile">date hired: <i><?= $employee->prettydatehired() ?></i></span>
                 <br>
                 <br>
@@ -62,92 +65,200 @@ Employee Information / Edit
     </div>
     <div class="col-md-9">
         <div class="section-header">
-            <h4 style="display:inline-block;">Employee Information</h4>
-
-            <a href="<?= url('referral') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
+            <h4>Employee Information</h4>
         </div>
-        <div class="panel panel-container" style="padding-top: 0px">
-            <div class="panel-body"> 
-                <label>Personal</label>
-                <hr>    
-                <br> 
-                <div class="col-md-12">
-                    @include('employee.fields.personalv')
-                    <br>
-                    <br>
-                </div>
-                <div class="col-md-12">
-                    <br>
-                    <br>
-                </div>
-                <br>
-                <br>
-                <label>User Access</label>
-                <hr>
-                <br>
-                <div class="col-md-12">
-                    @include('employee.fields.user_accessv')
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                </div>
-                <label>Job Related</label>
-                <hr>
-                <br>
-                <div class="col-md-12">
-                    @include('employee.fields.job_relatedv')
-                    <br>
-                    <br>
-                    <br>
-                </div>
-                <div class="col-md-12"></div>
-                <label>Government Numbers</label>
-                <hr>
-                <br>
-                <div class="col-md-12 no-padding">
-                    @include('employee.fields.governmentv')
-                    <br>
-                    <br>
-                </div>
-                <div class="col-md-12"><br></div>
-                <label>Login Credentials</label>
-                <hr>
-                <br>
-                <br>
-                <div class="col-md-12">
-                    @include('employee.fields.loginv')
-                    <br>
-                </div>
-                <div class="col-md-12">
-                @auth
-                @if(Auth::user()->id == $employee->id)
-                    <br>
-                    <div class="row">
-                        <div class="col-md-3" style="display: flex;">
-                            <a type="button" class="btn btn-default" href="{{url('employee/'. $employee->id .'/changepassword')}}">Change Password</a>
-                            &nbsp;
-                            <a class="btn btn-primary" href="/update-profile">Update Selected Information</a>
-                        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.personalv')
+        </div>
+        <div class="section-header section-subheading">
+            <h4>Other Information</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Father's Name</label>
+                        <input class="form-control" name="fathers_name" value="<?= isset($details->fathers_name) ? $details->fathers_name : "" ?>" readonly="1">
                     </div>
-                @endif
-                @if(Auth::user()->isAdmin() && empty($myprofile))
-                    <br>
-                    <div class="row">
-                        <div class="col-md-12" >
-                            <a type="button" class="btn btn-default" href="{{url('employee/'. $employee->id .'/changepassword')}}">Change Password</a>
-                            @if($employee->isActive())
-                            <a class="btn btn-primary" href="{{url('employee_info/' . $employee->id . '/edit')}}">Update Profile</a>
-                            <a href="#"  class="pull-right btn btn-primary delete_btn" data-toggle="modal" data-target="#messageModal"  data-id="{{$employee->id}}" style="background: red !important; border-color: red !important;">Deactivate Employee</a>
-                            @else
-                            <a class="btn btn-primary" href="{{url('employees/' . $employee->id . '/reactivate')}}">Reactivate Employee</a>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-                @endauth
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Father's Birthday</label>
+                        <input class="form-control" readonly="1" name="fathers_bday" value="<?= isset($details->fathers_bday) ? date("m/d/Y", strtotime($details->fathers_bday )) : "" ?>" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Complete Mother's Maiden Name</label>
+                        <input class="form-control" name="mothers_name" value="<?= isset($details->mothers_name) ? $details->mothers_name : "" ?>" readonly="1">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Mother's Birthday</label>
+                        <input class="form-control" readonly="1" name="mothers_bday" value="<?= isset($details->mothers_bday) ? date("m/d/Y", strtotime($details->mothers_bday )) : "" ?>" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Spouse's Name</label>
+                        <input class="form-control" placeholder="Spouse's Name" name="spouse_name" value="<?= isset($details->spouse_name) ? $details->spouse_name : "" ?>" readonly="1">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Spouse's Birthday</label>
+                        <input class="form-control" placeholder="Spouse's Birthday" readonly="1" name="spouse_bday" value="<?= $details->spouse_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->spouse_bday )) ?>" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+        </div>
+<?php
+    if(!empty($dependents[0]->dependent)) {
+?>
+        <div class="section-header section-subheading">
+            <h4>Dependents Information</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+        <?php
+            for($i=0;$i<count($dependents);$i++) {
+        ?>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Dependent's Name</label>
+                        <input class="form-control" readonly="1" name="dependent_name[]" value="<?= $dependents[$i]->dependent ?>">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Birthday</label>
+                        <input class="form-control" readonly="1" name="dependent_bday[]" value="<?= date("m/d/Y",strtotime($dependents[$i]->bday)) ?>" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Generali Number</label>
+                        <input class="form-control" name="generali_num[]" value="<?= $dependents[$i]->generali_num ?>" autocomplete="off" readonly="1">
+                    </div>
+                </div>
+            </div>
+        <?php
+            }
+        ?>
+        </div>
+<?php
+    }
+?>
+        <div class="section-header section-subheading">
+            <h4>In Case of Emergency</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>In case of emergency please contact.</label>
+                        <input type="text" name="em_con_name" readonly="1" class="form-control" value="<?= @$details->em_con_name ?>">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Relationship</label>
+                        <input type="text" name="em_con_rel" readonly="1" class="form-control" value="<?= @$details->em_con_rel ?>">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="text" name="em_con_num" readonly="1" class="form-control" value="<?= @$details->em_con_num ?>">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea name="em_con_address" readonly="1" class="form-control" rows="4"><?= @$details->em_con_address ?></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-header section-subheading">
+            <h4>User Access</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.user_accessv')
+        </div>
+<?php
+    if(count($linkees) > 0) {
+?>
+        <div class="section-header section-subheading">
+            <h4>Linkees</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="my-2 d-flex gap-2  p-2" style="width: 100%;flex-wrap: wrap;" id="linkees">
+                    <?php
+                        foreach($linkees as $linkee) {
+                    ?>
+                        <div class="border border-success rounded-pill p-2" id="linkee-<?= $linkee->id ?>"
+                            style="font-size: 12px; min-width:100px;">
+                            <input type="hidden" name="linkee-<?= $linkee->id ?>" value="<?= $linkee->id ?>">
+                            <span><?= $linkee->last_name ?>, <?= $linkee->first_name ?></span>
+                        </div>
+                    <?php
+                        }
+                    ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+<?php
+    }
+?>
+        <div class="section-header section-subheading">
+            <h4>Job Related</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.job_relatedv')
+        </div>
+        <div class="section-header section-subheading">
+            <h4>Government Numbers</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.governmentv')
+        </div>
+        <div class="section-header section-subheading">
+            <h4>Login Credentials</h4>
+        </div>
+        <div class="panel panel-body">
+            @include('employee.fields.loginv')
+            <div class="col-md-12">
+            @auth
+            @if(Auth::user()->id == $employee->id && !empty($myprofile))
+                <br>
+                <div class="row">
+                    <div class="col-md-3" style="display: flex;">
+                        <a type="button" class="btn btn-default" href="{{url('employee/'. $employee->id .'/changepassword')}}">Change Password</a>
+                        &nbsp;
+                        <a class="btn btn-primary" href="/update-profile">Update Selected Information</a>
+                    </div>
+                </div>
+            @endif
+            @if(Auth::user()->isAdmin() && empty($myprofile))
+                <br>
+                <div class="row">
+                    <div class="col-md-12" >
+                        <a type="button" class="btn btn-default" href="{{url('employee/'. $employee->id .'/changepassword')}}">Change Password</a>
+                        @if($employee->isActive())
+                        <a class="btn btn-primary" href="{{url('employee_info/' . $employee->id . '/edit')}}">Update Profile</a>
+                        <a href="#"  class="pull-right btn btn-primary delete_btn" data-toggle="modal" data-target="#messageModal"  data-id="{{$employee->id}}" style="background: red !important; border-color: red !important;">Deactivate Employee</a>
+                        @else
+                        <a class="btn btn-primary" href="{{url('employees/' . $employee->id . '/reactivate')}}">Reactivate Employee</a>
+                        @endif
+                    </div>
+                </div>
+            @endif
+            @endauth
             </div>
         </div>
     </div>

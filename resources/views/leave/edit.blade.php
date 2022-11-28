@@ -82,7 +82,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <strong>With/Without Pay: </strong>
-                            <select name="pay_type[]" class="form-control<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' non_reg') : ' non_reg' ?>"<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' readonly style="pointer-events:none;"') : ' readonly style="pointer-events:none;"' ?>>
+                            <select name="pay_type[]" class="form-control">
                                 <option value="0"<?= $leave->pay_type == 0 ? " selected" : "" ?>>Without Pay</option>
                                 <option value="1"<?= $leave->pay_type == 1 ? " selected" : "" ?>>With Pay</option>
                             </select>
@@ -119,7 +119,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <strong>With/Without Pay: </strong>
-                                <select name="pay_type[]" class="form-control<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' non_reg') : ' non_reg' ?>"<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' readonly style="pointer-events:none;"') : ' readonly style="pointer-events:none;"' ?>>
+                                <select name="pay_type[]" class="form-control">
                                     <option value="0"<?= $filed_days[$i]->pay_type == 0 ? " selected" : "" ?>>Without Pay</option>
                                     <option value="1"<?= $filed_days[$i]->pay_type == 1 ? " selected" : "" ?>>With Pay</option>
                                 </select>
@@ -273,7 +273,7 @@
     <div class="col-md-2">
         <div class="form-group">
             <strong>With/Without Pay: </strong>
-            <select name="pay_type[]" class="form-control<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' non_reg') : ' non_reg' ?>"<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' readonly style="pointer-events:none;"') : ' readonly style="pointer-events:none;"' ?>>
+            <select name="pay_type[]" class="form-control">
                 <option value="0">Without Pay</option>
                 <option value="1">With Pay</option>
             </select>
