@@ -6,7 +6,7 @@
         Hello <?= $obj_details['emp_name'] ?>,
         <br>
         <br>
-        Sample COMPLETED Overtime Request Email.
+        Your filed Overtime Request on <?= $obj_details['date'] ?> has been completed.
         <br>
 	
 	<br>

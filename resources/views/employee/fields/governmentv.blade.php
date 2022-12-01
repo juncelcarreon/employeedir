@@ -2,25 +2,25 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>SSS Number</label>
-            <input class="form-control" readonly="1" name="sss" type="text" value="<?= @$employee->sss ?>">
+            <input type="text" class="form-control" name="sss" value="<?= @$employee->sss ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Pag-ibig/HDMF</label>
-            <input class="form-control" readonly="1" name="pagibig" type="text" value="<?= @$employee->pagibig ?>">
+            <input type="text" class="form-control" name="pagibig" value="<?= @$employee->pagibig ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
-        <div class="form-group">    
+        <div class="form-group">
             <label>Philhealth Number</label>
-            <input class="form-control" readonly="1" name="philhealth" type="text" value="<?= @$employee->philhealth ?>">
+            <input type="text" class="form-control" name="philhealth" value="<?= @$employee->philhealth ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>TIN ID</label>
-            <input class="form-control" readonly="1" name="tin" type="text" value="<?= @$employee->tin ?>">
+            <input type="text" class="form-control" name="tin" value="<?= @$employee->tin ?>" readonly />
         </div>
     </div>
 </div>

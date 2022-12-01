@@ -1,69 +1,88 @@
 @extends('layouts.main')
+@section('title')
+Request | Overtime > Create
+@endsection
 @section('content')
 <style>
-.form-group strong {
-    display: block;
-    margin-bottom: 10px;
-}
-.form-group button {
-    display: block;
-    width: 100%;
-}
+@include('request.style');
 </style>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        OVERTIME REQUEST FORM
+<form action="<?= url('overtime') ?>" method="post">
+{{ csrf_field() }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            OVERTIME REQUEST FORM
 
-        <a href="<?= url('overtime') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
-    </div>
-    <div class="panel-body timeline-container">
-        <div class="flex-center position-ref full-height">
-            <form action="<?= url('overtime') ?>" method="post">
-            {{ csrf_field() }}
+            <a href="<?= url('overtime') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
+        </div>
+        <div class="panel-body timeline-container">
+            <div class="flex-center position-ref full-height">
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <strong>Name: </strong>
-                            <input type="text" name="employee_name" class="form-control" placeholder="Employee Name" value="<?= Auth::user()->fullname2() ?>" readonly>
-                        </div> 
+                            <strong>Name:</strong>
+                            <p><?= Auth::user()->fullname2() ?></p>
+                        </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <strong>Position: </strong>
-                            <input type="text" name="position" class="form-control" placeholder="Position" value="<?= Auth::user()->position_name ?>" readonly>
+                            <strong>Position:</strong>
+                            <p><?= Auth::user()->position_name ?></p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <strong>Department:</strong>
+                            <p><?= Auth::user()->team_name ?></p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <strong>Date Filed:</strong>
+                            <p><?= date('m/d/Y') ?></p>
                         </div> 
                     </div>
-                    <div class="col-md-3">
+                </div>
+            </div>
+        </div>
+        <div class="panel-heading panel-subheading">
+            OVERTIME INFORMATION
+        </div>
+        <div class="panel-body timeline-container">
+            <div class="flex-center position-ref full-height">
+                <div class="row">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <strong>Department: </strong>
-                            <input type="text" name="department" class="form-control" placeholder="Dept/Section" value="<?= Auth::user()->team_name ?>" readonly>
+                            <strong class="asterisk-required">Overtime Date:</strong>
                         </div> 
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <strong>Date Filed: </strong>
-                            <input type="text" value="<?= date('m/d/Y') ?>" name="date_filed" class="form-control" placeholder="Date Filed" readonly autocomplete="off">
-                        </div> 
+                            <strong class="asterisk-required">Estimated No. of Hours:</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <strong>&nbsp;</strong>
+                        </div>
                     </div>
                 </div>
                 <div class="entry-content">
                     <div class="row row-entry">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <strong>Overtime Date: </strong>
-                                <input type="text" name="date[]" class="form-control overtime_date" placeholder="MM/DD/YYYY" autocomplete="off" required>
+                                <input type="text" name="date[]" class="form-control overtime_date" placeholder="MM/DD/YYYY" autocomplete="off" onkeydown="return false" required />
                             </div> 
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <strong>Estimated No. of Hours: </strong>
-                                <input type="number" name="no_of_hours[]" class="form-control" value="1.00" min="1" required>
+                                <input type="number" name="no_of_hours[]" class="form-control" value="1.00" min="1" required />
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <strong>&nbsp; </strong>
-                                <button class="btn btn-primary btn-add"><span class="fa fa-plus"></span></button>
+                                <button class="btn btn-primary btn-add">
+                                    <span class="fa fa-plus"></span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -71,31 +90,27 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <strong>Reason: </strong>
+                            <strong class="asterisk-required">Reason:</strong>
                             <textarea name="reason" class="form-control" rows="4" required></textarea>
                         </div> 
                     </div>
                 </div>
-                <div class="col-md-12" style="border-top: 1px solid rgba(0,0,0,.125); padding-top: 15px; margin-top: 15px"></div>
+                <div class="division"></div>
                 <div class="form-group pull-right">
-                    <input type="submit" id="register-button" class="btn btn-primary" value="Submit">
-                    <input type="reset" class="btn btn-default" value="Reset">
+                    <input type="submit" class="btn btn-primary btn_submit" value="Submit" />
+                    <input type="reset" class="btn btn-default" value="Reset" />
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+</form>
 @endsection
 @section('scripts')
-<!-- <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
-<script>tinymce.init({ selector:'textarea', forced_root_block : 'p' });</script> -->
 <script type="text/javascript">
 $(function(){
     activeMenu($('#menu-overtime'));
 
-    $('.overtime_date').datepicker({
-        minDate: 0
-    });
+    $('.overtime_date').datepicker();
 
     $('.btn-add').click(function(e) {
         e.preventDefault();
@@ -109,42 +124,13 @@ $(function(){
             new_entry.find('.btn-add').html('<span class="fa fa-minus"></span>');
             new_entry.find('.btn-add').removeClass('btn-primary').addClass('btn-danger');
             new_entry.find('.btn-add').removeClass('btn-add').addClass('btn-remove')
-            new_entry.find('.overtime_date').removeAttr('id').removeClass('hasDatepicker').removeData('datepicker').unbind().datepicker({ 
-                minDate: 0 
-            });
+            new_entry.find('.overtime_date').removeAttr('id').removeClass('hasDatepicker').removeData('datepicker').unbind().datepicker();
             new_entry.find('.overtime_date').val('');
             new_entry.find('input[type="number"]').val('1.00');
             new_entry.find('.btn-remove').click(function(e) {
                 e.preventDefault();
                 $(this).closest('.row-entry').remove();
             });
-    });
-
-    $('input[type="submit"]').click(function(e) {
-        e.preventDefault();
-
-        var obj = $(this),
-            form = obj.closest('form'),
-            result = true;
-
-        form.find('input[required], textarea[required], select[required]').each(function(e) {
-            if($(this).val() == ''){
-                $(this).focus();
-                $(this).css({'border':'1px solid #ff0000'});
-
-                result = false;
-
-                return false;
-            }
-            $(this).removeAttr('style');
-        });
-
-        if(result) {
-            $('body').css({'pointer-events':'none'});
-            obj.attr('disabled', true);
-            obj.val('Please wait');
-            form.submit();
-        }
     });
 
     $('input[type="reset"]').click(function(e) {
@@ -155,6 +141,9 @@ $(function(){
 
         form.find('input[required], textarea[required]').each(function() {
             $(this).val('');
+            if($(this).attr('type') == 'number') {
+                $(this).val('1.00');
+            }
         });
     });
 });

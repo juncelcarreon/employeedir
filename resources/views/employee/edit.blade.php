@@ -79,37 +79,37 @@ Employee > Edit Employee Profile
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Father's Name</label>
-                        <input class="form-control" name="fathers_name" value="<?= isset($details->fathers_name) ? $details->fathers_name : "" ?>">
+                        <input class="form-control" name="fathers_name" value="<?= isset($details->fathers_name) ? $details->fathers_name : "" ?>" placeholder="Father's Name" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Father's Birthday</label>
-                        <input class="form-control" name="fathers_bday" value="<?= isset($details->fathers_bday) ? date("m/d/Y", strtotime($details->fathers_bday )) : "" ?>" autocomplete="off">
+                        <input class="form-control datetimepicker" name="fathers_bday" value="<?= $details->fathers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->fathers_bday )) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Complete Mother's Maiden Name</label>
-                        <input class="form-control" name="mothers_name" value="<?= isset($details->mothers_name) ? $details->mothers_name : "" ?>">
+                        <input class="form-control" name="mothers_name" value="<?= isset($details->mothers_name) ? $details->mothers_name : "" ?>" placeholder="Mother's Maiden Name" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Mother's Birthday</label>
-                        <input class="form-control" name="mothers_bday" value="<?= isset($details->mothers_bday) ? date("m/d/Y", strtotime($details->mothers_bday )) : "" ?>" autocomplete="off">
+                        <input class="form-control datetimepicker" name="mothers_bday" value="<?= $details->mothers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->mothers_bday )) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Spouse's Name</label>
-                        <input class="form-control" placeholder="Spouse's Name" name="spouse_name" value="<?= isset($details->spouse_name) ? $details->spouse_name : "" ?>">
+                        <input class="form-control" name="spouse_name" value="<?= isset($details->spouse_name) ? $details->spouse_name : "" ?>" placeholder="Spouse's Name" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Spouse's Birthday</label>
-                        <input class="form-control" placeholder="Spouse's Birthday" name="spouse_bday" value="<?= $details->spouse_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->spouse_bday )) ?>" autocomplete="off">
+                        <input class="form-control datetimepicker" name="spouse_bday" value="<?= $details->spouse_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->spouse_bday )) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
                     </div>
                 </div>
             </div>
@@ -122,19 +122,19 @@ Employee > Edit Employee Profile
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Dependent's Name</label>
-                        <input class="form-control" name="dependent_name[]" value="<?php echo count($dependents) > 0 ? $dependents[0]->dependent : "" ?>">
+                        <input class="form-control" name="dependent_name[]" value="<?= count($dependents) > 0 ? $dependents[0]->dependent : "" ?>" placeholder="Dependent's Name" />
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Birthday</label>
-                        <input class="form-control datepicker" name="dependent_bday[]" value="<?php echo count($dependents) > 0 ? date("m/d/Y",strtotime($dependents[0]->bday)) : "" ?>" autocomplete="off">
+                        <input class="form-control datetimepicker" name="dependent_bday[]" value="<?= count($dependents) > 0 ? ($dependents[0]->bday == '1970-01-01' ? '' : date("m/d/Y",strtotime($dependents[0]->bday))) : '' ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Generali Number</label>
-                        <input class="form-control" name="generali_num[]" value="<?php echo count($dependents) > 0 ? $dependents[0]->generali_num : "" ?>" autocomplete="off">
+                        <input class="form-control" name="generali_num[]" value="<?= count($dependents) > 0 ? $dependents[0]->generali_num : "" ?>" placeholder="xxxx-xxx-xxxx" autocomplete="off" />
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -153,19 +153,19 @@ Employee > Edit Employee Profile
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>In case of emergency please contact.</label>
-                        <input type="text" name="em_con_name" class="form-control" value="<?= @$details->em_con_name ?>">
+                        <input type="text" name="em_con_name" class="form-control" value="<?= @$details->em_con_name ?>" placeholder="Contact Name" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Relationship</label>
-                        <input type="text" name="em_con_rel" class="form-control" value="<?= @$details->em_con_rel ?>">
+                        <input type="text" name="em_con_rel" class="form-control" value="<?= @$details->em_con_rel ?>" placeholder="Relationship" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Contact Number</label>
-                        <input type="text" name="em_con_num" class="form-control" value="<?= @$details->em_con_num ?>">
+                        <input type="text" name="em_con_num" class="form-control" value="<?= @$details->em_con_num ?>" placeholder="xxxx-xxx-xxxx" />
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -291,7 +291,7 @@ Employee > Edit Employee Profile
       
           </thead>
           <tr style="background-color: #fd9a47;">
-              <td><input class="form-control datepicker" id="mv_transfer_date"></td>
+              <td><input class="form-control datetimepicker" id="mv_transfer_date"></td>
               <td>
                   <select class="select2 form-control" id="department_name" style="width: 100%">
                     <option selected="" disabled="">Select</option>
@@ -331,24 +331,32 @@ Employee > Edit Employee Profile
     </tr>
 </script>
 <script id="tmpl_addDependents" type="text/template">
-    <div id="dep_~id~" class="row">
-        <div class="col-md-3 form-group">
+<div id="dep_~id~" class="row">
+    <div class="col-md-3">
+        <div class="form-group">
             <label>Dependent's Name</label>
-            <input id="dep_name_~id~" class="form-control" name="dependent_name[]" value="">
-        </div>
-        <div class="col-md-3 form-group">
-            <label>Birthday</label>
-            <input id="dep_bday_~id~" class="form-control datepicker" name="dependent_bday[]" value="" autocomplete="off">
-        </div>
-        <div class="col-md-3 form-group">
-            <label>Generali Number</label>
-            <input class="form-control" name="generali_num[]" value="" autocomplete="off">
-        </div>
-        <div class="col-md-3 form-group" style="vertical-align: middle;">
-            <label>&nbsp;</label><br>
-            <a href="#dependentsDiv" class="btn btn-danger" data-id="~id~" onclick="removeThisDependent(this)">Remove Dependent</a>
+            <input type="text" id="dep_name_~id~" class="form-control" name="dependent_name[]" placeholder="Dependent's Name" />
         </div>
     </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Birthday</label>
+            <input type="text" id="dep_bday_~id~" class="form-control datetimepicker" name="dependent_bday[]" placeholder="MM/DD/YYYY" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Generali Number</label>
+            <input type="text" id="dep_generali_~id~" class="form-control" name="generali_num[]" placeholder="xxxx-xxx-xxxx" autocomplete="off" />
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>&nbsp;</label><br>
+            <a href="javascript:;" class="btn btn-danger" data-id="~id~" onclick="removeThisDependent(this)">Remove Dependent</a>
+        </div>
+    </div>
+</div>
 </script>
 <script id="tmpl_addLinkee" type="text/template">
     <div id="linkee_row_~id~" class="row">
@@ -473,10 +481,8 @@ function addDep(){
     js_tmpl = template.replace(/~id~/g,ctr);
     $("#dependentsDiv").append(js_tmpl);
     console.log('You Clicked Here');
-    $("#dep_bday_" + ctr).datepicker({
-        changeYear  : true,
-        changeMonth : true,
-        yearRange   : "1930:<?php echo date("Y") ?>"
+    $("#dep_bday_" + ctr).datetimepicker({
+        format: 'MM/DD/YYYY'
     });
     ctr++;
 }
@@ -488,8 +494,9 @@ $(function(){
         for($i = 1; $i < count($dependents); $i++) {
         ?>
         addDep();
-        $("#dep_name_" + <?php echo $i ?>).val("<?php echo $dependents[$i]->dependent ?>");
-        $("#dep_bday_" + <?php echo $i ?>).val("<?php echo date("m/d/Y",strtotime($dependents[$i]->bday)) ?>")
+        $("#dep_name_" + <?= $i ?>).val("<?= $dependents[$i]->dependent ?>");
+        $("#dep_bday_" + <?= $i ?>).val("<?= $dependents[$i]->bday == '1970-01-01' ? '' : date("m/d/Y",strtotime($dependents[$i]->bday)) ?>");
+        $("#dep_generali_" + <?= $i ?>).val("<?= $dependents[$i]->generali_num ?>");
         <?php
         }
     }
@@ -591,6 +598,10 @@ $(function(){
         changeYear  : true,
         changeMonth : true,
         yearRange   : "1930:<?php echo date("Y") ?>"
+    });
+
+    $(".datetimepicker").datetimepicker({
+        format: 'MM/DD/YYYY'
     });
 
     $(".is_reg_event").change(function(){

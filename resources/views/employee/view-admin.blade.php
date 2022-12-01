@@ -3,6 +3,7 @@
 Employee > View Profile
 @endsection
 @section('content')
+<link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
 <style type="text/css">
     .card-title{
         font-size: 16px;
@@ -70,6 +71,9 @@ Employee > View Profile
         <div class="panel panel-body mb-0">
             @include('employee.fields.personalv')
         </div>
+<?php
+    if(isset($details->fathers_name) || $details->fathers_bday != '1970-01-01' || isset($details->mothers_name) || $details->mothers_bday != '1970-01-01' || isset($details->spouse_name) || $details->spouse_bday != '1970-01-01') {
+?>
         <div class="section-header section-subheading">
             <h4>Other Information</h4>
         </div>
@@ -78,42 +82,43 @@ Employee > View Profile
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Father's Name</label>
-                        <input class="form-control" name="fathers_name" value="<?= isset($details->fathers_name) ? $details->fathers_name : "" ?>" readonly="1">
+                        <input class="form-control" name="fathers_name" value="<?= isset($details->fathers_name) ? $details->fathers_name : "" ?>" readonly />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Father's Birthday</label>
-                        <input class="form-control" readonly="1" name="fathers_bday" value="<?= isset($details->fathers_bday) ? date("m/d/Y", strtotime($details->fathers_bday )) : "" ?>" autocomplete="off">
+                        <input class="form-control" name="fathers_bday" value="<?= $details->fathers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->fathers_bday )) ?>" autocomplete="off" readonly />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Complete Mother's Maiden Name</label>
-                        <input class="form-control" name="mothers_name" value="<?= isset($details->mothers_name) ? $details->mothers_name : "" ?>" readonly="1">
+                        <input class="form-control" name="mothers_name" value="<?= isset($details->mothers_name) ? $details->mothers_name : "" ?>" readonly />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Mother's Birthday</label>
-                        <input class="form-control" readonly="1" name="mothers_bday" value="<?= isset($details->mothers_bday) ? date("m/d/Y", strtotime($details->mothers_bday )) : "" ?>" autocomplete="off">
+                        <input class="form-control" name="mothers_bday" value="<?= $details->mothers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->mothers_bday )) ?>" autocomplete="off" readonly />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Spouse's Name</label>
-                        <input class="form-control" placeholder="Spouse's Name" name="spouse_name" value="<?= isset($details->spouse_name) ? $details->spouse_name : "" ?>" readonly="1">
+                        <input class="form-control" name="spouse_name" value="<?= isset($details->spouse_name) ? $details->spouse_name : "" ?>" readonly />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Spouse's Birthday</label>
-                        <input class="form-control" placeholder="Spouse's Birthday" readonly="1" name="spouse_bday" value="<?= $details->spouse_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->spouse_bday )) ?>" autocomplete="off">
+                        <input class="form-control" name="spouse_bday" value="<?= $details->spouse_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->spouse_bday )) ?>" autocomplete="off" readonly />
                     </div>
                 </div>
             </div>
         </div>
 <?php
+    }
     if(!empty($dependents[0]->dependent)) {
 ?>
         <div class="section-header section-subheading">
@@ -127,19 +132,19 @@ Employee > View Profile
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Dependent's Name</label>
-                        <input class="form-control" readonly="1" name="dependent_name[]" value="<?= $dependents[$i]->dependent ?>">
+                        <input class="form-control" name="dependent_name[]" value="<?= $dependents[$i]->dependent ?>" readonly />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Birthday</label>
-                        <input class="form-control" readonly="1" name="dependent_bday[]" value="<?= date("m/d/Y",strtotime($dependents[$i]->bday)) ?>" autocomplete="off">
+                        <input class="form-control" name="dependent_bday[]" value="<?= $dependents[$i]->bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($dependents[$i]->bday)) ?>" autocomplete="off" readonly />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Generali Number</label>
-                        <input class="form-control" name="generali_num[]" value="<?= $dependents[$i]->generali_num ?>" autocomplete="off" readonly="1">
+                        <input class="form-control" name="generali_num[]" value="<?= $dependents[$i]->generali_num ?>" autocomplete="off" readonly />
                     </div>
                 </div>
             </div>
@@ -149,6 +154,7 @@ Employee > View Profile
         </div>
 <?php
     }
+    if(@$details->em_con_name != '' || @$details->em_con_rel != '' || @$details->em_con_num != '' || @$details->em_con_address != '') {
 ?>
         <div class="section-header section-subheading">
             <h4>In Case of Emergency</h4>
@@ -158,29 +164,32 @@ Employee > View Profile
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>In case of emergency please contact.</label>
-                        <input type="text" name="em_con_name" readonly="1" class="form-control" value="<?= @$details->em_con_name ?>">
+                        <input type="text" name="em_con_name" class="form-control" value="<?= @$details->em_con_name ?>" readonly />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Relationship</label>
-                        <input type="text" name="em_con_rel" readonly="1" class="form-control" value="<?= @$details->em_con_rel ?>">
+                        <input type="text" name="em_con_rel" class="form-control" value="<?= @$details->em_con_rel ?>" readonly />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Contact Number</label>
-                        <input type="text" name="em_con_num" readonly="1" class="form-control" value="<?= @$details->em_con_num ?>">
+                        <input type="text" name="em_con_num" class="form-control" value="<?= @$details->em_con_num ?>" readonly />
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>Address</label>
-                        <textarea name="em_con_address" readonly="1" class="form-control" rows="4"><?= @$details->em_con_address ?></textarea>
+                        <textarea name="em_con_address" class="form-control" rows="4" readonly><?= @$details->em_con_address ?></textarea>
                     </div>
                 </div>
             </div>
         </div>
+<?php
+    }
+?>
         <div class="section-header section-subheading">
             <h4>User Access</h4>
         </div>
@@ -221,12 +230,18 @@ Employee > View Profile
         <div class="panel panel-body mb-0">
             @include('employee.fields.job_relatedv')
         </div>
+<?php
+    if(@$employee->sss != '' || @$employee->pagibig != '' || @$employee->philhealth != '' || @$employee->tin != '') {
+?>
         <div class="section-header section-subheading">
             <h4>Government Numbers</h4>
         </div>
         <div class="panel panel-body mb-0">
             @include('employee.fields.governmentv')
         </div>
+<?php
+    }
+?>
         <div class="section-header section-subheading">
             <h4>Login Credentials</h4>
         </div>
@@ -238,22 +253,22 @@ Employee > View Profile
                 <br>
                 <div class="row">
                     <div class="col-md-3" style="display: flex;">
-                        <a type="button" class="btn btn-default" href="{{url('employee/'. $employee->id .'/changepassword')}}">Change Password</a>
+                        <a type="button" class="btn btn-default" href="<?= url("employee/{$employee->id}/changepassword") ?>">Change Password</a>
                         &nbsp;
-                        <a class="btn btn-primary" href="/update-profile">Update Selected Information</a>
+                        <a class="btn btn-primary" href="<?= url('update-profile') ?>">Update Selected Information</a>
                     </div>
                 </div>
             @endif
             @if(Auth::user()->isAdmin() && empty($myprofile))
                 <br>
                 <div class="row">
-                    <div class="col-md-12" >
-                        <a type="button" class="btn btn-default" href="{{url('employee/'. $employee->id .'/changepassword')}}">Change Password</a>
+                    <div class="col-md-12">
+                        <a type="button" class="btn btn-default" href="<?= url("employee/{$employee->id}/changepassword") ?>">Change Password</a>
                         @if($employee->isActive())
-                        <a class="btn btn-primary" href="{{url('employee_info/' . $employee->id . '/edit')}}">Update Profile</a>
-                        <a href="#"  class="pull-right btn btn-primary delete_btn" data-toggle="modal" data-target="#messageModal"  data-id="{{$employee->id}}" style="background: red !important; border-color: red !important;">Deactivate Employee</a>
+                        <a class="btn btn-primary" href="<?= url("employee_info/{$employee->id}/edit") ?>">Update Profile</a>
+                        <a href="#" class="pull-right btn btn-primary delete_btn" data-toggle="modal" data-target="#messageModal" data-id="<?= $employee->id ?>" style="background: red !important; border-color: red !important;">Deactivate Employee</a>
                         @else
-                        <a class="btn btn-primary" href="{{url('employees/' . $employee->id . '/reactivate')}}">Reactivate Employee</a>
+                        <a class="btn btn-primary" href="<?= url("employees/{$employee->id}/reactivate") ?>">Reactivate Employee</a>
                         @endif
                     </div>
                 </div>
@@ -287,23 +302,23 @@ Employee > View Profile
 @section('scripts')
 <script id="tmpl_addDependents" type="text/template">
 <div id="dep_~id~" class="row">
-    <div class="col-md-4 form-group">
-        <label>Dependent's Name</label>
-        <br>
-        <input readonly="1" id="dep_name_~id~" class="form-control" name="dependent_name[]" value="">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Dependent's Name</label>
+            <input type="text" id="dep_name_~id~" class="form-control" name="dependent_name[]" readonly />
+        </div>
     </div>
-    <div class="col-md-4 form-group">
-        <label>Birthday</label>
-        <br>
-        <input id="dep_bday_~id~" readonly="1" class="form-control" name="dependent_bday[]" value="" autocomplete="off">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Birthday</label>
+            <input type="text" id="dep_bday_~id~" class="form-control datetimepicker" name="dependent_bday[]" readonly />
+        </div>
     </div>
-    <div class="col-md-3 form-group">
-        <label>Generali Number</label>
-        <br>
-        <input class="form-control" name="generali_num[]" value="<?php echo count($dependents) > 0 ? $dependents[0]->generali_num : "" ?>" autocomplete="off" readonly="1">
-    </div>
-    <div class="col-md-4 form-group" style="vertical-align: middle;">
-        <br>
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Generali Number</label>
+            <input type="text" id="dep_generali_~id~" class="form-control" name="generali_num[]" readonly />
+        </div>
     </div>
 </div>
 </script>
@@ -318,7 +333,8 @@ $(function(){
 ?>
             addDep();
             $("#dep_name_" + <?php echo $i ?>).val("<?php echo $dependents[$i]->dependent ?>");
-            $("#dep_bday_" + <?php echo $i ?>).val("<?php echo date("m/d/Y",strtotime($dependents[$i]->bday)) ?>")
+            $("#dep_bday_" + <?= $i ?>).val("<?= $dependents[$i]->bday == '1970-01-01' ? '' : date("m/d/Y",strtotime($dependents[$i]->bday)) ?>");
+            $("#dep_generali_" + <?= $i ?>).val("<?= $dependents[$i]->generali_num ?>");
 <?php
         endfor;
     endif;

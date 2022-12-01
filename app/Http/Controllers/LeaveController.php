@@ -346,18 +346,18 @@ class LeaveController extends Controller
 			'details'        => $obj
 		];
 
-		Mail::to($employee->email)->send(new LeaveSelfNotification(['emp_name' => strtoupper($employee->first_name)]));
+		// Mail::to($employee->email)->send(new LeaveSelfNotification(['emp_name' => strtoupper($employee->first_name)]));
 
 		$supervisor = User::find($employee->supervisor_id);
 		if(!empty($supervisor->id)) {
 			$data['emp_name'] = strtoupper($supervisor->first_name);
-			Mail::to($supervisor->email)->send(new LeaveNotification($data));
+			// Mail::to($supervisor->email)->send(new LeaveNotification($data));
 		}
 
 		$manager = User::find($employee->manager_id);
 		if(!empty($manager->id)) {
 			$data['emp_name'] = strtoupper($manager->first_name);
-			Mail::to($manager->email)->send(new LeaveNotification($data));
+			// Mail::to($manager->email)->send(new LeaveNotification($data));
 		}
 
 		return redirect("leave" . '/' . $leave_id)->with('success', 'Leave Request Successfully Submitted!!');
@@ -466,7 +466,7 @@ class LeaveController extends Controller
 		}
 
 		$obj = LeaveRequestDetails::where('leave_id',$id)->where('status',1)->where('pay_type','<>',3)->get();
-		$cto = LeaveRequestDetails::where('leave_id',$id)->where('status',1)->where('pay_type',3)->get();
+		$cto = LeaveRequestDetails::where('leave_id',$id)->where('status','<>',0)->where('pay_type',3)->get();
 		if(count($obj) > 0) { $row = $obj[0]; }
 		if(count($cto) > 0) { $cto_row = $cto[0]; }
 
@@ -798,11 +798,11 @@ class LeaveController extends Controller
 			if(empty($manager)) {
 				$data['leader_name'] = 'HR DEPARTMENT';
 
-				Mail::to('hrd@elink.com.ph')->send(new LeaveReminder($data));
+				// Mail::to('hrd@elink.com.ph')->send(new LeaveReminder($data));
 			} else {
 				$data['leader_name'] = strtoupper($manager->first_name); 
 
-				Mail::to($manager->email)->send(new LeaveReminder($data));
+				// Mail::to($manager->email)->send(new LeaveReminder($data));
 			}
 
 			return back()->with('success', 'Leave request successfully recommended for approval.');
@@ -818,8 +818,8 @@ class LeaveController extends Controller
 		$leave_request->approved_by_signed_date = date('Y-m-d H:i:s');
 		$leave_request->approve_status_id = 1;
 
-		$req_det_obj = DB::select("select * from leave_request_details where leave_id = {$request->leave_id} and pay_type != 3 order by date ASC;");
-		$cto_dates = DB::select("select * from leave_request_details where leave_id = {$request->leave_id} and pay_type = 3 order by date ASC;");
+		$req_det_obj = DB::select("select * from leave_request_details where leave_id = {$request->leave_id} and pay_type != 3 AND status = 1 order by date ASC;");
+		$cto_dates = DB::select("select * from leave_request_details where leave_id = {$request->leave_id} and pay_type = 3 AND status = 1 order by date ASC;");
 		$employee = User::withTrashed()->find($leave_request->employee_id);
 		$obj = DB::select($this->newQuery($employee->id));
 		$credits = (object) [
@@ -864,7 +864,7 @@ class LeaveController extends Controller
 		if(!empty($cto_dates)) {
 			$with_pay = $with_pay - count($cto_dates);
 			for($i=0;$i<count($cto_dates);$i++) {
-				LeaveRequestDetails::where('id', $req_det_obj[$i]->id)->update(['status' => 3]);
+				LeaveRequestDetails::where('id', $cto_dates[$i]->id)->update(['status' => 3]);
 			}
 		}
 
@@ -938,7 +938,7 @@ class LeaveController extends Controller
 		];
 
 		if($leave_request->save()){
-			Mail::to($employee->email)->send(new LeaveApproved($data));
+			// Mail::to($employee->email)->send(new LeaveApproved($data));
 
 			return back()->with('success', 'Leave request successfully approved. . .');
 		} else {
@@ -977,7 +977,7 @@ class LeaveController extends Controller
 		];
 
 		if($leave_request->save()){
-			Mail::to($employee->email)->send(new LeaveDeclined($data));
+			// Mail::to($employee->email)->send(new LeaveDeclined($data));
 
 			return back()->with('success', 'Leave request successfully declined.');
 		} else {

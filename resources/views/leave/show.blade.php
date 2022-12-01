@@ -170,7 +170,7 @@
             </div>
 			<div class="col-md-6" style="direction: rtl">
             <?php
-        	if(($leave_request->supervisor_id == Auth::user()->id && empty($leave_request->recommending_approval_by_signed_date)) && ($leave_request->approve_status_id == 0 || $leave_request->approve_status_id == 3)) {
+        	if($employee->supervisor_id == Auth::user()->id && empty($leave_request->recommending_approval_by_signed_date) && $leave_request->approve_status_id == 0) {
             ?>
 				    <form action="<?= url('leave/recommend') ?>" method="POST" style="display: inline-flex;">
 				        {{ csrf_field() }}

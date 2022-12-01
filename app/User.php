@@ -264,25 +264,57 @@ class User extends Authenticatable
     public function isDeleted(){
         return $this->status == 2 || $this->trashed();
     }
-    public function getLinkees(){
-        	$main_names = DB::select("
-	        SELECT 
-        	    id, first_name, last_name, email
-	        FROM
-	            elink_employee_directory.employee_info AS ei,
-        	    adtl_linkees AS al
-	        WHERE
-        	    ((supervisor_id = $this->id
-	         	OR manager_id = $this->id)
-	                AND status = 1
-        	        AND deleted_at IS NULL)
-	                OR (al.adtl_linker = $this->id
-        	        AND ei.id = al.adtl_linkee)
-                
-	        GROUP BY ei.id,ei.first_name,ei.last_name,ei.email
-	        ORDER BY last_name ASC;
-    		");
 
-	return $main_names;
+    public function getLinkees(){
+        $data = [];
+    	$emp_lnk = DB::select("
+        SELECT 
+    	    id, first_name, last_name, email
+        FROM
+            employee_info
+        WHERE
+            status = 1 AND
+            deleted_at IS NULL AND
+            (supervisor_id = $this->id OR manager_id = $this->id)
+        ORDER BY last_name ASC;
+    	");
+
+        foreach($emp_lnk as $emp) {
+            $arr['last_name'] = $emp->last_name;
+            $arr['id'] = $emp->id;
+            $arr['first_name'] = $emp->first_name;
+            $arr['email'] = $emp->email;
+
+            $data[$emp->id] = (object) $arr;
+        }
+
+        $adtl_lnk = DB::select("
+        SELECT 
+            ei.id, ei.first_name, ei.last_name, ei.email
+        FROM
+            employee_info AS ei
+        INNER JOIN 
+            adtl_linkees AS lnk
+        ON
+            lnk.adtl_linkee = ei.id
+        WHERE
+            ei.status = 1 AND
+            ei.deleted_at IS NULL AND
+            lnk.adtl_linker = $this->id
+        ORDER BY ei.last_name ASC;
+        ");
+
+        foreach($adtl_lnk as $lnk) {
+            $arr['last_name'] = $lnk->last_name;
+            $arr['first_name'] = $lnk->first_name;
+            $arr['id'] = $lnk->id;
+            $arr['email'] = $lnk->email;
+
+            $data[$lnk->id] = (object) $arr;
+        }
+
+        array_multisort($data);
+
+    	return $data;
 	}
 }

@@ -23,7 +23,7 @@ class UndertimeController extends Controller
         $status = (($request->has('status') && $request->get('status') != "") ? $request->get('status') : 'pending');
         $id = Auth::user()->id;
 
-        $data['undertime_request'] = UndertimeRequest::getUndertime($status);
+        $data['undertime_request'] = UndertimeRequest::getUndertime($status, 'user', $id);
         $data['type'] = $status;
         $data['is_leader'] = count(DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id} OR `employee_info`.`supervisor_id`={$id})"));
 
@@ -91,8 +91,8 @@ class UndertimeController extends Controller
             // Mail::to($manager->email)->cc('ivybarria@elink.com.ph')->send(new UndertimeNotification($data));
         }
 
-        Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeNotification($data));
-        Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeSelfNotification(['emp_name' => strtoupper(Auth::user()->first_name)]));
+        // Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeNotification($data));
+        // Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeSelfNotification(['emp_name' => strtoupper(Auth::user()->first_name)]));
 
         // Mail::to(Auth::user()->email)->cc('ivybarria@elink.com.ph')->send(new UndertimeSelfNotification(['emp_name' => strtoupper(Auth::user()->first_name)]));
 
@@ -179,12 +179,12 @@ class UndertimeController extends Controller
                 $data['leader_name'] = 'HR DEPARTMENT';
 
                 // Mail::to('hrd@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeReminder($data));
-                Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeReminder($data));
+                // Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeReminder($data));
             } else {
                 $data['leader_name'] = strtoupper($manager->first_name); 
 
                 // Mail::to($manager->email)->cc('ivybarria@elink.com.ph')->send(new UndertimeReminder($data));
-                Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeReminder($data));
+                // Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeReminder($data));
             }
 
             return back()->with('success', 'Undertime Request successfully recommended for approval.');
@@ -214,7 +214,7 @@ class UndertimeController extends Controller
 
         if($undertime->save()){
             // Mail::to($employee->email)->cc('ivybarria@elink.com.ph')->send(new UndertimeApproved($data));
-            Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeApproved($data));
+            // Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeApproved($data));
 
             return back()->with('success', 'Undertime Request successfully approved. . .');
         } else {
@@ -244,7 +244,7 @@ class UndertimeController extends Controller
 
         if($undertime->save()){
             // Mail::to($employee->email)->cc('ivybarria@elink.com.ph')->send(new UndertimeDeclined($data));
-            Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeDeclined($data));
+            // Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new UndertimeDeclined($data));
 
             return back()->with('success', 'Undertime Request successfully declined.');
         } else {

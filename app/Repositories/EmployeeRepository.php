@@ -166,7 +166,9 @@ class EmployeeRepository implements RepositoryInterface
         $employee->employee_category = $request->employee_category;
         $employee->regularization_date = date("Y-m-d",strtotime($request->regularization_date));
         $employee->civil_status = $request->civil_status;
-
+        if($employee->gender == 2) {
+            $employee->profile_img = 'http://dir.elink.corp/public/img/nobody_f.original.jpg';
+        }
         $employee->password = Hash::make(env('USER_DEFAULT_PASSWORD', 'qwe123!@#$'));
         $employee->save();
         
@@ -403,8 +405,8 @@ class EmployeeRepository implements RepositoryInterface
     }
 
     public function employees(Request $request){
-        $departments = EmployeeDepartment::all();
-        $positions = User::allExceptSuperAdmin()->select('position_name')->distinct()->get();
+        $departments = EmployeeDepartment::orderBy('department_name')->get();;
+        $positions = User::allExceptSuperAdmin()->select('position_name')->distinct()->orderBy('position_name')->get();
 
         if(Auth::check()) {
             if (Auth::user()->isAdmin()) {

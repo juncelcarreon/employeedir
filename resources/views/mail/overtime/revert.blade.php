@@ -3,11 +3,12 @@
         <small style="padding: 20px 0 20px 0;font-size: 14px;">eLink Systems &amp; Concepts Corp.</small>
     </div>
 
-        Hello <?= $obj_details['emp_name'] ?>,
+        Hi <?= $obj_details['emp_name'] ?>,
         <br>
         <br>
-        Sample REVERTED Overtime Request Email.
+        Kindly see below correction/s on your submitted overtime report.
         <br>
+        <a href="<?= $obj_details['url'] ?>">Click</a> to agree or disagree with the corrections.
 	
 	<br>
 	<br>

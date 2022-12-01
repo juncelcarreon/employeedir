@@ -22,7 +22,7 @@
                     ?>
                         <tr>
                             <td><?= date('F d, Y',strtotime($detail['date'])) ?></td>
-                            <td><?= $detail['no_of_hours'] ?></td>
+                            <td><?= $detail['no_of_hours'] ?> hrs</td>
                         </tr>
                     <?php
                     endforeach;
@@ -32,7 +32,7 @@
                 <br>
                 <br>
                 Reason: <br>
-                <div style="white-space: pre-line;"><?= htmlentities($obj_details['reason']) ?></div>
+                <div style="white-space: pre-line;"><?= nl2br(htmlentities($obj_details['reason'])) ?></div>
                 <br>
                 <br>
 		Kindly click on <a href="<?= $obj_details['url'] ?>">request</a> to approve/decline.

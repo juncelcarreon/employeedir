@@ -99,24 +99,27 @@ class EmployeeInfoController extends Controller
 		}
 
 		$employee = User::where('id', $request->adtl_linkee)->first();
-		$linkee = AdtlLinkee::where('adtl_linkee',$request->adtl_linkee)->where('adtl_linker', $request->adtl_linker)->first();
 
-		if($linkee && $employee) {
-			$employee->supervisor_id = 0;
-			$employee->supervisor_name = '';
+		DB::table('adtl_linkees')->where('adtl_linkee',$request->adtl_linkee)->where('adtl_linker', $request->adtl_linker)->delete();
+
+		if(!empty($employee)) {
+			if($employee->supervisor_id == $request->adtl_linker) {
+				$employee->supervisor_id = 0;
+				$employee->supervisor_name = '';
+			}
+			if($employee->manager_id == $request->adtl_linker) {
+				$employee->manager_id = 0;
+				$employee->manager_name = '';
+			}
 			$employee->save();
-
-			DB::table('adtl_linkees')->where('adtl_id', $linkee->adtl_id)->delete();
-
-			return ['data' => true];
 		}
 
-		return ['data' => false];
+		return ['data' => true];
 	}
 
 	public function index()
 	{
-		return 'index';
+		return redirect(url('employees'));
 	}
 
 	public function create()

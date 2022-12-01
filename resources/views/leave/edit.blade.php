@@ -6,16 +6,16 @@
 <style>
 @include('leave.leave-style');
 </style>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        LEAVE APPLICATION FORM
+<form action="<?= url('leave/update') ?>" method="post" id="leave_form">
+    {{ csrf_field() }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            LEAVE APPLICATION FORM
 
-        <a href="<?= url("leave/{$leave_request->id}") ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
-    </div>
-    <div class="panel-body timeline-container ">
-        <div class="flex-center position-ref full-height">
-            <form action="<?= url('leave/update') ?>" method="post" id="leave_form">
-            {{ csrf_field() }}
+            <a href="<?= url("leave/{$leave_request->id}") ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
+        </div>
+        <div class="panel-body timeline-container">
+            <div class="flex-center position-ref full-height">
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
@@ -63,38 +63,64 @@
                         </div> 
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="panel-heading panel-subheading" style="position:relative;">
+            LEAVE DATES
+
+            <input type="text" name="number_of_days" value="<?= $leave_request->number_of_days ?>" class="form-control _numOfDaysField" list="leave_days" placeholder="No. of Days" autocomplete="off" readonly style="width:100px;position:absolute;right:15px;top:50%;transform:translateY(-50%);">
+        </div>
+        <div class="panel-body timeline-container">
+            <div class="flex-center position-ref full-height">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <strong>Date Filed: </strong>
-                            <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" autocomplete="off" value="<?= date('m/d/Y', strtotime($leave->date)) ?>">
+                            <strong>Leave Date: </strong>
                         </div> 
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <strong>Length: </strong>
-                            <select name="length[]" class="form-control _lengthDaySel">
-                                <option value="1"<?= $leave->length == 1 ? " selected" : "" ?>>Whole Day</option>
-                                <option value="0.5"<?= $leave->length == 0.5 ? " selected" : "" ?>>Half Day</option>
-                            </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <strong>With/Without Pay: </strong>
-                            <select name="pay_type[]" class="form-control">
-                                <option value="0"<?= $leave->pay_type == 0 ? " selected" : "" ?>>Without Pay</option>
-                                <option value="1"<?= $leave->pay_type == 1 ? " selected" : "" ?>>With Pay</option>
-                            </select>
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <strong>Add Date to File: </strong>
-                            <button type="button" class="btn btn-primary" id="_addLeaveItem"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
+                </div>
+                <div class="entry-content">
+                    <div class="row entry-row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" autocomplete="off" value="<?= date('m/d/Y', strtotime($leave->date)) ?>" required>
+                            </div> 
                         </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <select name="length[]" class="form-control _lengthDaySel">
+                                    <option value="1"<?= $leave->length == 1 ? " selected" : "" ?>>Whole Day</option>
+                                    <option value="0.5"<?= $leave->length == 0.5 ? " selected" : "" ?>>Half Day</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <select name="pay_type[]" class="form-control">
+                                    <option value="0"<?= $leave->pay_type == 0 ? " selected" : "" ?>>Without Pay</option>
+                                    <option value="1"<?= $leave->pay_type == 1 ? " selected" : "" ?>>With Pay</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary" id="_addLeaveItem" style="width:100%;">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="field_id[]" value="<?= $leave->id ?>">
                     </div>
-                    <div class="col-md-2"><input type="hidden" name="field_id[]" value="<?= $leave->id ?>"></div>
                 </div>
                 <div id="_date_form">
                 <?php
@@ -103,22 +129,19 @@
                     <div id="main_row_<?= $filed_days[$i]->id ?>" class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <strong>Date Filed: </strong>
-                                <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" autocomplete="off" value="<?= date('m/d/Y', strtotime($filed_days[$i]->date)) ?>">
+                                <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" autocomplete="off" value="<?= date('m/d/Y', strtotime($filed_days[$i]->date)) ?>" required>
                             </div> 
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <strong>Length: </strong>
                                 <select name="length[]" class="form-control _lengthDaySel">
                                     <option value="1"<?= $filed_days[$i]->length == 1 ? " selected" : "" ?>>Whole Day</option>
                                     <option value="0.5"<?= $filed_days[$i]->length == 0.5 ? " selected" : "" ?>>Half Day</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <strong>With/Without Pay: </strong>
                                 <select name="pay_type[]" class="form-control">
                                     <option value="0"<?= $filed_days[$i]->pay_type == 0 ? " selected" : "" ?>>Without Pay</option>
                                     <option value="1"<?= $filed_days[$i]->pay_type == 1 ? " selected" : "" ?>>With Pay</option>
@@ -127,16 +150,24 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <strong>Remove this Leave: </strong>
-                                <button type="button" data-type="main" data-id="<?= $filed_days[$i]->id ?>" class="btn btn-danger" onclick="removeThisLeave(this)"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+                                <button type="button" data-type="main" data-id="<?= $filed_days[$i]->id ?>" class="btn btn-danger" onclick="removeThisLeave(this)" style="width:100%;">
+                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                </button>
                             </div>
                         </div>
-                        <div class="col-md-2"><input type="hidden" name="field_id[]" value="<?= $filed_days[$i]->id ?>"></div>
+                        <input type="hidden" name="field_id[]" value="<?= $filed_days[$i]->id ?>">
                     </div>
                 <?php
                 }
                 ?>
                 </div>
+            </div>
+        </div>
+        <div class="panel-heading panel-subheading">
+            LEAVE TYPE
+        </div>
+        <div class="panel-body timeline-container">
+            <div class="flex-center position-ref full-height">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -147,23 +178,9 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-4"></div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <strong>Number of Days: </strong>
-                            <input type="text" name="number_of_days" class="form-control _numOfDaysField" list="leave_days" placeholder="No. of Days" autocomplete="off" value="<?= $leave_request->number_of_days ?>" readonly>
-                        </div>
-                    </div>
-                </div>
-                <!-- TYPE OF LEAVE -->
-                <div class="row">
-                    <div class="col-md-12" style="border-top: 1px solid rgba(0,0,0,.125); padding-top: 15px; margin-top: 25px">
-                        <strong>Type of Leave: </strong>
-                    </div>
-                </div>
-                <div class="row" style="padding-bottom: 25px; margin-bottom: 25px;">
-                    <div class="col-md-3" style="border-right: 1px solid rgba(0,0,0,.125);">
-                        <div class="form-group">
+                            <strong>Type of Leave: </strong>
                             <ul class="list-group list-group-flush">
                             <?php
                             foreach($leave_types as $lv) {
@@ -192,88 +209,94 @@
                             ?>
                             </ul>
                         </div>
-                        <?php
-                        if($is_leader > 0) {
-                        ?>
-                        <div id="cto-data" <?= (count($cto_dates) > 0) ? 'style="display: block;"' : 'style="display: none;"' ?>>
-                            <div class="form-group cto-dates">
-                                <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" autocomplete="off" value="<?= (count($cto_dates) > 0) ? date('m/d/Y', strtotime($cto_row->date)) : '' ?>">
-                                <button type="button" class="btn btn-primary" id="_addCTODay">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </div>
+                    <?php
+                    if($is_leader > 0) {
+                    ?>
+                    <div class="col-md-4" id="cto-data" <?= (count($cto_dates) > 0) ? 'style="display: block;"' : 'style="display: none;"' ?>>
+                        <div class="form-group cto-dates">
+                            <strong>CTO Dates: </strong>
+                            <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" autocomplete="off" value="<?= (count($cto_dates) > 0) ? date('m/d/Y', strtotime($cto_row->date)) : '' ?>">
+                            <button type="button" class="btn btn-primary" id="_addCTODay">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div id="cto-dates">
+                            <?php
+                            for($i = 1; $i < count($cto_dates); $i++) {
+                            ?>
+                            <div class="form-group cto-dates" id="cto_<?= $cto_dates[$i]->id ?>">
+                                <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" autocomplete="off" value="<?= date('m/d/Y', strtotime($cto_dates[$i]->date)) ?>">
+                                <button type="button" class="btn btn-danger" data-id="<?= $cto_dates[$i]->id ?>" onclick="removeCTO(this)">
+                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                                 </button>
                             </div>
-                            <div id="cto-dates">
-                                <?php
-                                for($i = 1; $i < count($cto_dates); $i++) {
-                                ?>
-                                <div class="form-group cto-dates" id="cto_<?= $cto_dates[$i]->id ?>">
-                                    <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" autocomplete="off" value="<?= date('m/d/Y', strtotime($cto_dates[$i]->date)) ?>">
-                                    <button type="button" class="btn btn-danger" data-id="<?= $cto_dates[$i]->id ?>" onclick="removeCTO(this)">
-                                        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-                                    </button>
-                                </div>
-                                <?php
-                                }
-                                ?>
-                            </div>
+                            <?php
+                            }
+                            ?>
                         </div>
-                        <?php
-                        }
-                        ?>
                     </div>
-                    <div class="col-md-9">
-                        <div class="report-date-box" style="padding-top: 25%">
-                            I will report for work on 
-                            <input type="text" name="report_date" class="datepicker" placeholder="date" value="<?= date('m/d/Y',strtotime($leave_request->report_date)) ?>" autocomplete="off">
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+        <div class="panel-heading panel-subheading">
+            OTHER INFORMATION
+        </div>
+        <div class="panel-body timeline-container">
+            <div class="flex-center position-ref full-height">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="report-date-box">
+                            <q>I will report for work on 
+                            <input type="text" name="report_date" class="datepicker" placeholder="date" autocomplete="off" value="<?= date('m/d/Y',strtotime($leave_request->report_date)) ?>" required>
                             If i fail to do so on the said date without any justifiable cause.
-                            I can considered to have abandoned my employment. I understand that any misrepresentation I make on this request is a serious offense and shall be a valid ground for disciplinary action against me.
+                            I can considered to have abandoned my employment. I understand that any misrepresentation I make on this request is a serious offense and shall be a valid ground for disciplinary action against me.</q>
                         </div>
                     </div>
                 </div>
-                <!-- END TYPE OF LEAVE -->
                 <!-- REASON -->
                 <div class="col-md-12" style="border-top: 1px solid rgba(0,0,0,.125); padding-top: 15px; margin-top: 25px"></div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <strong>Reason: </strong>
-                        <textarea name="reason" class="form-control" rows="4"><?= $leave_request->reason ?></textarea>
+                        <textarea name="reason" class="form-control" rows="4" required><?= $leave_request->reason ?></textarea>
                     </div> 
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <strong>Contact Number: </strong>
-                        <input type="text" name="contact_number" class="form-control" value="<?= $leave_request->contact_number ?>">
+                        <input type="text" name="contact_number" class="form-control" value="<?= $leave_request->contact_number ?>" required>
                     </div> 
                 </div>
                 <div class="form-group">
                     <input type="submit" id="register-button" class="btn btn-primary" value="Update">
                     <input type="reset" class="btn btn-default" value="Reset">
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+</form>
 <script id="tmpl_addLeaveDay" type="text/template">
 <div id="row_~~id~~" class="row">
     <div class="col-md-4">
         <div class="form-group">
-            <strong>Date Filed: </strong>
-            <input id="date_picker_~~id~~"  type="text" name="leave_date[]" class="form-control" placeholder="Date Filed" autocomplete="off">
+            <input id="date_picker_~~id~~"  type="text" name="leave_date[]" class="form-control _datesFiled" placeholder="Leave Date" autocomplete="off" required>
         </div> 
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="form-group">
-            <strong>Length: </strong>
             <select id="sel_ctr_~~id~~" name="length[]" class="form-control _lengthDaySel" onchange="computeTotalField()">
                 <option value="1">Whole Day</option>
                 <option value="0.5">Half Day</option>
             </select>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="form-group">
-            <strong>With/Without Pay: </strong>
-            <select name="pay_type[]" class="form-control">
+            <select id="Pay_~~id~~_" name="pay_type[]" class="form-control _thisPayType" onchange="computeLeaveCredits(this);">
                 <option value="0">Without Pay</option>
                 <option value="1">With Pay</option>
             </select>
@@ -281,8 +304,9 @@
     </div>
     <div class="col-md-2">
         <div class="form-group">
-            <strong>Remove this Leave: </strong>
-            <button type="button" data-type="sub" data-id="~~id~~" class="btn btn-danger" onclick="removeThisLeave(this)"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+            <button type="button" data-type="sub" data-id="~~id~~" class="btn btn-danger" onclick="removeThisLeave(this)" style="width:100%;">
+                <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+            </button>
         </div>
     </div>
     <div class="col-md-2"><input type="hidden" name="field_id[]" value="0"></div>
@@ -298,8 +322,6 @@
 </script>
 @endsection
 @section('scripts')
-<!-- <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
-<script>tinymce.init({ selector:'textarea', forced_root_block : 'p' });</script> -->
 <script type="text/javascript">
 var ctr = 1;
 var locked_days = [<?php foreach($blocked_dates as $b) { echo '"'.$b.'"'.","; } ?>];
@@ -392,6 +414,9 @@ $(function(){
     });
 
     $("._leaveCategory").change(function(){
+        var val = $(this).val();
+        $('input:checkbox').removeAttr('checked');
+        $('#cto-data').css({'display':'none'});
         checkCategory();
     });
 

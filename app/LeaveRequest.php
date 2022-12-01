@@ -190,6 +190,8 @@ class LeaveRequest extends Model
                     (e.team_name = '$dept' or e.usertype = 3 )
                         AND d.date >= CURDATE()
                         AND l.approve_status_id <> 2
+                        AND d.pay_type <> 3
+                        AND d.status = 1
                 ORDER BY d.date ASC
             ");
         else
@@ -206,6 +208,8 @@ class LeaveRequest extends Model
                     e.team_name = '$dept'
                         AND d.date >= CURDATE()
                         AND l.approve_status_id <> 2
+                        AND d.pay_type <> 3
+                        AND d.status = 1
                 ORDER BY d.date ASC
             ");
     }

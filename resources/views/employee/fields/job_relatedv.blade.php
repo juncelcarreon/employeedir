@@ -2,7 +2,7 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Position</label>
-            <input class="form-control" readonly="1" placeholder="Position" name="position_name" value="<?= @$employee->position_name ?>">
+            <input type="text" class="form-control" name="position_name" value="<?= @$employee->position_name ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
@@ -16,13 +16,13 @@
             }
             ?>
             <label>Account</label>
-            <input class="form-control" readonly="1" placeholder="Account" name="account_id" value="<?= @$account_name ?>">
+            <input type="text" class="form-control" name="account_id" value="<?= @$account_name ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Team/Department</label>
-            <input class="form-control" readonly="1" placeholder="Team/Department" name="team_name" value="<?= @$employee->team_name ?>">
+            <input type="text" class="form-control" name="team_name" value="<?= @$employee->team_name ?>" readonly />
         </div>
     </div>
 </div>
@@ -30,13 +30,13 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Manager</label>
-            <input class="form-control" readonly="1" placeholder="Manager" name="manager_id" value="<?= @$employee->manager_name ?>">
+            <input type="text" class="form-control" name="manager_id" value="<?= @$employee->manager_name ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label>Immediate Superior</label>
-            <input class="form-control" readonly="1" placeholder="Immediate Superior" name="supervisor_id" value="<?= @$employee->supervisor_name ?>">
+            <label>Immediate Superior / Supervisor</label>
+            <input type="text" class="form-control" name="supervisor_id" value="<?= @$employee->supervisor_name ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
@@ -48,8 +48,8 @@
                 case 2: $type = 'Project Based'; break;
             }
             ?>
-            <label>Type</label>
-            <input class="form-control" readonly="1" placeholder="Type" name="is_regular" value="<?= @$type ?>">
+            <label>Employee Type</label>
+            <input type="text" class="form-control" name="is_regular" value="<?= @$type ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
@@ -62,45 +62,44 @@
                 case 3: $category = 'Support'; break;
             }
             ?>
-            <label>Category</label>
-            <input class="form-control" readonly="1" placeholder="Type" name="is_regular" value="<?= @$category ?>">
+            <label>Employee Category</label>
+            <input type="text" class="form-control" name="is_regular" value="<?= @$category ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Hire Date</label>
-            <input class="form-control" readonly="1" placeholder="Hire Date" name="hired_date" value="<?= @$employee->datehired() ?>">
+            <input type="text" class="form-control" name="hired_date" value="<?= @$employee->datehired() ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Production Date</label>
-            <input class="form-control" readonly="1" placeholder="Hire Date" name="prod_date" value="<?= @$employee->prodDate() ?>">
+            <input type="text" class="form-control" name="prod_date" value="<?= @$employee->prodDate() ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Regularization Date</label>
-            <input type="text" readonly="1" placeholder="Regularization Date" name="regularization_date" class="form-control" value="<?= @$employee->regularization_date == '1970-01-01' ? '' : @$employee->regularization_date ?>" autocomplete="off">
+            <input type="text" name="regularization_date" class="form-control" value="<?= @$employee->regularization_date == '1970-01-01' ? '' : @$employee->regularization_date ?>" autocomplete="off" readonly />
         </div>
     </div>
-    <input type="hidden" class="form-control" placeholder="Ext" name="status_id" value="<?= @$employee->status || 1 ?>" >
     <div class="col-md-4">
         <div class="form-group">
             <label>EXT</label>
-            <input readonly="1" class="form-control" placeholder="Ext" name="ext" value="<?= @$employee->ext ?>" >
+            <input type="text" class="form-control" name="ext" value="<?= @$employee->ext ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Wave</label>
-            <input readonly="1" class="form-control" placeholder="Wave" name="wave" value="<?= @$employee->wave ?>" >
+            <input type="text" class="form-control" name="wave" value="<?= @$employee->wave ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Resignation Date </label>
-            <input class="form-control" readonly="1" placeholder="Resignation Date" name="resignation_date" value="<?= @$details->resignation_date == '1970-01-01' ? '' : @$details->resignation_date ?>" >
+            <input type="text" class="form-control" name="resignation_date" value="<?= @$details->resignation_date == '1970-01-01' ? '' : @$details->resignation_date ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
@@ -112,18 +111,18 @@
             }
             ?>
             <label>Rehirable</label>
-            <input readonly="1" class="form-control" placeholder="Rehirable" name="rehirable" value="<?= @$rehirable ?>">
+            <input type="text" class="form-control" name="rehirable" value="<?= @$rehirable ?>" readonly />
         </div>
     </div> 
     <div class="col-md-12">
         <div class="form-group">
             <label>Reason</label>
-            <input type="text" name="rehire_reason" class="form-control" value="{{ @$details->rehire_reason }}" readonly="">
+            <input type="text" name="rehire_reason" class="form-control" value="<?= @$details->rehire_reason ?>" readonly />
         </div>
     </div>
     <div class="col-md-12">
         <div class="form-group">
-            <input type="checkbox" disabled="1" name="all_access" <?php echo @$employee->all_access == 1 ? "checked" : "" ; ?>> &nbsp;
+            <input type="checkbox" disabled="1" name="all_access"<?= @$employee->all_access == 1 ? " checked" : "" ; ?> /> &nbsp;
             <span for="all_access">can view information from other account ?</span>
         </div>
     </div>
