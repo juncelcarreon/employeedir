@@ -4,6 +4,13 @@ Employees
 @endsection
 @section('content')
 <style type="text/css">
+    h4.timeline-title a{
+        transition: linear 0.3s;
+        font-weight: 500 !important;
+    }
+    h4.timeline-title a:hover{
+        padding-left: 5px;
+    }
     .emp-profile{
         background-color: white;
     }

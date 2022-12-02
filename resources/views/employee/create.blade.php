@@ -205,29 +205,42 @@ Employee > Add Employee
             <h4>Dependents Information</h4>
         </div>
         <div class="panel panel-body mb-0" id="dependentsDiv">
-            <div class="row">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <strong>Dependent's Name</strong>
+                    </div>
+                </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label>Dependent's Name</label>
+                        <strong>Birthday</strong>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <strong>Generali Number</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
                         <input type="text" class="form-control" name="dependent_name[]" placeholder="Dependent's Name" />
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label>Birthday</label>
                         <input type="text" class="form-control datetimepicker" name="dependent_bday[]" placeholder="MM/DD/YYYY" autocomplete="off" />
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label>Generali Number</label>
                         <input type="text" class="form-control" name="generali_num[]" placeholder="xxxx-xxx-xxxx" autocomplete="off" />
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
-                        <label>&nbsp;</label><br>
-                        <button class="btn btn-primary add-dependent">Add Dependent</button>
+                        <button class="btn btn-primary add-dependent" style="width: 100%;"><span class="fa fa-plus"></span></button>
                     </div>
                 </div>
             </div>
@@ -364,11 +377,11 @@ Employee > Add Employee
                     <div class="form-group">
                         <label>Manager</label>
                         <select class="select2 form-control" name="manager_id">
-                        <option selected disabled>Select</option>
+                        <option value="0" selected>Select</option>
                         <?php
-                        foreach($managers as $manager) {
+                        foreach($employees as $employee) {
                         ?>
-                        <option value="<?= $manager->id ?>"><?= $manager->fullname() ?></option>
+                        <option value="<?= $employee->id ?>"><?= $employee->fullname() ?></option>
                         <?php
                         }
                         ?>
@@ -379,11 +392,11 @@ Employee > Add Employee
                     <div class="form-group">
                         <label>Immediate Superior / Supervisor</label>
                         <select class="select2 form-control" name="supervisor_id">
-                            <option selected disabled>Select</option>
+                            <option value="0" selected>Select</option>
                             <?php
-                            foreach($supervisors as $supervisor) {
+                            foreach($employees as $employee) {
                             ?>
-                            <option value="<?= $supervisor->id ?>"><?= $supervisor->fullname() ?></option>
+                            <option value="<?= $employee->id ?>"><?= $employee->fullname() ?></option>
                             <?php
                             }
                             ?>
@@ -546,28 +559,24 @@ Employee > Add Employee
 @section('scripts')
 <script id="tmpl_addDependents" type="text/template">
 <div id="dep_~id~" class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="form-group">
-            <label>Dependent's Name</label>
             <input type="text" id="dep_name_~id~" class="form-control" name="dependent_name[]" placeholder="Dependent's Name" />
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-group">
-            <label>Birthday</label>
             <input type="text" id="dep_bday_~id~" class="form-control datetimepicker" name="dependent_bday[]" placeholder="MM/DD/YYYY" autocomplete="off" />
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-group">
-            <label>Generali Number</label>
             <input type="text" class="form-control" name="generali_num[]" placeholder="xxxx-xxx-xxxx" autocomplete="off" />
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="form-group">
-            <label>&nbsp;</label><br>
-            <a href="javascript:;" class="btn btn-danger" data-id="~id~" onclick="removeThisDependent(this)">Remove Dependent</a>
+            <a href="javascript:;" class="btn btn-danger" data-id="~id~" onclick="removeThisDependent(this)" style="width: 100%;"><span class="fa fa-minus"></span></a>
         </div>
     </div>
 </div>
@@ -616,9 +625,10 @@ $(function() {
         $("#dependentsDiv").append(js_tmpl);
         console.log('You Clicked Here');
         $("#dep_bday_" + ctr).datetimepicker({
-            format: 'MM/DD/YYYY'
+            format: 'MM/DD/YYYY',
+            useCurrent: false
         });
-        
+
         ctr++;
     });
 
@@ -629,7 +639,8 @@ $(function() {
     });
 
     $(".datetimepicker").datetimepicker({
-        format: 'MM/DD/YYYY'
+        format: 'MM/DD/YYYY',
+        useCurrent: false
     });
 
     $(".is_reg_event").change(function(){

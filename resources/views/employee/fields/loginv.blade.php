@@ -16,7 +16,7 @@
     </div>
     <?php
     }
-    if($employee->email2 != "") {
+    if($employee->email3 != "") {
     ?>
     <div class="col-md-4">
         <div class="form-group">

@@ -36,239 +36,253 @@ Employee > Edit Employee Profile
         background: #5bc0de !important;
     }
 </style>
-<br>
 {{ Form::open(array('url' => 'employee_info/' . $employee->id,'files' => true ,'id' => 'edit_employee_form')) }}
 {{ Form::hidden('_method', 'PUT') }}
 {{ csrf_field() }}
-    <div class="col-md-3" style="padding-left: 10px !important; padding-right: 10px;">
-        <div class="section-header">
-            <h4>Profile Picture</h4>
+<div class="col-md-3" style="padding-left: 0 !important; padding-right: 0 !important;">
+    <div class="section-header">
+        <h4>Profile Picture</h4>
+    </div>
+    <div class="panel panel-container">
+        <div class="row no-padding">
+            <div class="text-center">
+                <img src="<?= $employee->profile_img ?>" alt="Profile Image" id="profile_image" class="img-circle" style="width: 150px;margin-top: 30px;"/>
+                <br> 
+                <br>
+                <label id="bb" class="btn btn-default" style="margin:0 auto;"> Upload Photo
+                    <input id="image_uploader" type="file" class="btn btn-small" value="" onchange="previewFile()"  name="profile_image"/>
+                </label>    
+                <h4 class="card-title m-t-10"><?= $employee->fullname() ?></h4>
+                <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
+                <h6 class="card-subtitle"><?= $employee->team_name ?></h6>
+                <hr>
+            </div>
+            <span class="pull-left label-profile">date hired: <i><?= $employee->prettydatehired() ?></i></span>
+            <br>
+            <br>
         </div>
-        <div class="panel panel-container">
-            <div class="row no-padding">
-                <div class="text-center">
-                    <img alt="Profile Image" id="profile_image" style="width: 150px;margin-top: 30px;" src="{{ $employee->profile_img }}">
-                    <br> 
-                    <br>
-                    <label id="bb" class="btn btn-default" style="margin:0 auto;"> Upload Photo
-                        <input id="image_uploader" type="file" class="btn btn-small" value="" onchange="previewFile()"  name="profile_image"/>
-                    </label>    
-                    <h4 class="card-title m-t-10"><?= $employee->fullname() ?></h4>
-                    <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
-                    <h6 class="card-subtitle"><?= $employee->team_name ?></h6>
-                    <hr>
+    </div>
+</div>
+<div class="col-md-9">
+    <div class="section-header">
+        <h4>Employee Information</h4>
+
+        <a href="<?= url()->previous() ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
+    </div>
+    <div class="panel panel-body mb-0">
+        @include('employee.fields.personal')
+    </div>
+    <div class="section-header section-subheading">
+        <h4>Other Information</h4>
+    </div>
+    <div class="panel panel-body mb-0">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Father's Name</label>
+                    <input class="form-control" name="fathers_name" value="<?= isset($details->fathers_name) ? $details->fathers_name : "" ?>" placeholder="Father's Name" />
                 </div>
-                <span class="pull-left label-profile">date hired: <i><?= $employee->prettydatehired() ?></i></span>
-                <br>
-                <br>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Father's Birthday</label>
+                    <input class="form-control datetimepicker" name="fathers_bday" value="<?= $details->fathers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->fathers_bday )) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Complete Mother's Maiden Name</label>
+                    <input class="form-control" name="mothers_name" value="<?= isset($details->mothers_name) ? $details->mothers_name : "" ?>" placeholder="Mother's Maiden Name" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Mother's Birthday</label>
+                    <input class="form-control datetimepicker" name="mothers_bday" value="<?= $details->mothers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->mothers_bday )) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Spouse's Name</label>
+                    <input class="form-control" name="spouse_name" value="<?= isset($details->spouse_name) ? $details->spouse_name : "" ?>" placeholder="Spouse's Name" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Spouse's Birthday</label>
+                    <input class="form-control datetimepicker" name="spouse_bday" value="<?= $details->spouse_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->spouse_bday )) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-9">
-        <div class="section-header">
-            <h4>Employee Information</h4>
-        </div>
-        <div class="panel panel-body mb-0">
-            @include('employee.fields.personal')
-        </div>
-        <div class="section-header section-subheading">
-            <h4>Other Information</h4>
-        </div>
-        <div class="panel panel-body mb-0">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Father's Name</label>
-                        <input class="form-control" name="fathers_name" value="<?= isset($details->fathers_name) ? $details->fathers_name : "" ?>" placeholder="Father's Name" />
-                    </div>
+    <div class="section-header section-subheading">
+        <h4>Dependents Information</h4>
+    </div>
+    <div class="panel panel-body mb-0" id="dependentsDiv">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <strong>Dependent's Name</strong>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Father's Birthday</label>
-                        <input class="form-control datetimepicker" name="fathers_bday" value="<?= $details->fathers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->fathers_bday )) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <strong>Birthday</strong>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Complete Mother's Maiden Name</label>
-                        <input class="form-control" name="mothers_name" value="<?= isset($details->mothers_name) ? $details->mothers_name : "" ?>" placeholder="Mother's Maiden Name" />
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Mother's Birthday</label>
-                        <input class="form-control datetimepicker" name="mothers_bday" value="<?= $details->mothers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->mothers_bday )) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Spouse's Name</label>
-                        <input class="form-control" name="spouse_name" value="<?= isset($details->spouse_name) ? $details->spouse_name : "" ?>" placeholder="Spouse's Name" />
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Spouse's Birthday</label>
-                        <input class="form-control datetimepicker" name="spouse_bday" value="<?= $details->spouse_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->spouse_bday )) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <strong>Generali Number</strong>
                 </div>
             </div>
         </div>
-        <div class="section-header section-subheading">
-            <h4>Dependents Information</h4>
-        </div>
-        <div class="panel panel-body mb-0" id="dependentsDiv">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>Dependent's Name</label>
-                        <input class="form-control" name="dependent_name[]" value="<?= count($dependents) > 0 ? $dependents[0]->dependent : "" ?>" placeholder="Dependent's Name" />
-                    </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input class="form-control" name="dependent_name[]" value="<?= count($dependents) > 0 ? $dependents[0]->dependent : "" ?>" placeholder="Dependent's Name" />
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>Birthday</label>
-                        <input class="form-control datetimepicker" name="dependent_bday[]" value="<?= count($dependents) > 0 ? ($dependents[0]->bday == '1970-01-01' ? '' : date("m/d/Y",strtotime($dependents[0]->bday))) : '' ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <input class="form-control datetimepicker" name="dependent_bday[]" value="<?= count($dependents) > 0 ? ($dependents[0]->bday == '1970-01-01' ? '' : date("m/d/Y",strtotime($dependents[0]->bday))) : '' ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>Generali Number</label>
-                        <input class="form-control" name="generali_num[]" value="<?= count($dependents) > 0 ? $dependents[0]->generali_num : "" ?>" placeholder="xxxx-xxx-xxxx" autocomplete="off" />
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <input class="form-control" name="generali_num[]" value="<?= count($dependents) > 0 ? $dependents[0]->generali_num : "" ?>" placeholder="xxxx-xxx-xxxx" autocomplete="off" />
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>&nbsp;</label><br>
-                        <button class="btn btn-primary add-dependent">Add Dependent</button>
-                    </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <button class="btn btn-primary add-dependent" style="width: 100%;"><span class="fa fa-plus"></span></button>
                 </div>
             </div>
         </div>
-        <div class="section-header section-subheading">
-            <h4>In Case of Emergency</h4>
-        </div>
-        <div class="panel panel-body mb-0">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>In case of emergency please contact.</label>
-                        <input type="text" name="em_con_name" class="form-control" value="<?= @$details->em_con_name ?>" placeholder="Contact Name" />
-                    </div>
+    </div>
+    <div class="section-header section-subheading">
+        <h4>In Case of Emergency</h4>
+    </div>
+    <div class="panel panel-body mb-0">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>In case of emergency please contact.</label>
+                    <input type="text" name="em_con_name" class="form-control" value="<?= @$details->em_con_name ?>" placeholder="Contact Name" />
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Relationship</label>
-                        <input type="text" name="em_con_rel" class="form-control" value="<?= @$details->em_con_rel ?>" placeholder="Relationship" />
-                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Relationship</label>
+                    <input type="text" name="em_con_rel" class="form-control" value="<?= @$details->em_con_rel ?>" placeholder="Relationship" />
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Contact Number</label>
-                        <input type="text" name="em_con_num" class="form-control" value="<?= @$details->em_con_num ?>" placeholder="xxxx-xxx-xxxx" />
-                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input type="text" name="em_con_num" class="form-control" value="<?= @$details->em_con_num ?>" placeholder="xxxx-xxx-xxxx" />
                 </div>
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Address</label>
-                        <textarea name="em_con_address" class="form-control" rows="4"><?= @$details->em_con_address ?></textarea>
-                    </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea name="em_con_address" class="form-control" rows="4"><?= @$details->em_con_address ?></textarea>
                 </div>
             </div>
         </div>
-        <div class="section-header section-subheading">
-            <h4>User Access</h4>
-        </div>
-        <div class="panel panel-body mb-0">
-            @include('employee.fields.user_access')
-        </div>
-        <div class="section-header section-subheading">
-            <h4>Linkees</h4>
-        </div>
-        <div class="panel panel-body mb-0">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="my-2 d-flex gap-2 p-2" style="width: 100%;flex-wrap: wrap;" id="linkees">
-                        <?php
-                        foreach($linkees as $linkee) {
-                        ?>
-                            <div class="border border-success rounded-pill p-1" id="linkee-<?= $linkee->id ?>" style="font-size: 12px; min-width:100px;">
-                                <input type="hidden" name="linkee-<?= $linkee->id ?>" value="<?= $linkee->id ?>">
-                                <span class="ms-2"><?= $linkee->last_name ?>, <?= $linkee->first_name ?></span>
-                                <button type="button" class="btn btn-sm" onclick="deleteNodeAndData(document.getElementById('linkee-<?= $linkee->id ?>'))">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        <?php
-                        }
-                        ?>
-                    </div>
-                    <div class="d-flex gap-2" style="max-width: 80%;">
+    </div>
+    <div class="section-header section-subheading">
+        <h4>User Access</h4>
+    </div>
+    <div class="panel panel-body mb-0">
+        @include('employee.fields.user_access')
+    </div>
+    <div class="section-header section-subheading">
+        <h4>Linkees</h4>
+    </div>
+    <div class="panel panel-body mb-0">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="my-2 d-flex gap-2 p-2" style="width: 100%;flex-wrap: wrap;" id="linkees">
                     <?php
-                    if(Auth::user()->isAdmin() || Auth::user()->isHR()) {
+                    foreach($linkees as $linkee) {
                     ?>
-                        <select name="adtl_linkees" id="linkees_list" data-val="1" class="select2 process_linkee form-control">
-                            <option value="">Select a Linkee</option>
-                            <?php
-                            foreach($supervisors as $s) {
-                            ?>
-                                <option value="<?= $s->id ?>"><?= $s->fullname() ?></option>
-                            <?php
-                            }
-                            ?>
-                        </select>
-                        <div>
-                            <button type="button" id="addLinkeeBtn" class="btn btn-primary ">Add a Linkee</button>
-                        </div>
-                    <?php
-                    }
-                    ?>
-                    </div>
-                    <template id="linkee_template">
-                        <div class="border border-success rounded-pill p-2" id="linkee-" style="font-size: 12px; min-width:100px;">
-                            <input type="hidden" name="linkee-" value="">
-                            <span></span>
-                            <button type="button" class="btn btn-sm">
+                        <div class="border border-success rounded-pill p-1" id="linkee-<?= $linkee->id ?>" style="font-size: 12px; min-width:100px;">
+                            <input type="hidden" name="linkee-<?= $linkee->id ?>" value="<?= $linkee->id ?>">
+                            <span class="ms-2"><?= $linkee->last_name ?>, <?= $linkee->first_name ?></span>
+                            <button type="button" class="btn btn-sm" onclick="deleteNodeAndData(document.getElementById('linkee-<?= $linkee->id ?>'))">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
                                 </svg>
                             </button>
                         </div>
-                    </template>
+                    <?php
+                    }
+                    ?>
                 </div>
+                <div class="d-flex gap-2" style="max-width: 80%;">
+                <?php
+                if(Auth::user()->isAdmin() || Auth::user()->isHR()) {
+                ?>
+                    <select name="adtl_linkees" id="linkees_list" data-val="1" class="select2 process_linkee form-control">
+                        <option value="">Select a Linkee</option>
+                        <?php
+                        foreach($supervisors as $s) {
+                        ?>
+                            <option value="<?= $s->id ?>"><?= $s->fullname() ?></option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+                    <div>
+                        <button type="button" id="addLinkeeBtn" class="btn btn-primary ">Add a Linkee</button>
+                    </div>
+                <?php
+                }
+                ?>
+                </div>
+                <template id="linkee_template">
+                    <div class="border border-success rounded-pill p-2" id="linkee-" style="font-size: 12px; min-width:100px;">
+                        <input type="hidden" name="linkee-" value="">
+                        <span></span>
+                        <button type="button" class="btn btn-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </template>
             </div>
         </div>
-        <div class="section-header section-subheading">
-            <h4>Job Related</h4>
-        </div>
-        <div class="panel panel-body mb-0">
-            @include('employee.fields.job_related')
-        </div>
-        <div class="section-header section-subheading">
-            <h4>Government Numbers</h4>
-        </div>
-        <div class="panel panel-body mb-0">
-            @include('employee.fields.government')
-        </div>
-        <div class="section-header section-subheading">
-            <h4>Login Credentials</h4>
-        </div>
-        <div class="panel panel-body">
-            @include('employee.fields.login')
-            <div class="col-md-12">
-                <br>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-primary" value="Save" />
-                        </div>
+    </div>
+    <div class="section-header section-subheading">
+        <h4>Job Related</h4>
+    </div>
+    <div class="panel panel-body mb-0">
+        @include('employee.fields.job_related')
+    </div>
+    <div class="section-header section-subheading">
+        <h4>Government Numbers</h4>
+    </div>
+    <div class="panel panel-body mb-0">
+        @include('employee.fields.government')
+    </div>
+    <div class="section-header section-subheading">
+        <h4>Login Credentials</h4>
+    </div>
+    <div class="panel panel-body">
+        @include('employee.fields.login')
+        <div class="col-md-12">
+            <br>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Save" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {{ Form::close() }}
 <!-- Modal -->
 <div class="modal fade" id="modalMovements" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -332,28 +346,24 @@ Employee > Edit Employee Profile
 </script>
 <script id="tmpl_addDependents" type="text/template">
 <div id="dep_~id~" class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="form-group">
-            <label>Dependent's Name</label>
             <input type="text" id="dep_name_~id~" class="form-control" name="dependent_name[]" placeholder="Dependent's Name" />
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-group">
-            <label>Birthday</label>
             <input type="text" id="dep_bday_~id~" class="form-control datetimepicker" name="dependent_bday[]" placeholder="MM/DD/YYYY" autocomplete="off" />
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-group">
-            <label>Generali Number</label>
             <input type="text" id="dep_generali_~id~" class="form-control" name="generali_num[]" placeholder="xxxx-xxx-xxxx" autocomplete="off" />
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="form-group">
-            <label>&nbsp;</label><br>
-            <a href="javascript:;" class="btn btn-danger" data-id="~id~" onclick="removeThisDependent(this)">Remove Dependent</a>
+            <a href="javascript:;" class="btn btn-danger" data-id="~id~" onclick="removeThisDependent(this)" style="width: 100%;"><span class="fa fa-minus"></span></a>
         </div>
     </div>
 </div>
@@ -482,7 +492,8 @@ function addDep(){
     $("#dependentsDiv").append(js_tmpl);
     console.log('You Clicked Here');
     $("#dep_bday_" + ctr).datetimepicker({
-        format: 'MM/DD/YYYY'
+        format: 'MM/DD/YYYY',
+        useCurrent: false
     });
     ctr++;
 }
@@ -601,7 +612,8 @@ $(function(){
     });
 
     $(".datetimepicker").datetimepicker({
-        format: 'MM/DD/YYYY'
+        format: 'MM/DD/YYYY',
+        useCurrent: false
     });
 
     $(".is_reg_event").change(function(){

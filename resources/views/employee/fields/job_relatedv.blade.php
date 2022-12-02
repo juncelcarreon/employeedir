@@ -30,13 +30,29 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Manager</label>
-            <input type="text" class="form-control" name="manager_id" value="<?= @$employee->manager_name ?>" readonly />
+            <?php
+            $manager_name = '';
+            foreach($supervisors as $supervisor) {
+                if($supervisor->id == @$employee->manager_id) {
+                    $manager_name = $supervisor->fullname();
+                }
+            }
+            ?>
+            <input type="text" class="form-control" name="manager_id" value="<?= @$manager_name ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Immediate Superior / Supervisor</label>
-            <input type="text" class="form-control" name="supervisor_id" value="<?= @$employee->supervisor_name ?>" readonly />
+            <?php
+            $supervisor_name = '';
+            foreach($supervisors as $supervisor) {
+                if($supervisor->id == @$employee->supervisor_id) {
+                    $supervisor_name = $supervisor->fullname();
+                }
+            }
+            ?>
+            <input type="text" class="form-control" name="supervisor_id" value="<?= @$supervisor_name ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">

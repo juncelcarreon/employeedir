@@ -429,17 +429,17 @@ class EmployeeRepository implements RepositoryInterface
                         ->orWhere('ext', 'LIKE', '%'.$request->get('keyword').'%');
                     });
 
-                    $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(10);
+                    // $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(10);
 
-                    foreach($employees as $key=>$employee) {
-                        $manager = User::find($employee->manager_id);
-                        $supervisor = User::find($employee->supervisor_id);
+                    // foreach($employees as $key=>$employee) {
+                    //     $manager = User::find($employee->manager_id);
+                    //     $supervisor = User::find($employee->supervisor_id);
 
-                        $employee->manager_name = (empty($manager) ? 'NO MANAGER' : $employee->manager_name);
-                        $employee->supervisor_name = (empty($supervisor) ? 'NO SUPERVISOR' : $employee->supervisor_name);
-                    }
+                    //     $employee->manager_name = (empty($manager) ? 'NO MANAGER' : $employee->manager_name);
+                    //     $employee->supervisor_name = (empty($supervisor) ? 'NO SUPERVISOR' : $employee->supervisor_name);
+                    // }
 
-                    return view('employee.employees')->with('employees', $employees )->with('request', $request)->with('departments', $departments)->with('positions', $positions);
+                    // return view('employee.employees')->with('employees', $employees )->with('request', $request)->with('departments', $departments)->with('positions', $positions);
                 }
 
                 if ($request->has('department') && $request->get('department') != "") {

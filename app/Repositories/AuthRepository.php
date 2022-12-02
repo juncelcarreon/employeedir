@@ -280,6 +280,7 @@ class AuthRepository implements RepositoryInterface
         }
         return view('employee.changepassword')->with('id', $id);
     }
+
     public function savepassword(Request $request, $id)
     {
         $user = User::find($id);
@@ -288,12 +289,8 @@ class AuthRepository implements RepositoryInterface
             return redirect()->back()->withErrors(array('message' => 'all field are required!', 'status' => 'error'));
         }
 
-        if(!Auth::user()->isAdmin()){
-            if (Hash::check($request->old_password, $user->password)) {
-                // Do nothing
-            } else {
-                return redirect()->back()->withErrors(array('message' => 'incorrect old password', 'status' => 'error'));
-            }  
+        if (!Auth::user()->isAdmin() && !Hash::check($request->old_password, $user->password)) {
+            return redirect()->back()->withErrors(array('message' => 'incorrect old password', 'status' => 'error'));
         }
 
         if ($request->new_password == $request->confirm_password) {
@@ -306,6 +303,5 @@ class AuthRepository implements RepositoryInterface
         } else {
             return redirect()->back()->withErrors(array('message' => 'new password don\'t match', 'status' => 'error'));
         }
-        
     }
 }

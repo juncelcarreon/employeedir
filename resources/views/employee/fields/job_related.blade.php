@@ -42,7 +42,7 @@
         <div class="form-group">
             <label>Manager</label>
             <select class="select2 form-control" name="manager_id">
-                <option selected disabled>Select</option>
+                <option value="0" selected>Select</option>
                 <?php
                 foreach($supervisors as $supervisor) {
                 ?>
@@ -57,7 +57,7 @@
         <div class="form-group">
             <label>Immediate Superior / Supervisor</label>
             <select class="select2 form-control" name="supervisor_id">
-                <option selected disabled>Select</option>
+                <option value="0" selected>Select</option>
                 <?php
                 foreach($supervisors as $supervisor) {
                 ?>

@@ -2,7 +2,7 @@
 body{
     zoom: 0.99;
     background-color: #dddddd;
-    background-image: url("../../public/img/debut-light.png");
+    background-image: url("../img/debut-light.png");
      background-attachment: fixed;
 }
 div.dropdown, div.dropdown.open{

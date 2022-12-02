@@ -124,11 +124,10 @@ class EmployeeInfoController extends Controller
 
 	public function create()
 	{
-		$data['managers'] = User::allExceptSuperAdmin()->orderBy('last_name')->get();
-		$data['supervisors'] = User::allExceptSuperAdmin()->orderBy('last_name')->get();
+		$data['employees'] = User::whereNull('deleted_at')->where('status', 1)->where('id', '<>', 1)->orderBy('last_name')->get();
 		$data['departments'] = EmployeeDepartment::all();
 		$data['accounts'] = ElinkAccount::all();
-		$data['positions'] = User::select('position_name')->groupBy('position_name')->get();
+		$data['positions'] = User::select('position_name')->where('id', '<>', 1)->groupBy('position_name')->get();
 
 		return view('employee.create', $data);
 	}
@@ -159,7 +158,7 @@ class EmployeeInfoController extends Controller
 		}
 
 		$data['employee'] = $employee;
-		$data['supervisors'] = User::where('id', '<>', '1')->get();
+		$data['supervisors'] = User::whereNull('deleted_at')->where('status', 1)->where('id', '<>', 1)->orderBy('last_name')->get();
 		$data['departments'] = EmployeeDepartment::all();
 		$data['accounts'] = ElinkAccount::all();
 		$data['details'] = $obj;
@@ -604,7 +603,7 @@ class EmployeeInfoController extends Controller
 
 			if(Auth::user()->isAdmin() || Auth::user()->id == $id) {
 				$data['linkees'] = $employee->getLinkees();
-				$data['supervisors'] = User::all();
+				$data['supervisors'] = User::whereNull('deleted_at')->where('status', 1)->where('id', '<>', 1)->orderBy('last_name')->get();
 				$data['departments'] = EmployeeDepartment::all();
 				$data['accounts'] = ElinkAccount::all();
 				$data['details'] = $details;
@@ -613,6 +612,7 @@ class EmployeeInfoController extends Controller
 				return view('employee.view-admin', $data);
 			} else {
 				$data['employee_details'] = $details;
+				$data['employees'] = User::whereNull('deleted_at')->where('status', 1)->where('id', '<>', 1)->orderBy('last_name')->get();
 
 				return view('employee.view', $data);
 			}
@@ -636,7 +636,7 @@ class EmployeeInfoController extends Controller
 		}
 
 		$data['employee'] = Auth::user();
-		$data['supervisors'] = User::all();
+		$data['supervisors'] = User::whereNull('deleted_at')->where('status', 1)->where('id', '<>', 1)->orderBy('last_name')->get();
 		$data['departments'] = EmployeeDepartment::all();
 		$data['accounts'] = ElinkAccount::all();
 		$data['details'] = $details;

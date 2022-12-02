@@ -4,6 +4,12 @@ Employees > Active Employees
 @endsection
 @section('content')
 <style type="text/css">
+    h4.timeline-title a{
+        transition: linear 0.3s;
+    }
+    h4.timeline-title a:hover{
+        padding-left: 5px;
+    }
     .emp-profile{
         background-color: white;
     }
@@ -169,8 +175,8 @@ foreach($employees as $employee) {
 ?>
     <div class="col-md-12" style="padding-left: 0px; padding-right: 0px; ">
         <div class="emp-profile" style="padding: 10px; margin-bottom: 0px;">
-            <div class="row">
-                <div class="col-md-1" style="float: left;">
+            <div class="row" style="display: flex; justify-content:space-between;align-items: center;">
+                <div class="col-md-1">
                     <div style="background-image: url(<?= $employee->profile_img ?>); width: 60px; height: 60px;margin: 15px; background-size: cover; background-repeat: no-repeat; background-position: 50% 50%; border-radius: 50%;">
                     </div>
                 </div>
@@ -222,15 +228,17 @@ foreach($employees as $employee) {
                     </h5>
                 </div>
                 <div class="col-md-2">
-                    <a href="<?= url("employee_info/{$employee->id}") ?>" title="View">
-                        <i class="fa fa-eye" style="color: #3A75FB;"></i>
-                    </a>&nbsp;&nbsp;    
-                    <a href="<?= url("employee_info/{$employee->id}/edit") ?>" title="Edit">
-                        <i class="fa fa-pencil" style="color: #3A75FB;"></i>
-                    </a>&nbsp;&nbsp;
-                    <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Deactivate" data-id="<?= $employee->id ?>">
-                        <i class="fa fa-user-times" style="color: red;" ></i>
-                    </a>
+                    <div class="options">
+                        <a href="<?= url("employee_info/{$employee->id}") ?>" title="View">
+                            <i class="fa fa-eye" style="color: #3A75FB;"></i>
+                        </a>&nbsp;&nbsp;    
+                        <a href="<?= url("employee_info/{$employee->id}/edit") ?>" title="Edit">
+                            <i class="fa fa-pencil" style="color: #3A75FB;"></i>
+                        </a>&nbsp;&nbsp;
+                        <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Deactivate" data-id="<?= $employee->id ?>">
+                            <i class="fa fa-user-times" style="color: red;" ></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -4,6 +4,12 @@ Employees > Separated Employees
 @endsection
 @section('content')
 <style type="text/css">
+    h4.timeline-title a{
+        transition: linear 0.3s;
+    }
+    h4.timeline-title a:hover{
+        padding-left: 5px;
+    }
     .emp-profile{
         background-color: white;
     }
@@ -55,7 +61,7 @@ Employees > Separated Employees
     }
 </style>
 <div class="col-md-12">
-    <ul class="alphabet-search" style="padding-left: 0px">
+    <ul class="alphabet-search" style="padding-left: 0px;display: flex;justify-content: space-between;">
         <li style="margin-left: 0px">
             <form style="display: unset;">
                 <input type="hidden" name="alphabet" value="<?= $request->alphabet ?>">
@@ -65,8 +71,8 @@ Employees > Separated Employees
                     <span class="fa fa-search"></span>
                 </button>
             </form>
-            <a href="/download-inactive?<?= (empty($_SERVER['QUERY_STRING']) ? '' : $_SERVER['QUERY_STRING']) ?>" class="btn btn-success"><span class="fa fa-download">&nbsp;</span> DOWNLOAD SEPARATED EMPLOYEES</a>
         </li>
+        <a href="/download-inactive?<?= (empty($_SERVER['QUERY_STRING']) ? '' : $_SERVER['QUERY_STRING']) ?>" class="btn btn-success"><span class="fa fa-download">&nbsp;</span> DOWNLOAD SEPARATED EMPLOYEES</a>
     </ul>
 <?php
 if(count($employees) == 0) {
@@ -87,8 +93,8 @@ foreach($employees as $employee) {
 ?>
     <div class="col-md-12" style="padding-left: 0px; padding-right: 0px; ">
         <div class="emp-profile" style="padding: 10px; margin-bottom: 0px;">
-            <div class="row">
-                <div class="col-md-1" style="float: left;">
+            <div class="row" style="display: flex; justify-content:space-between;align-items: center;">
+                <div class="col-md-1">
                     <div style="background-image: url(<?= $employee->profile_img ?>); width: 60px; height: 60px;margin: 15px; background-size: cover; background-repeat: no-repeat; background-position: 50% 50%; border-radius: 50%;"></div>
                 </div>
                 <div class="col-md-3">
@@ -105,7 +111,7 @@ foreach($employees as $employee) {
                     </h5>
                     <h5>
                         <span class="fa fa-envelope" title="Email Address"></span>
-                        <span class="employee-description" style="color: #0c59a2;;">&nbsp;&nbsp;<?= $employee->email ?></span>
+                        <span class="employee-description" style="color: #0c59a2;">&nbsp;&nbsp;<?= $employee->email ?></span>
                     </h5>
                 <?php
                 if(isset($employee->ext) && $employee->ext != '--' && $employee->ext != '') {
@@ -149,27 +155,29 @@ foreach($employees as $employee) {
                 ?>
                 </div>
                 <div class="col-md-2">
-                    <a href="<?= url("profile/{$employee->id}") ?>" title="View">
-                        <i class="fa fa-eye"  style="color: #3A75FB;"></i>
-                    </a>&nbsp;&nbsp;
-                <?php
-                if($employee->isActive()) {
-                ?>
-                    <a href="<?= url("employee_info/{$employee->id}/edit") ?>" title="Edit">
-                        <i class="fa fa-pencil" style="color: #3A75FB;"></i>
-                    </a>&nbsp;&nbsp;
-                    <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Deactivate" data-id="<?= $employee->id ?>">
-                        <i class="fa fa-user-times" style="color: red;"></i>
-                    </a>
-                <?php
-                } else {
-                ?>
-                    <a href="<?= url("employees/{$employee->id}/reactivate") ?>" title="Reactivate Employee" data-id="<?= $employee->id ?>">
-                        <i class="fa fa-user-plus" style="color: green;"></i>
-                    </a>
-                <?php
-                }
-                ?>
+                    <div class="options">
+                        <a href="<?= url("profile/{$employee->id}") ?>" title="View">
+                            <i class="fa fa-eye"  style="color: #3A75FB;"></i>
+                        </a>&nbsp;&nbsp;
+                    <?php
+                    if($employee->isActive()) {
+                    ?>
+                        <a href="<?= url("employee_info/{$employee->id}/edit") ?>" title="Edit">
+                            <i class="fa fa-pencil" style="color: #3A75FB;"></i>
+                        </a>&nbsp;&nbsp;
+                        <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Deactivate" data-id="<?= $employee->id ?>">
+                            <i class="fa fa-user-times" style="color: red;"></i>
+                        </a>
+                    <?php
+                    } else {
+                    ?>
+                        <a href="<?= url("employees/{$employee->id}/reactivate") ?>" title="Reactivate Employee" data-id="<?= $employee->id ?>">
+                            <i class="fa fa-user-plus" style="color: green;"></i>
+                        </a>
+                    <?php
+                    }
+                    ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -178,11 +186,11 @@ foreach($employees as $employee) {
 }
 ?>
 </div>
-    <div class="col-md-12 header-container" style="margin-top: 0px;">
-        <div class="pull-right">
-            <?= $employees->appends(Illuminate\Support\Facades\Input::except('page'))->links() ?>
-        </div>
+<div class="col-md-12 header-container" style="margin-top: 0px;">
+    <div class="pull-right">
+        <?= $employees->appends(Illuminate\Support\Facades\Input::except('page'))->links() ?>
     </div>
+</div>
 @endsection
 @section('scripts')
 <script type="text/javascript">
