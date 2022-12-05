@@ -5,57 +5,76 @@ Employees > Separated Employees > Profile
 @section('content')
 <link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
 <style type="text/css">
-    .card-title {
-        font-size: 14px;
-        line-height: 21px;
-        margin-top: 15px;
-        font-weight: 400;
-        color: black;
-    }
-    .card-subtitle{
-        font-size: 12px;
-        color: #878;
-    }
-    .label-profile{
-        padding-left: 15px; padding-right: 15px;
-    }
-    .employee-details-value{
-        font-size: 14px;
-        line-height: 21px;
-        padding-bottom: 10px;
-        color: black;
-    }
-    .employee-email{
-        color: #0c59a2;
-    }
-    .form-group label{
-        font-weight: 600;
-        color: #878;
-    }
-    .col-md-9 hr{
-        margin: 0px;
-    }
-    .section-header h4{
-        display: inline-block;
-    }
-    .section-subheading{
-        background: #5bc0de !important;
-    }
-    address{
-        margin-bottom: 10px;
-        white-space: pre-line;
-    }
+.emp-image{
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 30px auto 0;
+}
+.emp-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.card-title{
+    font-size: 16px;
+    line-height: 21px;
+    margin-top: 15px;
+    font-weight: 400;
+    color: #000;
+}
+.card-subtitle{
+    font-size: 12px;
+    color: #878;
+}
+.label-profile{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.employee-details-value{
+    font-size: 14px;
+    line-height: 21px;
+    padding-bottom: 10px;
+    color: black;
+}
+.employee-email{
+    color: #0c59a2;
+}
+.form-group label{
+    font-weight: 600;
+    color: #878;
+}
+.section-header h4{
+    display: inline-block;
+}
+.section-subheading{
+    background: #5bc0de !important;
+}
+address{
+    margin-bottom: 10px;
+    white-space: pre-line;
+}
+.p-0{
+    padding: 0 !important;
+}
+table tbody tr td span{
+    display: none;
+}
 </style>
-<div class="col-md-3" style="padding-left: 0 !important; padding-right: 0;">
+<div class="col-md-3 p-0">
     <div class="section-header">
         <h4>Profile Picture</h4>
     </div>
     <div class="panel panel-container">
         <div class="row no-padding">
             <div class="text-center">
-                <img alt="image" class="img-circle" style="width: 150px; height: 150px; margin-top: 30px;" src="<?= $employee->profile_img ?>">
+                <div class="emp-image">
+                    <img src="<?= $employee->profile_img ?>" alt="image" />
+                </div>
                 <br>
-                <h4 class="card-title m-t-10" style="font-size: 16px;line-height: 21px;margin-top: 15px;font-weight: 400;color: black;"><?= $employee->fullname() ?></h4>
+                <h4 class="card-title"><?= $employee->fullname() ?></h4>
                 <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
                 <h6 class="card-subtitle"><?= $employee->team_name ?></h6>
                 <hr>
@@ -126,7 +145,7 @@ Employees > Separated Employees > Profile
             <div class="col-md-4">
                 <div class="form-group">
                     <label>Account</label>
-                    <p class="employee-details-value">{{ empty(@$employee->account->account_name) ? '-' : @$employee->account->account_name}}</p>
+                    <p class="employee-details-value"><?= empty(@$employee->account->account_name) ? '-' : @$employee->account->account_name ?></p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -157,7 +176,7 @@ Employees > Separated Employees > Profile
                         case 2: $type = 'Project Based'; break;
                     }
                     ?>
-                    <p class="employee-details-value name-format">{{ $type }}</p>
+                    <p class="employee-details-value name-format"><?= $type ?></p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -210,25 +229,31 @@ Employees > Separated Employees > Profile
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Company Email</label>
-                    <p class="employee-email">{{ $employee->email }}</p>
+                    <p class="employee-email"><?= $employee->email ?></p>
                 </div>
             </div>
-            @if(!empty($employee->email2))
+            <?php
+            if(!empty($employee->email2)) {
+            ?>
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Personal Email</label>
-                    <p class="employee-email">{{ $employee->email2 }}</p>
+                    <p class="employee-email"><?= $employee->email2 ?></p>
                 </div>
             </div>
-            @endif 
-            @if(!empty($employee->email3))
+            <?php
+            } 
+            if(!empty($employee->email3)) {
+            ?>
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Secondary Email</label>
-                    <p class="employee-email">{{ $employee->email3 }}</p>
+                    <p class="employee-email"><?= $employee->email3 ?></p>
                 </div>
             </div>
-            @endif 
+            <?php
+            }
+            ?> 
         </div>
     </div>
     <?php
@@ -250,7 +275,7 @@ Employees > Separated Employees > Profile
                             <th>No. Of Days</th>
                             <th>Status</th>
                             <th>Date Requested</th>
-                            <th width="100px">Options</th>
+                            <th>Options</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -281,7 +306,7 @@ Employees > Separated Employees > Profile
                             <td><?php echo implode('<br>', $dates); ?></td>
                             <td><?= (float) $num_days ?></td>
                             <td><?= $leave_status ?></td>
-                            <td><span style="display: none;"><?= strtotime($request->date_filed) ?></span> <?= date("M d, Y",strtotime($request->date_filed)) ?></td>
+                            <td><span><?= strtotime($request->date_filed) ?></span> <?= date("M d, Y",strtotime($request->date_filed)) ?></td>
                             <td class="td-option">
                                 <a href="<?= url("leave/{$request->id}") ?>" title="View" class="btn_view">
                                     <span class="fa fa-eye"></span>

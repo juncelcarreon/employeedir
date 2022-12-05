@@ -5,52 +5,68 @@ Employee > Add Employee
 @section('content') 
 <link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
 <style type="text/css">
-    .card-title{
-        font-size: 16px;
-        line-height: 21px;
-        margin-top: 15px;
-        font-weight: 400;
-        color: black;
-    }
-    .card-subtitle{
-        font-size: 12px;
-        color: #878;
-    }
-    .employee-details-value{
-        font-size: 16px;
-        line-height: 21px;
-        padding-bottom: 10px;
-        color: black;
-    }
-    .label-profile{
-        padding-left: 15px; 
-        padding-right: 15px;
-    }
-    .col-md-9 hr{
-        margin: 0px;
-    }
-    .section-header h4 {
-        display: inline-block;
-    }
-    .section-subheading{
-        background: #5bc0de !important;
-    }
+.emp-image{
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 30px auto 0;
+}
+.emp-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+#bb{
+    margin: 0 auto;
+}
+.card-title{
+    font-size: 16px;
+    line-height: 21px;
+    margin-top: 15px;
+    font-weight: 400;
+    color: #000;
+}
+.card-subtitle{
+    font-size: 12px;
+    color: #878;
+}
+.label-profile{
+    padding-left: 15px; 
+    padding-right: 15px;
+}
+.section-header h4 {
+    display: inline-block;
+}
+.section-subheading{
+    background: #5bc0de !important;
+}
+#dependentsDiv .btn{
+    width: 100%;
+}
+pre{
+    border: 0px solid transparent;
+    border-radius: 0px !important;
+    margin-top: -3px;
+}
 </style>
 <br>
 <form id="create_employee_form" role="form" method="POST" action="{{ route('employee_info.store')}}" enctype="multipart/form-data">
     {{ csrf_field() }}
-    <div class="col-md-3" style="padding-left: 10px !important; padding-right: 10px;">
+    <div class="col-md-3 p-0">
         <div class="section-header">
             <h4>Profile Picture </h4>
         </div>
         <div class="panel panel-container">
             <div class="row no-padding">
                 <div class="text-center">
-                    <img src="<?= asset('public/img/nobody_m.original.jpg') ?>" alt="image" id="profile_image" class="img-circle" style="width: 150px; height: 150px; margin-top: 30px;" />
-                    <br> 
+                    <div class="emp-image">
+                        <img src="<?= asset('public/img/nobody_m.original.jpg') ?>" id="profile_image" alt="image" />
+                    </div>
                     <br>
-                     <label id="bb" class="btn btn-default" style="margin:0 auto;"> Upload Photo
-                        <input type="file" id="image_uploader" class="btn btn-small" value="" onchange="previewFile()"  name="profile_image"/>
+                     <label id="bb" class="btn btn-default"> Upload Photo
+                        <input type="file" id="image_uploader" class="btn btn-small" name="profile_image" />
                     </label> 
                     <h4 class="card-title m-t-10"></h4>
                     <h6 class="card-subtitle"></h6>
@@ -240,7 +256,9 @@ Employee > Add Employee
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <button class="btn btn-primary add-dependent" style="width: 100%;"><span class="fa fa-plus"></span></button>
+                        <button class="btn btn-primary add-dependent">
+                            <span class="fa fa-plus"></span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -537,7 +555,7 @@ Employee > Add Employee
                 <div class="col-md-12">
                     <div class="form-group">
                         <p>
-                            <pre style="border: 0px solid transparent; border-radius: 0px !important; margin-top: -3px;"><i class="fa fa-info-circle">&nbsp;</i> Password will be generated automatically once saved.</pre>
+                            <pre><i class="fa fa-info-circle">&nbsp;</i> Password will be generated automatically once saved.</pre>
                         </p>
                     </div>
                 </div>
@@ -576,7 +594,9 @@ Employee > Add Employee
     </div>
     <div class="col-md-2">
         <div class="form-group">
-            <a href="javascript:;" class="btn btn-danger" data-id="~id~" onclick="removeThisDependent(this)" style="width: 100%;"><span class="fa fa-minus"></span></a>
+            <a href="javascript:;" class="btn btn-danger" data-id="~id~" onclick="removeThisDependent(this)">
+                <span class="fa fa-minus"></span>
+            </a>
         </div>
     </div>
 </div>

@@ -84,7 +84,7 @@ class EmployeeInfoController extends Controller
 			$linkeeInformation = User::where('id', $linkee->adtl_linkee)->first();
 			$linkeeInformation->supervisor_id = $linkerInformation->id;
 			$linkeeInformation->supervisor_name = $linkerInformation->fullname();
-			$linkeeInformation->save();
+			// $linkeeInformation->save();
 		}
 
 		return ['data' => $linkeeInformation ?? false];

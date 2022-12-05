@@ -1429,17 +1429,7 @@ class CoachingController extends Controller
             ");
             $linkee = $main_obj[0]->lnk_linkee;
             if( $main_obj[0]->lnk_linker == $this->getActiveUser() && $main_obj[0]->lnk_acknw == 0 ){
-                $main_names = DB::select("
-                    SELECT 
-                        id, first_name, last_name
-                    FROM
-                        elink_employee_directory.employee_info
-                    WHERE
-                        (supervisor_id = $main_id
-                            OR manager_id = $main_id)
-                            AND status = 1
-                            AND deleted_at IS NULL
-                    ORDER BY last_name ASC;");
+                $main_names = Auth::user()->getLinkees();
 
                 $focus = DB::select("
                     SELECT 
@@ -2041,51 +2031,23 @@ class CoachingController extends Controller
 
     private function viewManagement($req)
     {
-        # Main Coaching Function
-        $main_id = Auth::user()->id;
-        /* original queries
-        $main_names = DB::select("
-            SELECT 
-                id, first_name, last_name, email
-            FROM
-                elink_employee_directory.employee_info
-            WHERE
-                (supervisor_id = $main_id
-                    OR manager_id = $main_id)
-                    AND status = 1
-                    AND deleted_at IS NULL
-            ORDER BY last_name ASC;");
-         * */
-         $main_names = DB::select("
-            SELECT 
-                id, first_name, last_name, email
-            FROM
-                elink_employee_directory.employee_info AS ei,
-                adtl_linkees AS al
-            WHERE
-                ((supervisor_id = $main_id
-                    OR manager_id = $main_id)
-                    AND status = 1
-                    AND deleted_at IS NULL)
-                    OR (al.adtl_linker = $main_id
-                    AND ei.id = al.adtl_linkee)
-            GROUP BY ei.id,ei.first_name,ei.last_name,ei.email
-            ORDER BY last_name ASC;
-        ");
-        $lt_types = DB::select("
-            SELECT 
-                lt_id, lt_desc
-            FROM
-                linking_types
-            WHERE
-                lt_status = 1
-            ORDER BY lt_order ASC;");
+        $lt_types = DB::select("SELECT lt_id, lt_desc FROM linking_types WHERE lt_status = 1 ORDER BY lt_order ASC;");
 
-        return view('coaching.supervisor')
-            ->with("management",$this->isManagement())
-            ->with("names",$main_names)
-            ->with("lt_types",$lt_types)
-            ->with("lastVal",["lnk_type" => $req->post("lnk_type"), "lnk_linkee" => $req->post("lnk_linkee"), "lnk_linkee_name" => $req->post("lnk_linkee_name"), "lnk_linkee_email" => $req->post("lnk_linkee_email"), "flag" => $req->post("process_linking"), "lnk_linker_name" => $req->post("lnk_linker_name"), "lnk_linker_email" => $req->post("lnk_linker_email")]);
+        $last['lnk_type'] = $req->post("lnk_type");
+        $last['lnk_linkee'] = $req->post("lnk_linkee");
+        $last['lnk_linkee_name'] = $req->post("lnk_linkee_name");
+        $last['lnk_linkee_email'] = $req->post("lnk_linkee_email");
+        $last['flag'] = $req->post("process_linking");
+        $last['lnk_linker_name'] = $req->post("lnk_linker_name");
+        $last['lnk_linker_email'] = $req->post("lnk_linker_email");
+
+        $data['management'] = $this->isManagement();
+        $data['names'] = Auth::user()->getLinkees();
+        $data['new'] = 1;
+        $data['lt_types'] = $lt_types;
+        $data['lastVal'] = $last;
+
+        return view('coaching.supervisor', $data);
     }
 
     private function viewStaff()

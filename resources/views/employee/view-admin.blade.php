@@ -5,49 +5,62 @@ Employee > View Profile
 @section('content')
 <link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
 <style type="text/css">
-    .card-title{
-        font-size: 16px;
-        line-height: 21px;
-        margin-top: 15px;
-        font-weight: 400;
-        color: #000;
-    }
-    .card-subtitle{
-        font-size: 12px;
-        color: #878;
-    }
-    .employee-details-value{
-        font-size: 16px;
-        line-height: 21px;
-        padding-bottom: 10px;
-        color: #000;
-    }
-    .label-profile{
-        padding-left: 15px; 
-        padding-right: 15px;
-    }
-    .col-md-9 hr{
-        margin: 0px;
-    }
-    .section-header h4 {
-        display: inline-block;
-    }
-    .section-subheading{
-        background: #5bc0de !important;
-    }
+.emp-image{
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 30px auto 0;
+}
+.emp-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.card-title{
+    font-size: 16px;
+    line-height: 21px;
+    margin-top: 15px;
+    font-weight: 400;
+    color: #000;
+}
+.card-subtitle{
+    font-size: 12px;
+    color: #878;
+}
+.label-profile{
+    padding-left: 15px; 
+    padding-right: 15px;
+}
+.section-header h4 {
+    display: inline-block;
+}
+.section-subheading{
+    background: #5bc0de !important;
+}
+#linkees{
+    width: 100%;
+    flex-wrap: wrap;
+}
+#linkees .linkee{
+    font-size: 12px;
+    padding: 5px;
+}
 </style>
 {{ Form::open(array('url' => 'employee_info/' . $employee->id,'files' => true ,'id' => 'edit_employee_form')) }}
 {{ Form::hidden('_method', 'PUT') }}
 {{ csrf_field() }}
-<div class="col-md-3" style="padding-left: 0 !important; padding-right: 0 !important;">
+<div class="col-md-3 p-0">
     <div class="section-header">
         <h4>Profile Picture</h4>
     </div>
     <div class="panel panel-container">
         <div class="row no-padding">
             <div class="text-center">
-                <img src="<?= $employee->profile_img ?>" alt="Profile Image" id="profile_image" class="img-circle" style="width: 150px;margin-top: 30px;"/>
-                <br> 
+                <div class="emp-image">
+                    <img src="<?= $employee->profile_img ?>" alt="image" />
+                </div>
                 <br>
                 <h4 class="card-title m-t-10"><?= $employee->fullname() ?></h4>
                 <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
@@ -222,13 +235,11 @@ Employee > View Profile
     <div class="panel panel-body mb-0">
         <div class="row">
             <div class="col-md-12">
-                <div class="my-2 d-flex gap-2  p-2" style="width: 100%;flex-wrap: wrap;" id="linkees">
+                <div class="my-2 d-flex gap-2 p-2" id="linkees">
                 <?php
                     foreach($linkees as $linkee) {
                 ?>
-                    <div class="border border-success rounded-pill p-2" id="linkee-<?= $linkee->id ?>"
-                        style="font-size: 12px; min-width:100px;">
-                        <input type="hidden" name="linkee-<?= $linkee->id ?>" value="<?= $linkee->id ?>">
+                    <div class="border border-success rounded-pill linkee" id="linkee-<?= $linkee->id ?>">
                         <span><?= $linkee->last_name ?>, <?= $linkee->first_name ?></span>
                     </div>
                 <?php
@@ -269,7 +280,7 @@ Employee > View Profile
         @if(Auth::user()->id == $employee->id && !empty($myprofile))
             <br>
             <div class="row">
-                <div class="col-md-3" style="display: flex;">
+                <div class="col-md-3 d-flex">
                     <a type="button" class="btn btn-default" href="<?= url("employee/{$employee->id}/changepassword") ?>">Change Password</a>
                     &nbsp;
                     <a class="btn btn-primary" href="<?= url('update-profile') ?>">Update Selected Information</a>
@@ -283,7 +294,7 @@ Employee > View Profile
                     <a type="button" class="btn btn-default" href="<?= url("employee/{$employee->id}/changepassword") ?>">Change Password</a>
                     @if($employee->isActive())
                     <a class="btn btn-primary" href="<?= url("employee_info/{$employee->id}/edit") ?>">Update Profile</a>
-                    <a href="#" class="pull-right btn btn-primary delete_btn" data-toggle="modal" data-target="#messageModal" data-id="<?= $employee->id ?>" style="background: red !important; border-color: red !important;">Deactivate Employee</a>
+                    <a href="#" class="pull-right btn btn-danger delete_btn" data-toggle="modal" data-target="#messageModal" data-id="<?= $employee->id ?>">Deactivate Employee</a>
                     @else
                     <a class="btn btn-primary" href="<?= url("employees/{$employee->id}/reactivate") ?>">Reactivate Employee</a>
                     @endif

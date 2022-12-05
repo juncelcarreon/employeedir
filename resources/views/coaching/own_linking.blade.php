@@ -3,7 +3,16 @@
 Linking Sessions > Personal Sessions
 @endsection
 <style>
-.dataTables_wrapper{margin:0 !important;}
+.dataTables_wrapper{
+    margin:0 !important;
+}
+b{
+    color: #0000FF; 
+    font-size: 16px;
+}
+td span{
+    display: none;
+}
 </style>
 @section('content')
 <div class="container-fluid">
@@ -11,7 +20,7 @@ Linking Sessions > Personal Sessions
         @include('coaching.sub_menu')
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-12"><b style="color: #0000FF; font-size: 16px;">My Personal Linking Sessions</b></div>
+                <div class="col-md-12"><b>My Personal Linking Sessions</b></div>
             </div>
             <div class="row">
                 <div class="col-md-1"></div>
@@ -31,7 +40,7 @@ Linking Sessions > Personal Sessions
                         foreach($my_links as $ll) {
                         ?>
                         <tr>
-                            <td><?= date("F d, Y",strtotime($ll->lnk_date)) ?></td>
+                            <td><span><?= strtotime($ll->lnk_date) ?></span> <?= date("F d, Y",strtotime($ll->lnk_date)) ?></td>
                             <td><?= $ll->lnk_linker_name ?></td>
                             <td><?= $ll->link_type_desc ?></td>
                             <td><?= $ll->focus ?></td>
@@ -50,6 +59,10 @@ Linking Sessions > Personal Sessions
 <script type="text/javascript">
 $(function(){
     activeMenu($('#menu-linking-sessions'));
+
+    $('.table').DataTable({
+        order: [[0, 'desc']],
+    });
 });
 </script>
 @endsection

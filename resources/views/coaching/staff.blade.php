@@ -3,7 +3,12 @@
 Linking Sessions > Pending
 @endsection
 <style>
-.dataTables_wrapper{margin:0 !important;}
+.dataTables_wrapper{
+    margin:0 !important;
+}
+td span{
+    display: none;
+}
 </style>
 @section('content')
 <div class="container-fluid">
@@ -26,21 +31,22 @@ Linking Sessions > Pending
                         <tbody>
                         <?php
                         foreach($linking as $lk) {
+                            if(!empty($lk->lnk_id)) {
                         ?>
                             <tr>
-                                <td><?= date("F d, Y", strtotime($lk->lnk_date)) ?></td>
+                                <td><span><?= strtotime($lk->lnk_date) ?></span> <?= date("F d, Y", strtotime($lk->lnk_date)) ?></td>
                                 <td><?= $lk->link_type_desc ?></td>
                                 <td><?= $lk->focus ?></td>
                                 <td><?= $lk->lnk_linker_name ?></td>
                                 <td><a class="btn btn-primary" href="<?= url("{$lk->lt_link}/{$lk->lnk_id}?ackn_acc=1") ?>">ACKNOWLEDGE</a></td>
                             </tr>
-                        <?php    
+                        <?php
+                            }
                         }
                         ?>
                         </tbody>
                     </table>
                 </div>
-                <div class="col-md-4">&nbsp;</div>
             </div>
         </div>
     </div>
@@ -48,6 +54,10 @@ Linking Sessions > Pending
 <script type="text/javascript">
 $(function(){
     activeMenu($('#menu-linking-sessions'));
+
+    $('.table').DataTable({
+        order: [[0, 'desc']],
+    });
 });
 </script>
 @endsection

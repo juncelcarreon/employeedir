@@ -2,7 +2,7 @@
     <?php
     if($management == 1):
     ?>
-    <a href="<?= url('coaching-session') ?>" style="color: white;">New Linking</a>  |
+    <a href="<?= url('coaching-session') ?>" style="color: white;<?= empty($new) ? '' : 'font-weight: bold' ?>">New Linking</a>  |
     <a href="<?= url('linkee-pending') ?>" style="color: white;">Pending</a>  |
     <?php
     else:

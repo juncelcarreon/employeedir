@@ -4,76 +4,108 @@ Employees > Separated Employees
 @endsection
 @section('content')
 <style type="text/css">
-    h4.timeline-title a{
-        transition: linear 0.3s;
-    }
-    h4.timeline-title a:hover{
-        padding-left: 5px;
-    }
-    .emp-profile{
-        background-color: white;
-    }
-    .col-md-12{
-        margin-bottom: 1px !important;
-    }
-    .emp-profile{
-        margin: auto;
-    }
-    .header-container{
-        margin-top: 20px;
-    }
-    #search_employee{
-        padding-left: 5px;
-    }
-    .alphabet-search{
-        display: inline-flex;
-        list-style: none;
-    }
-    .alphabet-search li{
-        margin-left: 10px;
-    }
-    .header-list{
-
-    }
-    .employee-description{
-        color: #777;
-        font-size: 12px;
-    }
-    h1, h2, h3, h4, h5, h6 {
-        color: #777;
-    }
-    li a.selected{
-        font-weight: 900!important;
-    }
-    .pagination>li:first-child>a, .pagination>li:first-child>span{
-        border-top-left-radius: 0px !important;
-        border-bottom-left-radius: 0px !important;
-    }
-    .pagination>li:last-child>a, .pagination>li:last-child>span {
-        border-top-right-radius: 0px !important;
-        border-bottom-right-radius: 0px !important;
-    }
-    .emp-profile .fa{
-        color: #555;
-    }
-    select{
-        cursor: pointer !important;
-    }
+.alphabet-search{
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    padding-left: 0px;
+    margin-bottom: 10px;
+}
+.alphabet-search form button{
+    height: 35px;
+    margin: 1px 0 0;
+}
+#search_employee{
+    padding: 5px;
+}
+.emp-profile{
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.emp-image{
+    width: 60px; 
+    height: 60px;
+    margin: 15px;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.emp-image img{
+    width: 100%;
+    height: 100%;
+    object-fit:cover;
+}
+.employee-description{
+    color: #777;
+    font-size: 12px;
+}
+.employee-email{
+    color: #0c59a2;
+}
+h4.timeline-title{
+    font-size: 17px; 
+    text-transform: uppercase;
+}
+h4.timeline-title a{
+    transition: linear 0.3s;
+}
+h4.timeline-title a:hover{
+    padding-left: 5px;
+}
+h5{
+    color: #455;
+}
+h3, h6.employee-account{
+    color: #777;
+}
+h6 span.name-format{
+    color: #808080;
+}
+.header-container{
+    position: relative;
+    z-index: 10;
+}
+.pagination>li:first-child>a, .pagination>li:first-child>span{
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+}
+.pagination>li:last-child>a, .pagination>li:last-child>span {
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+.p-0{
+    padding: 0 !important;
+}
+.d-flex{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+}
+.emp-profile .fa-eye, .fa-pencil{
+    color: #3A75FB;
+}
+.emp-profile .fa-user-times{
+    color: #ff0000;
+}
+.emp-profile .fa-user-plus{
+    color: #008000;
+}
 </style>
 <div class="col-md-12">
-    <ul class="alphabet-search" style="padding-left: 0px;display: flex;justify-content: space-between;">
-        <li style="margin-left: 0px">
-            <form style="display: unset;">
-                <input type="hidden" name="alphabet" value="<?= $request->alphabet ?>">
-                <input type="hidden" name="department" value="<?= $request->department ?>">
-                <input type="text" placeholder="Search by name" id="search_employee" name="keyword" value="<?= $request->keyword ?>">
-                <button class="btn btn-primary" style="height:  35px; margin-top: 1px;">
-                    <span class="fa fa-search"></span>
-                </button>
-            </form>
-        </li>
+    <div class="alphabet-search">
+        <form>
+            <input type="hidden" name="alphabet" value="<?= $request->alphabet ?>">
+            <input type="hidden" name="department" value="<?= $request->department ?>">
+            <input type="text" placeholder="Search by name" id="search_employee" name="keyword" value="<?= $request->keyword ?>">
+            <button class="btn btn-primary">
+                <span class="fa fa-search"></span>
+            </button>
+        </form>
+
         <a href="/download-inactive?<?= (empty($_SERVER['QUERY_STRING']) ? '' : $_SERVER['QUERY_STRING']) ?>" class="btn btn-success"><span class="fa fa-download">&nbsp;</span> DOWNLOAD SEPARATED EMPLOYEES</a>
-    </ul>
+    </div>
 <?php
 if(count($employees) == 0) {
 ?>
@@ -91,18 +123,20 @@ if(count($employees) == 0) {
 }
 foreach($employees as $employee) {
 ?>
-    <div class="col-md-12" style="padding-left: 0px; padding-right: 0px; ">
-        <div class="emp-profile" style="padding: 10px; margin-bottom: 0px;">
-            <div class="row" style="display: flex; justify-content:space-between;align-items: center;">
+    <div class="col-md-12 p-0">
+        <div class="emp-profile">
+            <div class="row d-flex">
                 <div class="col-md-1">
-                    <div style="background-image: url(<?= $employee->profile_img ?>); width: 60px; height: 60px;margin: 15px; background-size: cover; background-repeat: no-repeat; background-position: 50% 50%; border-radius: 50%;"></div>
+                    <div class="emp-image">
+                        <img src="<?= $employee->profile_img ?>" alt="<?= $employee->fullname() ?>" />
+                    </div>
                 </div>
                 <div class="col-md-3">
-                    <h4 class="timeline-title name-format" style="color: #444;font-weight: 500; font-size: 17px; margin-top: 10px; text-transform: uppercase;">
+                    <h4 class="timeline-title name-format">
                         <a href="<?= url("profile/{$employee->id}") ?>"><?= $employee->fullname() ?></a>
                     </h4>
-                    <h5 style="color: #455;"><?= $employee->position_name ?></h5>
-                    <h6><?= $employee->team_name.(isset($employee->account) ? "- ". $employee->account->account_name : ""); ?></h6>
+                    <h5><?= $employee->position_name ?></h5>
+                    <h6 class="employee-account"><?= $employee->team_name.(isset($employee->account) ? "- ". $employee->account->account_name : ""); ?></h6>
                 </div>
                 <div class="col-md-3">
                     <h5>
@@ -111,7 +145,7 @@ foreach($employees as $employee) {
                     </h5>
                     <h5>
                         <span class="fa fa-envelope" title="Email Address"></span>
-                        <span class="employee-description" style="color: #0c59a2;">&nbsp;&nbsp;<?= $employee->email ?></span>
+                        <span class="employee-description employee-email">&nbsp;&nbsp;<?= $employee->email ?></span>
                     </h5>
                 <?php
                 if(isset($employee->ext) && $employee->ext != '--' && $employee->ext != '') {
@@ -136,20 +170,20 @@ foreach($employees as $employee) {
                 <?php
                 if(isset($employee->supervisor_name)) {
                 ?>
-                    <h5 style="font-size: 12px;">
+                    <h6>
                         <span class="fa fa-user" title="Immediate Superior"></span>
-                        <span class="name-format" style="color: gray;">Immediate Superior:</span>
+                        <span class="name-format">Immediate Superior:</span>
                         <?= $employee->supervisor_name ?>
-                    </h5>
+                    </h6>
                 <?php
                 }
                 if(isset($employee->manager_name)) {
                 ?>
-                    <h5 style="font-size: 12px;">
+                    <h6>
                         <span class="fa fa-user" title="Manager"></span>
-                        <span style="color: gray;">Manager: </span>
-                        <span class="name-format"><?= $employee->manager_name ?></span>
-                    </h5>
+                        <span class="name-format">Manager: </span>
+                        <?= $employee->manager_name ?>
+                    </h6>
                 <?php
                 }
                 ?>
@@ -157,22 +191,22 @@ foreach($employees as $employee) {
                 <div class="col-md-2">
                     <div class="options">
                         <a href="<?= url("profile/{$employee->id}") ?>" title="View">
-                            <i class="fa fa-eye"  style="color: #3A75FB;"></i>
+                            <i class="fa fa-eye"></i>
                         </a>&nbsp;&nbsp;
                     <?php
                     if($employee->isActive()) {
                     ?>
                         <a href="<?= url("employee_info/{$employee->id}/edit") ?>" title="Edit">
-                            <i class="fa fa-pencil" style="color: #3A75FB;"></i>
+                            <i class="fa fa-pencil"></i>
                         </a>&nbsp;&nbsp;
                         <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Deactivate" data-id="<?= $employee->id ?>">
-                            <i class="fa fa-user-times" style="color: red;"></i>
+                            <i class="fa fa-user-times"></i>
                         </a>
                     <?php
                     } else {
                     ?>
                         <a href="<?= url("employees/{$employee->id}/reactivate") ?>" title="Reactivate Employee" data-id="<?= $employee->id ?>">
-                            <i class="fa fa-user-plus" style="color: green;"></i>
+                            <i class="fa fa-user-plus"></i>
                         </a>
                     <?php
                     }
@@ -186,7 +220,7 @@ foreach($employees as $employee) {
 }
 ?>
 </div>
-<div class="col-md-12 header-container" style="margin-top: 0px;">
+<div class="col-md-12 header-container">
     <div class="pull-right">
         <?= $employees->appends(Illuminate\Support\Facades\Input::except('page'))->links() ?>
     </div>

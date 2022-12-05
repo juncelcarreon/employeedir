@@ -5,52 +5,93 @@ Employee > Edit Employee Profile
 @section('content')
 <link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
 <style type="text/css">
-    .card-title{
-        font-size: 16px;
-        line-height: 21px;
-        margin-top: 15px;
-        font-weight: 400;
-        color: black;
-    }
-    .card-subtitle{
-        font-size: 12px;
-        color: #878;
-    }
-    .employee-details-value{
-        font-size: 16px;
-        line-height: 21px;
-        padding-bottom: 10px;
-        color: black;
-    }
-    .label-profile{
-        padding-left: 15px; 
-        padding-right: 15px;
-    }
-    .col-md-9 hr{
-        margin: 0px;
-    }
-    .section-header h4 {
-        display: inline-block;
-    }
-    .section-subheading{
-        background: #5bc0de !important;
-    }
+.emp-image{
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 30px auto 0;
+}
+.emp-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+#bb{
+    margin: 0 auto;
+}
+.card-title{
+    font-size: 16px;
+    line-height: 21px;
+    margin-top: 15px;
+    font-weight: 400;
+    color: #000;
+}
+.card-subtitle{
+    font-size: 12px;
+    color: #878;
+}
+.label-profile{
+    padding-left: 15px; 
+    padding-right: 15px;
+}
+.section-header h4 {
+    display: inline-block;
+}
+.section-subheading{
+    background: #5bc0de !important;
+}
+#dependentsDiv .btn{
+    width: 100%;
+}
+#linkees{
+    width: 100%;
+    flex-wrap: wrap;
+}
+#linkees .linkee{
+    font-size: 12px;
+    padding: 1px;
+}
+#linkees .linkee button{
+    border: 0;
+    border-radius: 40px !important;
+}
+#linkees-select{
+    max-width: 80%;
+}
+#modalMovements .modal-body{
+    max-height:500px; 
+    min-height: 450px; 
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#modalMovements .dataTables_wrapper{
+    margin: 0;
+}
+#modalMovements #transferForm tr{
+    background-color: #fd9a47;
+}
+#modalMovements #transferForm .select2{
+    width: 100% !important;
+}
 </style>
 {{ Form::open(array('url' => 'employee_info/' . $employee->id,'files' => true ,'id' => 'edit_employee_form')) }}
 {{ Form::hidden('_method', 'PUT') }}
 {{ csrf_field() }}
-<div class="col-md-3" style="padding-left: 0 !important; padding-right: 0 !important;">
+<div class="col-md-3 p-0">
     <div class="section-header">
         <h4>Profile Picture</h4>
     </div>
     <div class="panel panel-container">
         <div class="row no-padding">
             <div class="text-center">
-                <img src="<?= $employee->profile_img ?>" alt="Profile Image" id="profile_image" class="img-circle" style="width: 150px;margin-top: 30px;"/>
+                <div class="emp-image">
+                    <img src="<?= $employee->profile_img ?>" id="profile_image" alt="image" />
+                </div>
                 <br> 
-                <br>
-                <label id="bb" class="btn btn-default" style="margin:0 auto;"> Upload Photo
-                    <input id="image_uploader" type="file" class="btn btn-small" value="" onchange="previewFile()"  name="profile_image"/>
+                <label id="bb" class="btn btn-default"> Upload Photo
+                    <input type="file" id="image_uploader" class="btn btn-small" name="profile_image"/>
                 </label>    
                 <h4 class="card-title m-t-10"><?= $employee->fullname() ?></h4>
                 <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
@@ -154,7 +195,9 @@ Employee > Edit Employee Profile
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <button class="btn btn-primary add-dependent" style="width: 100%;"><span class="fa fa-plus"></span></button>
+                    <button class="btn btn-primary add-dependent">
+                        <span class="fa fa-plus"></span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -202,11 +245,11 @@ Employee > Edit Employee Profile
     <div class="panel panel-body mb-0">
         <div class="row">
             <div class="col-md-12">
-                <div class="my-2 d-flex gap-2 p-2" style="width: 100%;flex-wrap: wrap;" id="linkees">
+                <div class="my-2 d-flex gap-2 p-2" id="linkees">
                     <?php
                     foreach($linkees as $linkee) {
                     ?>
-                        <div class="border border-success rounded-pill p-1" id="linkee-<?= $linkee->id ?>" style="font-size: 12px; min-width:100px;">
+                        <div class="border border-success rounded-pill linkee" id="linkee-<?= $linkee->id ?>">
                             <input type="hidden" name="linkee-<?= $linkee->id ?>" value="<?= $linkee->id ?>">
                             <span class="ms-2"><?= $linkee->last_name ?>, <?= $linkee->first_name ?></span>
                             <button type="button" class="btn btn-sm" onclick="deleteNodeAndData(document.getElementById('linkee-<?= $linkee->id ?>'))">
@@ -219,7 +262,7 @@ Employee > Edit Employee Profile
                     }
                     ?>
                 </div>
-                <div class="d-flex gap-2" style="max-width: 80%;">
+                <div class="d-flex gap-2" id="linkees-select">
                 <?php
                 if(Auth::user()->isAdmin() || Auth::user()->isHR()) {
                 ?>
@@ -241,9 +284,9 @@ Employee > Edit Employee Profile
                 ?>
                 </div>
                 <template id="linkee_template">
-                    <div class="border border-success rounded-pill p-2" id="linkee-" style="font-size: 12px; min-width:100px;">
-                        <input type="hidden" name="linkee-" value="">
-                        <span></span>
+                    <div class="border border-success rounded-pill linkee" id="linkee-">
+                        <input type="hidden">
+                        <span class="ms-2"></span>
                         <button type="button" class="btn btn-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
@@ -286,54 +329,65 @@ Employee > Edit Employee Profile
 {{ Form::close() }}
 <!-- Modal -->
 <div class="modal fade" id="modalMovements" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Staff Position Movements</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-        <div class="modal-body" style="max-height:500px; height: 450px; overflow: auto;">
-        <table class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">Date of Transfer</th>
-              <th scope="col">Department</th>
-              <th scope="col">Position</th>
-            </tr>
-      
-          </thead>
-          <tr style="background-color: #fd9a47;">
-              <td><input class="form-control datetimepicker" id="mv_transfer_date"></td>
-              <td>
-                  <select class="select2 form-control" id="department_name" style="width: 100%">
-                    <option selected="" disabled="">Select</option>
-                    @foreach($departments as $department)
-                        <option <?php echo $department->department_name == @$employee->team_name ? "selected" : "";?> value="{{ $department->id }}"> {{$department->department_name}}</option>
-                    @endforeach
-                </select>
-              </td>
-              <td>
-                <input class="form-control" id="mv_position" value="" list="positions" required>
-                <datalist id="positions">
-                    @foreach($positions as $position)
-                        <option value="{{ $position->position_name }}">
-                    @endforeach
-                </datalist>
-              </td>
-          </tr>
-          <tbody id="mdl_bodyMvmt">
-          </tbody>
-        </table>
-        </div>
-      <div class="modal-footer">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Staff Position Movements</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date of Transfer</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">Position</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transferForm">
+                        <tr>
+                            <td>
+                                <input class="form-control datetimepicker" id="mv_transfer_date">
+                            </td>
+                            <td>
+                                <select class="select2 form-control" id="department_name">
+                                    <option selected disabled>Select</option>
+                                    <?php
+                                    foreach($departments as $department) {
+                                    ?>
+                                    <option value="<?= $department->id ?>"<?= $department->department_name == @$employee->team_name ? " selected" : "";?>><?= $department->department_name ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </select>
+                            </td>
+                            <td>
+                                <input class="form-control" id="mv_position" list="positions" required>
+                                <datalist id="positions">
+                                    <?php
+                                    foreach($positions as $position) {
+                                    ?>
+                                    <option value="<?= $position->position_name ?>"><?= $position->position_name ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </datalist>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody id="mdl_bodyMvmt"></tbody>
+                </table>
+            </div>
+        <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button id="savingOption" type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
         <input type="hidden" id="active-employee-id" value="{{ $employee->id }}">
-      </div>
+        </div>
+        </div>
     </div>
-  </div>
 </div>
 @endsection
 @section('scripts')
@@ -363,7 +417,9 @@ Employee > Edit Employee Profile
     </div>
     <div class="col-md-2">
         <div class="form-group">
-            <a href="javascript:;" class="btn btn-danger" data-id="~id~" onclick="removeThisDependent(this)" style="width: 100%;"><span class="fa fa-minus"></span></a>
+            <a href="javascript:;" class="btn btn-danger" data-id="~id~" onclick="removeThisDependent(this)">
+                <span class="fa fa-minus"></span>
+            </a>
         </div>
     </div>
 </div>
