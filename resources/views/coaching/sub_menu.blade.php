@@ -1,27 +1,28 @@
-<div class="panel-heading" style="font-size: 12px;">
+<div class="panel-heading">
     <?php
     if($management == 1):
     ?>
-    <a href="<?= url('coaching-session') ?>" style="color: white;<?= empty($new) ? '' : 'font-weight: bold' ?>">New Linking</a>  |
-    <a href="<?= url('linkee-pending') ?>" style="color: white;">Pending</a>  |
+    <a href="<?= url('coaching-session') ?>"<?= empty($new) ? '' : ' class="active"' ?>>New Linking</a>  |
+    <a href="<?= url('linkee-pending') ?>"<?= empty($pending_menu) ? '' : ' class="active"' ?>>Pending</a>  |
     <?php
     else:
     ?>
-    <a href="<?= url('coaching-session') ?>" style="color: white;">Pending</a> | 
+    <a href="<?= url('coaching-session') ?>"<?= empty($pending_menu) ? '' : ' class="active"' ?>>Pending</a> | 
     <?php
     endif;
     ?>
-    <a href="<?= url('gtky-list') ?>" style="color: white;">GTKY</a> |
-    <a href="<?= url('gs-list') ?>" style="color: white;">GS</a> |
-    <a href="<?= url('sb-list') ?>" style="color: white;">SB</a> |
-    <a href="<?= url('sda-list') ?>" style="color: white;">SDA</a> |
-    <a href="<?= url('view-ql') ?>" style="color: white;">QL</a> | 
-    <a href="<?= url('list-ce') ?>" style="color: white;">CE</a> | 
-    <a href="<?= url('acc-list') ?>" style="color: white;">AS</a>
+    <a href="<?= url('gtky-list') ?>"<?= empty($gtky) ? '' : ' class="active"' ?>>GTKY</a> |
+    <a href="<?= url('goal-setting-list') ?>"<?= empty($gs) ? '' : ' class="active"' ?>>GS</a> |
+    <a href="<?= url('skill-building-list') ?>"<?= empty($sb) ? '' : ' class="active"' ?>>SB</a> |
+    <a href="<?= url('skill-dev-act-list') ?>"<?= empty($sda) ? '' : ' class="active"' ?>>SDA</a> |
+    <a href="<?= url('quick-link-list') ?>"<?= empty($ql) ? '' : ' class="active"' ?>>QL</a> | 
+    <a href="<?= url('ce-expectation-list') ?>"<?= empty($ce) ? '' : ' class="active"' ?>>CE</a> | 
+    <a href="<?= url('acc-set-list') ?>"<?= empty($as) ? '' : ' class="active"' ?>>AS</a>
     <?php
     if($management == 1):
     ?>
-    | <a href="<?= url('own-linking') ?>" style="color: white;">Personal</a>
+    | <a href="<?= url('own-linking') ?>"<?= empty($personal) ? '' : ' class="active"' ?>>Personal</a>
+    <a href="<?= url('download-linking') ?>" class="btn btn-success pull-right"><i class="fa fa-download">&nbsp;</i> DOWNLOAD EXCEL REPORT</a>
     <?php
     endif;
     ?>

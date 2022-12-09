@@ -2,6 +2,9 @@
 @section('title')
 Employee > Change Password
 @endsection
+@section('breadcrumb')
+Employees > Change Password
+@endsection
 @section('content')
 <style type="text/css">
 .form-group label{

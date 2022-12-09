@@ -6,6 +6,9 @@
 .engagement { cursor: pointer; margin: 10px auto; border-bottom: 1px solid #ccc; padding: 10px; }
 .engagement:hover { color: #30A5FF; }
 .engagement:last-child { border: 0; }
+
+.timeline-title a, .birthday-holder a{ transition: linear 0.3s; }
+.timeline-title a:hover, .birthday-holder a:hover{ padding-left: 5px; }
 </style>
 @section('content')
 <?php

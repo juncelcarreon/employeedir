@@ -64,31 +64,32 @@
             <?php
             $i = 1;
             foreach($leave_requests as $request) {
-                $reason = "";
-                $num_days = 0;
-                $dates = [];
-                $pay_status = [];
-                foreach($request->leave_details as $detail):
-                    array_push($dates, date('M d, Y', strtotime($detail->date)));
-                    array_push($pay_status, (($detail->pay_type) ? 'With Pay' : 'Without Pay'));
-                    $num_days += $detail->length;
-                endforeach;
+                if(!empty($request->leave_details)) {
+                    $reason = "";
+                    $num_days = 0;
+                    $dates = [];
+                    $pay_status = [];
+                    foreach($request->leave_details as $detail):
+                        array_push($dates, date('M d, Y', strtotime($detail->date)));
+                        array_push($pay_status, (($detail->pay_type) ? 'With Pay' : 'Without Pay'));
+                        $num_days += $detail->length;
+                    endforeach;
 
-                $leave_status = "Pending <br> <small>(Recommendation / Approval)</small>";
-                switch($request->approve_status_id) {
-                    case 1:
-                        $leave_status = 'Approved';
-                        break;
-                    case 2:
-                        $leave_status = 'Not Approved';
-                        break;
-                    case 3:
-                        $leave_status = "Pending <br> <small>(Approval)</small>";
-                        break;
-                }
+                    $leave_status = "Pending <br> <small>(Recommendation / Approval)</small>";
+                    switch($request->approve_status_id) {
+                        case 1:
+                            $leave_status = 'Approved';
+                            break;
+                        case 2:
+                            $leave_status = 'Not Approved';
+                            break;
+                        case 3:
+                            $leave_status = "Pending <br> <small>(Approval)</small>";
+                            break;
+                    }
 
-                $reason = $request->pay_type_id == 1 ? "Planned - " : "Unplanned - ";
-                $reason .= (strlen($request->reason) > 80) ? substr($request->reason, 0, 80)." ..." : $request->reason;
+                    $reason = $request->pay_type_id == 1 ? "Planned - " : "Unplanned - ";
+                    $reason .= (strlen($request->reason) > 80) ? substr($request->reason, 0, 80)." ..." : $request->reason;
             ?>
                 <tr>
                     <td><?= $i ?></td>
@@ -106,7 +107,8 @@
                     </td>
                 </tr>
             <?php 
-            $i++;
+                $i++;
+                }
             }
             ?>
             </tbody>

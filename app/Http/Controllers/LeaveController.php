@@ -333,7 +333,7 @@ class LeaveController extends Controller
 				'leave_id'      => $leave_id,
 				'date'          => date("Y-m-d",strtotime($obj['leave_date'][$i])) == '1970-01-01'? now()->format('Y-m-d') : date("Y-m-d",strtotime($obj['leave_date'][$i])) ,
 				'length'        => $obj['length'][$i],
-				'pay_type'      => (($employee->is_regular == 0) ? 0 : $obj['pay_type'][$i])
+				'pay_type'      => (($employee->is_regular == 0 || empty($obj['pay_type'][$i])) ? 0 : $obj['pay_type'][$i])
 			];
 
 			LeaveRequestDetails::create($details);
@@ -346,18 +346,18 @@ class LeaveController extends Controller
 			'details'        => $obj
 		];
 
-		// Mail::to($employee->email)->send(new LeaveSelfNotification(['emp_name' => strtoupper($employee->first_name)]));
+		Mail::to($employee->email)->send(new LeaveSelfNotification(['emp_name' => strtoupper($employee->first_name)]));
 
 		$supervisor = User::find($employee->supervisor_id);
 		if(!empty($supervisor->id)) {
 			$data['emp_name'] = strtoupper($supervisor->first_name);
-			// Mail::to($supervisor->email)->send(new LeaveNotification($data));
+			Mail::to($supervisor->email)->send(new LeaveNotification($data));
 		}
 
 		$manager = User::find($employee->manager_id);
 		if(!empty($manager->id)) {
 			$data['emp_name'] = strtoupper($manager->first_name);
-			// Mail::to($manager->email)->send(new LeaveNotification($data));
+			Mail::to($manager->email)->send(new LeaveNotification($data));
 		}
 
 		return redirect("leave" . '/' . $leave_id)->with('success', 'Leave Request Successfully Submitted!!');
@@ -798,11 +798,11 @@ class LeaveController extends Controller
 			if(empty($manager)) {
 				$data['leader_name'] = 'HR DEPARTMENT';
 
-				// Mail::to('hrd@elink.com.ph')->send(new LeaveReminder($data));
+				Mail::to('hrd@elink.com.ph')->send(new LeaveReminder($data));
 			} else {
 				$data['leader_name'] = strtoupper($manager->first_name); 
 
-				// Mail::to($manager->email)->send(new LeaveReminder($data));
+				Mail::to($manager->email)->send(new LeaveReminder($data));
 			}
 
 			return back()->with('success', 'Leave request successfully recommended for approval.');
@@ -938,7 +938,7 @@ class LeaveController extends Controller
 		];
 
 		if($leave_request->save()){
-			// Mail::to($employee->email)->send(new LeaveApproved($data));
+			Mail::to($employee->email)->send(new LeaveApproved($data));
 
 			return back()->with('success', 'Leave request successfully approved. . .');
 		} else {
@@ -977,7 +977,7 @@ class LeaveController extends Controller
 		];
 
 		if($leave_request->save()){
-			// Mail::to($employee->email)->send(new LeaveDeclined($data));
+			Mail::to($employee->email)->send(new LeaveDeclined($data));
 
 			return back()->with('success', 'Leave request successfully declined.');
 		} else {

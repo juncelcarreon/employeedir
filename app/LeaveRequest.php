@@ -279,13 +279,17 @@ class LeaveRequest extends Model
             DESC
         ");
 
+        $leave_details  = [];
         foreach($data as $key=>$value) {
             $details = DB::select("SELECT * FROM `leave_request_details` WHERE `leave_request_details`.`leave_id` = {$value->id} AND `leave_request_details`.`status` != 0 AND `leave_request_details`.`pay_type` != 3 ORDER BY `leave_request_details`.`date`");
 
-            $data[$key]->leave_details = $details;
+            if(!empty($details)) {
+                $leave_details[$key] = $value;
+                $leave_details[$key]->leave_details = $details;
+            }
         }
 
-        return $data;
+        return $leave_details;
     }
 
 }

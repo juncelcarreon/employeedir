@@ -2,6 +2,9 @@
 @section('title')
 Employee > Add Employee
 @endsection
+@section('breadcrumb')
+Employees > Add Employee
+@endsection
 @section('content') 
 <link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
 <style type="text/css">

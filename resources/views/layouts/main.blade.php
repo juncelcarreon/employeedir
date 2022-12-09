@@ -113,7 +113,11 @@
                 <li><a href="#">
                     <em class="fa fa-home"></em>
                 </a></li>
+                @if(View::hasSection('breadcrumb'))
+                <li class="active">@yield('breadcrumb')</li>
+                @else
                 <li class="active">{{ breadCrumbs() }}</li>
+                @endif
             </ol>
         </div><!--/.row-->
         <div class="page-content">

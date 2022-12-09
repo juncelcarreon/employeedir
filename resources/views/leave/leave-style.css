@@ -141,3 +141,9 @@
 #leave_credits_table_filter, #leave_credits_table_info, #leave_credits_table_paginate {
     display: none !important;
 }
+
+.non_reg{
+    cursor: not-allowed;
+    background-color: #eee;
+    pointer-events: none;
+}

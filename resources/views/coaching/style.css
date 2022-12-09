@@ -1,0 +1,78 @@
+.dataTables_wrapper{
+    margin:0 !important;
+}
+
+.panel-heading{
+    font-size: 12px;
+    border-radius: 0 !important;
+}
+
+.panel-heading a{
+    color: #fff;
+}
+
+.panel-heading a:not(.btn):hover, .panel-heading a:not(.btn).active{
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.panel-subheading{
+    background: #5bc0de;
+    font-size: 12px;
+    color: #fff;
+    height: 60px;
+    line-height: 38px;
+    padding: 10px 15px;
+}
+
+.form-text{
+    color: #ff0000;
+}
+
+.d-none{
+    display: none;
+}
+
+.d-flex{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.modal-header{
+    background: #3a75fb;
+}
+
+.modal-title{
+    display: inline-block;
+    color: #fff;
+}
+
+.close{
+    color: #fff;
+}
+
+.table-metric{
+    background:#fff;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom:20px;
+}
+.table-metric tbody th, .table-metric tbody td{
+    padding: 8px 10px;
+    line-height: 1.42857143;
+    vertical-align: top;
+}
+.table-metric .form-group{
+    margin: 0 !important;
+}
+.table-metric strong{
+    font-size: 14px;
+}
+
+td span{
+    display: none;
+}
+
+.select2-container--default .select2-results__option[aria-disabled=true]{
+    display: none;
+}

@@ -138,7 +138,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <select id="mainPayType" name="pay_type[]" class="form-control _thisPayType<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' non_reg') : ' non_reg' ?>"<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' disabled') : ' disabled' ?>>
+                                <select id="mainPayType" name="pay_type[]" class="form-control _thisPayType<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' non_reg') : ' non_reg' ?>">
                                     <option value="0">Without Pay</option>
                                     <option value="1">With Pay</option>
                                 </select>
@@ -276,7 +276,7 @@
     </div>
     <div class="col-md-3">
         <div class="form-group">
-            <select id="Pay_~~id~~_" name="pay_type[]" class="form-control _thisPayType<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' non_reg') : ' non_reg' ?>" onchange="computeLeaveCredits(this);"<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' disabled') : ' disabled' ?>>
+            <select id="Pay_~~id~~_" name="pay_type[]" class="form-control _thisPayType<?= ($credits->is_regular == 1) ? ((floor($credits->current_credit) > 0) ? '' : ' non_reg') : ' non_reg' ?>" onchange="computeLeaveCredits(this);">
                 <option value="0">Without Pay</option>
                 <option value="1">With Pay</option>
             </select>

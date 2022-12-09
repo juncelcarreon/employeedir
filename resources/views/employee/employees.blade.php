@@ -1,4 +1,7 @@
 @extends('layouts.main')
+@section('breadcrumb')
+Employees > Active Employees
+@endsection
 @section('title')
 Employees > Active Employees
 @endsection

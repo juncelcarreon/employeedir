@@ -2,6 +2,9 @@
 @section('title')
 Employee > View Profile
 @endsection
+@section('breadcrumb')
+Employees > View Employee > <?= $employee->fullname() ?>
+@endsection
 @section('content')
 <link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
 <style type="text/css">

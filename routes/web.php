@@ -160,27 +160,82 @@ Route::middleware(['auth'])->group(function(){
     Route::post('process-linkee', 'EmployeeInfoController@processLinkees')->name('add-linkees');
     Route::post('delete-linkee', 'EmployeeInfoController@deleteLinkees')->name('remove-linkees');
     Route::get('process-linkee', 'EmployeeInfoController@processLinkees');
+
     Route::get('coaching-session', 'CoachingController@mainCoaching');
     Route::get('linkee-pending', 'CoachingController@forAcknowledgement');
-    Route::get('quick-link/{id}', 'CoachingController@viewQL');
-    Route::get('goal-setting/{id}', 'CoachingController@viewGS');
-    Route::get('ce-expectation/{id}', 'CoachingController@viewCE');
-    Route::get('acc-set/{id}','CoachingController@viewACC');
-    Route::get('skill-building/{id}','CoachingController@viewSB');
-    Route::get('skill-dev-act/{id}','CoachingController@viewSDA');
     Route::get('own-linking', 'CoachingController@thisLink');
-    Route::get('gtky-list', 'CoachingController@listGTKYs');
-    Route::get('gtky/{id}', 'CoachingController@viewGTKY');
-    Route::get('gs-list', 'CoachingController@listGSs');
-    Route::get('sb-list', 'CoachingController@listSBs');
-    Route::get('view-ql', 'CoachingController@listQLs');
-    Route::get('list-ce', 'CoachingController@listCEs');
-    Route::get('sda-list', 'CoachingController@listSDAs');
-    Route::get('acc-list', 'CoachingController@listACCs');
-    Route::get('lnk-notify', 'CoachingController@sendNotify');
     Route::get('download-linking', 'CoachingController@downloadLinking');
-    Route::get('download-linking2', 'CoachingController@downloadLinking2');
-    Route::get('test-linking', 'CoachingController@testLinking');
+
+    /* Linking Session: Quick Link */
+    Route::get('quick-link-list', 'CoachingController@listQLs');
+    Route::get('quick-link/{id}', 'CoachingController@viewQL');
+    Route::get('quick-link-edit/{id}', 'CoachingController@editQL');
+    Route::get('quick-link-acknowledge/{id}', 'CoachingController@acknowledgeQL');
+    Route::post('add-quick-link', 'CoachingController@addQL')->name('add-quick-link');
+    Route::post('update-quick-link', 'CoachingController@updateQL')->name('update-quick-link');
+    Route::post('acknowledged-quick-link', 'CoachingController@acknowledgedQL')->name('acknowledged-quick-link');
+    /* End Linking Session: Quick Link */
+
+    /* Linking Session: Cementing Expectation */
+    Route::get('ce-expectation-list', 'CoachingController@listCEs');
+    Route::get('ce-expectation/{id}', 'CoachingController@viewCE');
+    Route::get('ce-expectation-edit/{id}', 'CoachingController@editCE');
+    Route::get('ce-expectation-acknowledge/{id}', 'CoachingController@acknowledgeCE');
+    Route::post('add-ce-expectation', 'CoachingController@addCE')->name('add-ce-expectation');
+    Route::post('update-ce-expectation', 'CoachingController@updateCE')->name('update-ce-expectation');
+    Route::post('acknowledged-ce-expectation', 'CoachingController@acknowledgedCE')->name('acknowledged-ce-expectation');
+    /* End Linking Session: Cementing Expectation */
+
+    /* Linking Session: Accountability Setting */
+    Route::get('acc-set/{id}','CoachingController@viewAS');
+    Route::get('acc-set-edit/{id}', 'CoachingController@editAS');
+    Route::get('acc-set-acknowledge/{id}', 'CoachingController@acknowledgeAS');
+    Route::get('acc-set-list', 'CoachingController@listASs');
+    Route::post('add-acc-set', 'CoachingController@addAS')->name('add-acc-set');
+    Route::post('update-acc-set', 'CoachingController@updateAS')->name('update-acc-set');
+    Route::post('acknowledged-acc-set', 'CoachingController@acknowledgedAS')->name('acknowledged-acc-set');
+    /* End Linking Session: Accountability Setting */
+
+    /* Linking Session: Skill Development Activities */
+    Route::get('skill-dev-act/{id}','CoachingController@viewSDA');
+    Route::get('skill-dev-act-edit/{id}', 'CoachingController@editSDA');
+    Route::get('skill-dev-act-acknowledge/{id}', 'CoachingController@acknowledgeSDA');
+    Route::get('skill-dev-act-list', 'CoachingController@listSDAs');
+    Route::post('add-skill-dev-act', 'CoachingController@addSDA')->name('add-skill-dev-act');
+    Route::post('update-skill-dev-act', 'CoachingController@updateSDA')->name('update-skill-dev-act');
+    Route::post('acknowledged-skill-dev-act', 'CoachingController@acknowledgedSDA')->name('acknowledged-skill-dev-act');
+    /* End Linking Session: Skill Development Activities */
+
+    /* Linking Session: Getting To Know You */
+    Route::get('gtky/{id}', 'CoachingController@viewGTKY');
+    Route::get('gtky-edit/{id}', 'CoachingController@editGTKY');
+    Route::get('gtky-acknowledge/{id}', 'CoachingController@acknowledgeGTKY');
+    Route::get('gtky-list', 'CoachingController@listGTKYs');
+    Route::post('add-gtky', 'CoachingController@addGTKY')->name('add-gtky');
+    Route::post('update-gtky', 'CoachingController@updateGTKY')->name('update-gtky');
+    Route::post('acknowledged-gtky', 'CoachingController@acknowledgedGTKY')->name('acknowledged-gtky');
+    /* End Linking Session: Getting To Know You */
+
+    /* Linking Session: Skill Building */
+    Route::get('skill-building/{id}','CoachingController@viewSB');
+    Route::get('skill-building-edit/{id}', 'CoachingController@editSB');
+    Route::get('skill-building-acknowledge/{id}', 'CoachingController@acknowledgeSB');
+    Route::get('skill-building-list', 'CoachingController@listSBs');
+    Route::post('add-skill-building', 'CoachingController@addSB')->name('add-skill-building');
+    Route::post('update-skill-building', 'CoachingController@updateSB')->name('update-skill-building');
+    Route::post('acknowledged-skill-building', 'CoachingController@acknowledgedSB')->name('acknowledged-skill-building');
+    /* End Linking Session: Skill Building */
+
+    /* Linking Session: Goal Setting */
+    Route::get('goal-setting/{id}', 'CoachingController@viewGS');
+    Route::get('goal-setting-edit/{id}', 'CoachingController@editGS');
+    Route::get('goal-setting-acknowledge/{id}', 'CoachingController@acknowledgeGS');
+    Route::get('goal-setting-list', 'CoachingController@listGSs');
+    Route::post('add-goal-setting', 'CoachingController@addGS')->name('add-goal-setting');
+    Route::post('update-goal-setting', 'CoachingController@updateGS')->name('update-goal-setting');
+    Route::post('acknowledged-goal-setting', 'CoachingController@acknowledgedGS')->name('acknowledged-goal-setting');
+    /* End Linking Session: Goal Setting */
+
     Route::get('has-admin','UtilsController@setThisAdmin');
     Route::get('expanded-credits', 'LeaveController@leaveCredits')->name('expanded.credits');
     Route::get('expanded-tracker', 'LeaveController@leaveTracker');
@@ -241,3 +296,4 @@ Route::get('/send-email-reminder', 'EmailReminderController@index');
 Route::get('/send-email-reminders', 'EmailRemindersController@index');
 Route::get('/send-email-reminder-to-leader', 'EmailReminderController@remindTeamLeader');
 Route::get('/send-email-reminder-approval', 'EmailRemindersController@reminderApproval');
+Route::get('/maintenance', 'TestController@viewMaintenance');
