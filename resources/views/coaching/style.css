@@ -1,3 +1,9 @@
+ol.breadcrumb li span{
+    display: inline-block;
+    color: #ccc;
+    padding: 0 5px;
+}
+
 .dataTables_wrapper{
     margin:0 !important;
 }
@@ -38,16 +44,24 @@
     flex-wrap: wrap;
 }
 
-.modal-header{
+#modal-history .modal-header{
     background: #3a75fb;
 }
 
-.modal-title{
+#modal-history .modal-title{
     display: inline-block;
     color: #fff;
 }
 
-.close{
+#modal-history .modal-body{
+    min-height: 450px;
+}
+
+#modal-history #table-history_wrapper{
+    padding: 0 !important;
+}
+
+#modal-history .close{
     color: #fff;
 }
 
@@ -57,14 +71,17 @@
     max-width: 100%;
     margin-bottom:20px;
 }
+
 .table-metric tbody th, .table-metric tbody td{
     padding: 8px 10px;
     line-height: 1.42857143;
     vertical-align: top;
 }
+
 .table-metric .form-group{
     margin: 0 !important;
 }
+
 .table-metric strong{
     font-size: 14px;
 }

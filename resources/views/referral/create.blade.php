@@ -1,6 +1,9 @@
 @extends('layouts.main')
 @section('title')
-    Job Referrals > Create
+Job Referrals > Create
+@endsection
+@section('breadcrumb')
+Job Referral
 @endsection
 @section('content')
 <div class="panel panel-default">
@@ -35,7 +38,7 @@
                             <input type="text" class="form-control" name="referrer_last_name" required>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label>Department <small class="text-danger">*</small></label>
                             <input type="text" class="form-control" name="referrer_department" required>

@@ -1,6 +1,9 @@
 @extends('layouts.main')
 @section('title')
-    Request | Leaves List
+Request > Leave > <?= ucfirst($type) ?> List
+@endsection
+@section('breadcrumb')
+Request > Leave > <?= ucfirst($type) ?> List
 @endsection
 @section('content')
 <style type="text/css">

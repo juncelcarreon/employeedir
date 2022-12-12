@@ -2,6 +2,9 @@
 @section('title')
 Employees > Separated Employees
 @endsection
+@section('breadcrumb')
+Employees <span>></span> Separated Employees
+@endsection
 @section('content')
 <style type="text/css">
 .alphabet-search{
@@ -63,35 +66,7 @@ h3, h6.employee-account{
 h6 span.name-format{
     color: #808080;
 }
-.header-container{
-    position: relative;
-    z-index: 10;
-}
-.pagination>li:first-child>a, .pagination>li:first-child>span{
-    border-top-left-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
-}
-.pagination>li:last-child>a, .pagination>li:last-child>span {
-    border-top-right-radius: 0px !important;
-    border-bottom-right-radius: 0px !important;
-}
-.p-0{
-    padding: 0 !important;
-}
-.d-flex{
-    display: flex;
-    justify-content:space-between;
-    align-items: center;
-}
-.emp-profile .fa-eye, .fa-pencil{
-    color: #3A75FB;
-}
-.emp-profile .fa-user-times{
-    color: #ff0000;
-}
-.emp-profile .fa-user-plus{
-    color: #008000;
-}
+@include('employee.style');
 </style>
 <div class="col-md-12">
     <div class="alphabet-search">

@@ -1,22 +1,30 @@
 @extends('layouts.main')
 @section('title')
-    Job Referrals > View
+Job Referrals > View Referral
+@endsection
+@section('breadcrumb')
+Referrals <span>></span> View Referral
 @endsection
 @section('content')
 <style>
-    table{
-        width: 100%;
-        margin: 10px;
-    }
-    table tr td {
-        border-bottom: 1px dashed #dadada;
-        font-size: 13px;
-        padding-top: 15px;
-        padding-bottom: 5px;
-    }
-    table tr td:nth-child(2){
-        font-weight: 600;
-    }
+ol.breadcrumb li span{
+    display: inline-block;
+    color: #ccc;
+    padding: 0 5px;
+}
+table{
+    width: 100%;
+    margin: 10px;
+}
+table tr td {
+    border-bottom: 1px dashed #dadada;
+    font-size: 13px;
+    padding-top: 15px;
+    padding-bottom: 5px;
+}
+table tr td:nth-child(2){
+    font-weight: 600;
+}
 </style>
 <div class="panel panel-default">
     <div class="panel-heading">

@@ -1,8 +1,18 @@
 @extends('layouts.main')
 @section('title')
-Department > Create
+Departments > Add Department
 @endsection
 @section('content')
+@section('breadcrumb')
+Departments <span>></span> Add Department 
+@endsection
+<style type="text/css">
+ol.breadcrumb li span{
+    display: inline-block;
+    color: #ccc;
+    padding: 0 5px;
+}
+</style>
 <div class="panel panel-default">
     <div class="panel-heading">
         New Department

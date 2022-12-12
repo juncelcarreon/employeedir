@@ -2,67 +2,70 @@
 @section('title')
 Employees
 @endsection
+@section('breadcrumbs')
+Employees
+@endsection
 @section('content')
 <style type="text/css">
-    h4.timeline-title a{
-        transition: linear 0.3s;
-        font-weight: 500 !important;
-    }
-    h4.timeline-title a:hover{
-        padding-left: 5px;
-    }
-    .emp-profile{
-        background-color: white;
-    }
-    .col-md-12{
-        margin-bottom: 1px !important;
-    }
-    .emp-profile{
-        margin: auto;
-    }
-    .header-container{
-        margin-top: 20px;
-    }
-    #search_employee{
-        padding-left: 5px;
-    }
-    .alphabet-search{
-        display: inline-flex;
-        list-style: none;
-    }
-    .alphabet-search li{
-        margin-left: 10px;
-    }
-    .header-list{
+h4.timeline-title a{
+    transition: linear 0.3s;
+    font-weight: 500 !important;
+}
+h4.timeline-title a:hover{
+    padding-left: 5px;
+}
+.emp-profile{
+    background-color: white;
+}
+.col-md-12{
+    margin-bottom: 1px !important;
+}
+.emp-profile{
+    margin: auto;
+}
+.header-container{
+    margin-top: 20px;
+}
+#search_employee{
+    padding-left: 5px;
+}
+.alphabet-search{
+    display: inline-flex;
+    list-style: none;
+}
+.alphabet-search li{
+    margin-left: 10px;
+}
+.header-list{
 
-    }
-    .employee-description{
-        color: #777;
-        font-size: 12px;
-    }
-    h1, h2, h3, h4, h5, h6 {
-        color: #777;
-    }
-    li a.selected{
-        font-weight: 900!important;
-    }
-    .pagination>li:first-child>a, .pagination>li:first-child>span{
-        border-top-left-radius: 0px !important;
-        border-bottom-left-radius: 0px !important;
-    }
-    .pagination>li:last-child>a, .pagination>li:last-child>span {
-        border-top-right-radius: 0px !important;
-        border-bottom-right-radius: 0px !important;
-    }
-    .emp-profile .fa{
-        color: #555 !important;
-    }
-    select{
-        cursor: pointer !important;
-    }
+}
+.employee-description{
+    color: #777;
+    font-size: 12px;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #777;
+}
+li a.selected{
+    font-weight: 900!important;
+}
+.pagination>li:first-child>a, .pagination>li:first-child>span{
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+}
+.pagination>li:last-child>a, .pagination>li:last-child>span {
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+.emp-profile .fa{
+    color: #555 !important;
+}
+select{
+    cursor: pointer !important;
+}
 </style>
 <div class="col-md-12">
-    <div class="header-container" style="margin-bottom: 5px;">
+    <div class="header-container" style="margin:0 auto 5px;">
         <div class="flexbox" style="display: flex; justify-content: space-between;">
             <ul class="alphabet-search" style="padding-left: 0px">
                 <li style="margin-left: 0px">

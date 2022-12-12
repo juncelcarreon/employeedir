@@ -2,8 +2,16 @@
 @section('title')
 My Profile > Update Selected Information
 @endsection
+@section('breadcrumb')
+My Profile <span>></span> Update Selected Information
+@endsection
 @section('content')
 <style type="text/css">
+ol.breadcrumb li span{
+    display: inline-block;
+    color: #ccc;
+    padding: 0 5px;
+}
 .form-group label{
     color: #878;
 }

@@ -3,7 +3,7 @@
 Linking Sessions > Skill Building > Acknowledge Session
 @endsection
 @section('breadcrumb')
-Linking Sessions > Skill Building > Acknowledge Session
+Linking Sessions <span>/</span> Skill Building <span>></span> Acknowledge Session
 @endsection
 @section('content')
 <style>

@@ -1,18 +1,14 @@
 @extends('layouts.main')
-@section('breadcrumb')
-Employees > Active Employees
-@endsection
 @section('title')
 Employees > Active Employees
 @endsection
+@section('breadcrumb')
+Employees <span>></span> Active Employees
+@endsection
 @section('content')
 <style type="text/css">
-.header-container{
-    position: relative;
-    z-index: 10;
-}
 .header-margin{
-    margin: 20px auto 5px;
+    margin: 0 auto 5px;
 }
 .alphabet-search{
     display: inline-flex;
@@ -103,23 +99,7 @@ h3, h6.employee-account{
 h6 span.name-format{
     color: #808080;
 }
-.pagination>li:first-child>a, .pagination>li:first-child>span{
-    border-top-left-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
-}
-.pagination>li:last-child>a, .pagination>li:last-child>span {
-    border-top-right-radius: 0px !important;
-    border-bottom-right-radius: 0px !important;
-}
-.p-0{
-    padding: 0 !important;
-}
-.emp-profile .fa-eye, .fa-pencil{
-    color: #3A75FB;
-}
-.emp-profile .fa-user-times{
-    color: #ff0000;
-}
+@include('employee.style');
 </style>
 <div class="col-md-12">
     <div class="header-container header-margin">

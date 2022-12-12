@@ -1,15 +1,18 @@
 @extends('layouts.main')
 @section('title')
-Department
+Departments
+@endsection
+@section('breadcrumb')
+Departments
 @endsection
 @section('content')
 <style type="text/css">
-    h5{
-        font-weight: 500;
-        font-size: 12px;
-        line-height: 19px;
-        margin-bottom: 0px;
-    }
+h5{
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 19px;
+    margin-bottom: 0px;
+}
 </style>
 <div class="panel panel-default">
     <div class="panel-heading">

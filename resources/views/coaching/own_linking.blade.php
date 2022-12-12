@@ -3,7 +3,7 @@
 Linking Sessions > Personal Sessions
 @endsection
 @section('breadcrumb')
-Linking Sessions > Personal Sessions
+Linking Sessions <span>></span> Personal Sessions
 @endsection
 @section('content')
 <style>

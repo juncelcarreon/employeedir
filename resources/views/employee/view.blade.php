@@ -1,51 +1,55 @@
 @extends('layouts.main')
 @section('title')
-Employees > View Profile
+Employee > View Profile
+@endsection
+@section('breadcrumb')
+Employee <span>></span> View Profile
 @endsection
 @section('content')
 <link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
 <style type="text/css">
-    #view_profile .card-subtitle{
-        font-size: 12px;
-        color: #878;
-    }
-    .label-profile{
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-    .employee-details-value{
-        font-size: 14px;
-        line-height: 21px;
-        color: #000;
-    }
-    .employee-email{
-        font-size: 14px;
-        line-height: 21px;
-        color: #0c59a2;
-        word-break: break-all;
-        margin: 0;
-    }
-    .employee-email:last-child{
-        margin: 0 0 10px;
-    }
-    .form-group label{
-        font-weight: 600;
-        color: #878;
-        margin: 0;
-    }
-    .col-md-9 hr{
-        margin: 0px;
-    }
-    .section-header h4 {
-        display: inline-block;
-    }
-    .section-subheading{
-        background: #5bc0de !important;
-    }
-    address{
-        margin-bottom: 10px;
-        white-space: pre-line;
-    }
+#view_profile .card-subtitle{
+    font-size: 12px;
+    color: #878;
+}
+.label-profile{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.employee-details-value{
+    font-size: 14px;
+    line-height: 21px;
+    color: #000;
+}
+.employee-email{
+    font-size: 14px;
+    line-height: 21px;
+    color: #0c59a2;
+    word-break: break-all;
+    margin: 0;
+}
+.employee-email:last-child{
+    margin: 0 0 10px;
+}
+.form-group label{
+    font-weight: 600;
+    color: #878;
+    margin: 0;
+}
+.col-md-9 hr{
+    margin: 0px;
+}
+.section-header h4 {
+    display: inline-block;
+}
+.section-subheading{
+    background: #5bc0de !important;
+}
+address{
+    margin-bottom: 10px;
+    white-space: pre-line;
+}
+@include('employee.style');
 </style>
 <div id="view_profile">
     <?php

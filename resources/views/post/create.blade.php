@@ -1,17 +1,25 @@
 @extends('layouts.main')
 @section('title')
-    Blog Posts | HR Progress > Create
+Blog Posts > HR Progress > Add Post
+@endsection
+@section('breadcrumb')
+Blog Posts <span>/</span> HR Progress <span>></span> Add Post
 @endsection
 @section('content')
 <style type="text/css">
-	img.preview{
-	    width: 100%;
-    	height: 100%;
-		float: left;
-	}
-	div.gallery{
-		display: inline-block;
-	}
+ol.breadcrumb li span{
+    display: inline-block;
+    color: #ccc;
+    padding: 0 5px;
+}
+img.preview{
+    width: 100%;
+	height: 100%;
+	float: left;
+}
+div.gallery{
+	display: inline-block;
+}
 </style>
 <div class="panel panel-default">
 	<div class="panel panel-heading">

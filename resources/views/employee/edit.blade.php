@@ -3,7 +3,7 @@
 Employee > Edit Employee Profile
 @endsection
 @section('breadcrumb')
-Employees > Update Employee > <?= $employee->fullname() ?>
+Employees <span>></span> Edit Employee Profile
 @endsection
 @section('content')
 <link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
@@ -78,6 +78,7 @@ Employees > Update Employee > <?= $employee->fullname() ?>
 #modalMovements #transferForm .select2{
     width: 100% !important;
 }
+@include('employee.style');
 </style>
 {{ Form::open(array('url' => 'employee_info/' . $employee->id,'files' => true ,'id' => 'edit_employee_form')) }}
 {{ Form::hidden('_method', 'PUT') }}

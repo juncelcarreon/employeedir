@@ -1,13 +1,13 @@
 @extends('layouts.main')
 @section('title')
-    Blog Posts | Activities
+Blog Posts > Activities
+@endsection
+@section('breadcrumb')
+Blog Posts <span>></span> Activities
 @endsection
 @section('content')
 <style type="text/css">
-    table >tbody> tr > td {
-        vertical-align: middle !important;
-        margin: auto;
-    }
+@include('activity.style');
 </style>
 <div class="panel panel-default">
     <div class="panel-heading">

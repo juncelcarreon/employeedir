@@ -3,7 +3,7 @@
 Linking Sessions > Goal Setting > Acknowledge Session
 @endsection
 @section('breadcrumb')
-Linking Sessions > Goal Setting > Acknowledge Session
+Linking Sessions <span>/</span> Goal Setting <span>></span> Acknowledge Session
 @endsection
 @section('content')
 <style>

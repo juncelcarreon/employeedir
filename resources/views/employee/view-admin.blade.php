@@ -3,7 +3,14 @@
 Employee > View Profile
 @endsection
 @section('breadcrumb')
-Employees > View Employee > <?= $employee->fullname() ?>
+<?php
+    if(empty($myprofile)) {
+        echo 'Employee <span>></span> View Profile';
+    } else {
+        echo 'My Profile';
+    }
+?>
+
 @endsection
 @section('content')
 <link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
@@ -50,6 +57,7 @@ Employees > View Employee > <?= $employee->fullname() ?>
     font-size: 12px;
     padding: 5px;
 }
+@include('employee.style');
 </style>
 {{ Form::open(array('url' => 'employee_info/' . $employee->id,'files' => true ,'id' => 'edit_employee_form')) }}
 {{ Form::hidden('_method', 'PUT') }}

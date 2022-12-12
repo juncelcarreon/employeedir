@@ -3,7 +3,7 @@
 Linking Sessions > Skills Development Activities > New Session
 @endsection
 @section('breadcrumb')
-Linking Sessions > Skills Development Activities > New Session
+Linking Sessions <span>/</span> Skills Development Activities <span>></span> New Session
 @endsection
 @section('content')
 <style>

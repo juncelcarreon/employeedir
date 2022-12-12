@@ -1,9 +1,9 @@
 @extends('layouts.main')
 @section('title')
-Linking Sessions > Pending
+Linking Sessions > Pending Sessions
 @endsection
 @section('breadcrumb')
-Linking Sessions > Pending Sessions
+Linking Sessions <span>></span> Pending Sessions
 @endsection
 @section('content')
 <style>

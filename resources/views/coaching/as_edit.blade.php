@@ -3,7 +3,7 @@
 Linking Sessions > Accountability Setting > Edit Session
 @endsection
 @section('breadcrumb')
-Linking Sessions > Accountability Setting > Edit Session
+Linking Sessions <span>/</span> Accountability Setting <span>></span> Edit Session
 @endsection
 @section('content')
 <style>

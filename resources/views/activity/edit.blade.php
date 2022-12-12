@@ -1,14 +1,13 @@
 @extends('layouts.main')
 @section('title')
-    Blog Posts | Activities > Edit
+Blog Posts > Activities > Edit Activity
+@endsection
+@section('breadcrumb')
+Blog Posts <span>/</span> Activities <span>></span> Edit Activity
 @endsection
 @section('content')
 <style type="text/css">
-    #img_holder{
-        width: 200px;
-        margin: 0 auto;
-        max-width: 100%;
-    }
+@include('activity.style');
 </style>
 <div class="panel panel-default">
     <div class="panel-heading">

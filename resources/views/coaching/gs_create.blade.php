@@ -3,7 +3,7 @@
 Linking Sessions > Goal Setting > New Session
 @endsection
 @section('breadcrumb')
-Linking Sessions > Goal Setting > New Session
+Linking Sessions <span>/</span> Goal Setting <span>></span> New Session
 @endsection
 @section('content')
 <style>

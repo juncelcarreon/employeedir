@@ -1,22 +1,13 @@
 @extends('layouts.main')
 @section('title')
-    Blog Posts | Events > <?= $event->event_name ?>
+Blog Posts > Events > <?= $event->event_name ?>
+@endsection
+@section('breadcrumb')
+Blog Posts <span>/</span> Events <span>></span> <?= $event->event_name ?>
 @endsection
 @section('content')
 <style>
-    table{
-        width: 100%;
-        margin: 10px;
-    }
-    table tr td {
-        border-bottom: 1px dashed #dadada;
-        font-size: 13px;
-        padding-top: 15px;
-        padding-bottom: 5px;
-    }
-    table tr td:nth-child(2){
-        font-weight: 600;
-    }
+@include('events.style');
 </style>
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -31,7 +22,7 @@
     <div class="panel-body timeline-container">
         <div class="row">
             <div class="col-md-12">
-                <table>
+                <table id="table-view">
                     <tr>
                         <td>Event Name</td>
                         <td><?= $event->event_name ?></td>

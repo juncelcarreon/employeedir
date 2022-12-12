@@ -1,25 +1,13 @@
 @extends('layouts.main')
 @section('title')
-    Blog Posts | Activities > Create
+Blog Posts > Activities > Add Activity
+@endsection
+@section('breadcrumb')
+Blog Posts <span>/</span> Activities <span>></span> Add Activity
 @endsection
 @section('content')
 <style type="text/css">
-    #division_id-error{
-        margin-top: 65px;
-        margin-left: -61px;
-        position: absolute;
-    }
-    label.error + span{
-        padding-bottom: 30px;
-    }
-    #account_id-error{
-        margin-left: -60px;
-    }
-    #img_holder{
-        width: 200px;
-        margin: 0 auto;
-        max-width: 100%;
-    }
+@include('activity.style');
 </style>
 <div class="panel panel-default">
     <div class="panel-heading">

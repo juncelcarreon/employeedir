@@ -1,16 +1,18 @@
 @extends('layouts.main')
 @section('title')
-    Blog Posts | Events > Create
+Blog Posts > Events > Add Event
+@endsection
+@section('breadcrumb')
+Blog Posts <span>/</span> Events <span>></span> Add Event
 @endsection
 @section('head')
     <link href="<?= asset('./css/spectrum.css') ?>" rel="stylesheet">
+
     <script src='<?= asset('./js/spectrum.js') ?>'></script>
 @endsection
 @section('content')
 <style>
-    .sp-picker-container{
-        display: none;
-    }
+@include('events.style');
 </style>
 <div class="panel panel-default">
     <div class="panel-heading">

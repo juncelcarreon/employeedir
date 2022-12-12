@@ -3,7 +3,7 @@
 Linking Sessions > Cementing Expectation > View Session
 @endsection
 @section('breadcrumb')
-Linking Sessions > Cementing Expectation > View Session
+Linking Sessions <span>/</span> Cementing Expectation <span>></span> View Session
 @endsection
 @section('content')
 <style>

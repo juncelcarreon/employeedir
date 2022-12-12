@@ -1,8 +1,16 @@
 @extends('layouts.main')
 @section('title')
-    Job Referrals
+Referrals
+@endsection
+@section('breadcrumb')
+Referrals
 @endsection
 @section('content')
+<style>
+td span{
+    display: none;
+}
+</style>
 <div class="panel panel-default">
     <div class="panel-heading">
         Job Referrals
@@ -34,7 +42,7 @@
                     <td><?= $referral->referral_contact_number ?></td>
                     <td><?= $referral->referral_email ?></td>
                     <td><?= $referral->getReferrerFullName() ?></td>
-                    <td><?= prettyDate($referral->created_at) ?></td>
+                    <td><span><?= strtotime($referral->created_at) ?></span> <?= prettyDate($referral->created_at) ?></td>
                     <td>
                         <a href="<?= url("referral/{$referral->id}") ?>">
                             <span class="fa fa-eye"></span>

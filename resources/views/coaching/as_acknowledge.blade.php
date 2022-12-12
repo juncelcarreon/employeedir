@@ -3,7 +3,7 @@
 Linking Sessions > Accountability Setting > Acknowledge Session
 @endsection
 @section('breadcrumb')
-Linking Sessions > Accountability Setting > Acknowledge Session
+Linking Sessions <span>/</span> Accountability Setting <span>></span> Acknowledge Session
 @endsection
 @section('content')
 <style>

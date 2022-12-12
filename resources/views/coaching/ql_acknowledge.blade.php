@@ -3,7 +3,7 @@
 Linking Sessions > Quick Link > Acknowledge Session
 @endsection
 @section('breadcrumb')
-Linking Sessions > Quick Link > Acknowledge Session
+Linking Sessions <span>/</span> Quick Link <span>></span> Acknowledge Session
 @endsection
 @section('content')
 <style>

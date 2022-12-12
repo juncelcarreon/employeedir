@@ -1,10 +1,18 @@
 @extends('layouts.main')
 @section('title')
-Employees > Separated Employees > Profile
+Employees > Separated Employees > View Profile
+@endsection
+@section('breadcrumb')
+Employees <span>/</span> Separated Employees <span>></span> View Profile
 @endsection
 @section('content')
 <link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
 <style type="text/css">
+ol.breadcrumb li span{
+    display: inline-block;
+    color: #ccc;
+    padding: 0 5px;
+}
 .emp-image{
     width: 150px;
     height: 150px;

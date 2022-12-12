@@ -3,7 +3,7 @@
 Linking Sessions > Skill Building > View Session
 @endsection
 @section('breadcrumb')
-Linking Sessions > Skill Building > View Session
+Linking Sessions <span>/</span> Skill Building <span>></span> View Session
 @endsection
 @section('content')
 <style>

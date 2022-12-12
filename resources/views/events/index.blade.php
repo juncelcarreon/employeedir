@@ -1,8 +1,14 @@
 @extends('layouts.main')
 @section('title')
-    Blog Posts | Events
+Blog Posts > Events
+@endsection
+@section('breadcrumb')
+Blog Posts <span>></span> Events
 @endsection
 @section('content')
+<style>
+@include('events.style');
+</style>
 <div class="panel panel-default">
     <div class="panel-heading">
         Events List

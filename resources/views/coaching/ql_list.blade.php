@@ -3,7 +3,7 @@
 Linking Sessions > Quick Link
 @endsection
 @section('breadcrumb')
-Linking Sessions > Quick Link > List
+Linking Sessions <span>/</span> Quick Link <span>></span> List
 @endsection
 @section('content')
 <style>

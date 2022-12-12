@@ -34,16 +34,18 @@ class CoachingController extends Controller
 
     private $active_user;
 
-    // public function __construct() {
-    //     $this->middleware(function($request, $next) {
-    //         if ($this->getActiveUser() != 2797) {
-    //             return redirect('maintenance');
-    //             exit;
-    //         } else {
-    //             return $next($request);
-    //         }
-    //     });
-    // }
+    public function mainCoaching(Request $req)
+    {
+        if($req->post("lnk_type") && $req->post("lnk_linkee")) {
+            return $this->processLinking($req);
+        } else {
+            if($this->isManagement()) {
+                return $this->viewManagement();
+            } else {
+                return $this->viewStaff();
+            }
+        }
+    }
 
     /* Management Pending */
     public function forAcknowledgement()
@@ -69,24 +71,21 @@ class CoachingController extends Controller
         return "No access for thisLink()";
     }
 
-    public function mainCoaching(Request $req)
-    {
-        if($req->post("lnk_type") && $req->post("lnk_linkee")) {
-            return $this->processLinking($req);
-        } else {
-            if($this->isManagement()) {
-                return $this->viewManagement($req);
-            } else {
-                return $this->viewStaff();
-            }
-        }
-    }
-
     public function downloadLinking()
     {
         $writesheet = new Spreadsheet();
         $writer = IOFactory::createWriter($writesheet, "Xlsx");
         $sheet = $writesheet->getActiveSheet();
+        // $sheet->getColumnDimensionByColumn('A')->setAutoSize(false);
+        $sheet->getColumnDimension('A')->setWidth('20');
+        $sheet->getColumnDimension('B')->setWidth('20');
+        $sheet->getColumnDimension('C')->setWidth('30');
+        $sheet->getColumnDimension('D')->setWidth('25');
+        $sheet->getColumnDimension('E')->setWidth('25');
+        $sheet->getColumnDimension('F')->setWidth('30');
+        $sheet->getColumnDimension('G')->setWidth('100');
+        $sheet->getColumnDimension('H')->setWidth('15');
+        $sheet->getColumnDimension('I')->setWidth('20');
         $i = 1;
         $header = array("Date", "Employee Number", "Linkee","Linking Type","Linker","Focus", "Comments","Status","Link");
         $sheet->fromArray([$header], NULL, 'A'.$i);
@@ -109,6 +108,10 @@ class CoachingController extends Controller
                 $lk->link
             ];
             $sheet->fromArray([$body], NULL, 'A'.$i); 
+            $sheet->setCellValue("I{$i}", $lk->link);
+            $sheet->getCell("I{$i}")->getHyperlink()->setUrl($lk->link);
+            $sheet->getStyle("I{$i}")->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLUE);
+            $sheet->getStyle("G{$i}")->getAlignment()->setWrapText(true);
             $i++;
         }
 
@@ -119,103 +122,6 @@ class CoachingController extends Controller
         $writer->setPreCalculateFormulas(false);
         $writer->setOffice2003Compatibility(true);
         $writer->save('php://output');
-    }
-
-    private function getActiveUser()
-    {
-        if(!$this->active_user) {
-            $this->active_user = Auth::user()->id;
-        }
-
-        return $this->active_user;
-    }
-
-    private function isManagement()
-    {
-        $id = $this->getActiveUser();
-        $linkees = Auth::user()->getLinkees();
-        $is_leader = DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id} OR `employee_info`.`supervisor_id`={$id})");
-
-        if (count($is_leader) > 0 || count($linkees) > 0) {
-            return 1;
-        }
-
-        return 0;
-    }
-
-    private function viewManagement($req)
-    {
-        $lt_types = DB::select("SELECT lt_id, lt_desc FROM linking_types WHERE lt_status = 1 ORDER BY lt_order ASC;");
-
-        $data['management'] = $this->isManagement();
-        $data['names'] = Auth::user()->getLinkees();
-        $data['new'] = 1;
-        $data['lt_types'] = $lt_types;
-
-        return view('coaching.supervisor', $data);
-    }
-
-    private function viewStaff()
-    {
-        $data['linking'] = LinkingMaster::getUnacknowledged(Auth::user()->id);
-        $data['management'] = $this->isManagement();
-        $data['pending_menu'] = 1;
-
-        return view('coaching.staff', $data);
-    }
-
-    private function processLinking($req)
-    {
-        $obj['lnk_date'] = $req->post("lnk_date");
-        $obj['lnk_linkee'] = $req->post("lnk_linkee");
-        $obj['lnk_linkee_name'] = $req->post("lnk_linkee_name");
-        $obj['lnk_linkee_email'] = $req->post("lnk_linkee_email");
-        $obj['lnk_linker'] = $req->post("lnk_linker");
-        $obj['sel_focus'] = LinkingFocus::where('fc_status', 1)->get();
-
-        $data['management'] = $this->isManagement();
-        $data['new'] = 1;
-        $data['obj'] = $obj;
-
-        switch(intval($req->post('lnk_type'))):
-            case 1: 
-                $data['history'] = QuickLink::getQL($req->lnk_linkee, 0, 1);
-
-                return view('coaching.ql_create', $data);
-            break;
-            case 2:
-                $data['history'] = CementingExpectations::getCE($req->lnk_linkee, 0, 1);
-
-                return view('coaching.ce_create', $data);
-            break;
-            case 3: 
-                $data['history'] = AccountabilitySession::getAS($req->lnk_linkee, 0, 1);
-
-                return view('coaching.as_create', $data);
-            break;
-            case 4: 
-                $data['history'] = SkillsDevelopment::getSDA($req->lnk_linkee, 0, 1);
-
-                return view('coaching.sda_create', $data);
-            break;
-            case 5:
-                $data['history'] = GettingToKnowYou::getGTKY($req->lnk_linkee, 0, 1);
-
-                return view('coaching.gtky_create', $data);
-            break;
-            case 6:
-                $data['history'] = SkillBuilding::getSB($req->lnk_linkee, 0, 1);
-
-                return view('coaching.sb_create', $data);
-            break;
-            case 7:
-                $data['history'] = GoalSetting::getGS($req->lnk_linkee, 0, 1);
-
-                return view('coaching.gs_create', $data);
-            break;
-
-            default: return "We Are Still Working In This Linking Session Type.";
-        endswitch;
     }
 
     /* Quick Links */
@@ -1139,4 +1045,103 @@ class CoachingController extends Controller
             return view('coaching.gs_view', $data);
         }
     /* End Goal Setting */
+
+    /* Private Functions */
+        private function getActiveUser()
+        {
+            if(!$this->active_user) {
+                $this->active_user = Auth::user()->id;
+            }
+
+            return $this->active_user;
+        }
+
+        private function isManagement()
+        {
+            $id = $this->getActiveUser();
+            $linkees = Auth::user()->getLinkees();
+            $is_leader = DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id} OR `employee_info`.`supervisor_id`={$id})");
+
+            if (count($is_leader) > 0 || count($linkees) > 0) {
+                return 1;
+            }
+
+            return 0;
+        }
+
+        private function viewManagement()
+        {
+            $data['management'] = $this->isManagement();
+            $data['names'] = Auth::user()->getLinkees();
+            $data['new'] = 1;
+            $data['lt_types'] = LinkingTypes::where('lt_status', 1)->orderBy('lt_order')->get();
+
+            return view('coaching.supervisor', $data);
+        }
+
+        private function viewStaff()
+        {
+            $data['linking'] = LinkingMaster::getUnacknowledged(Auth::user()->id);
+            $data['management'] = $this->isManagement();
+            $data['pending_menu'] = 1;
+
+            return view('coaching.staff', $data);
+        }
+
+        private function processLinking($req)
+        {
+            $obj['lnk_date'] = $req->post("lnk_date");
+            $obj['lnk_linkee'] = $req->post("lnk_linkee");
+            $obj['lnk_linkee_name'] = $req->post("lnk_linkee_name");
+            $obj['lnk_linkee_email'] = $req->post("lnk_linkee_email");
+            $obj['lnk_linker'] = $req->post("lnk_linker");
+            $obj['sel_focus'] = LinkingFocus::where('fc_status', 1)->get();
+
+            $data['management'] = $this->isManagement();
+            $data['new'] = 1;
+            $data['obj'] = $obj;
+
+            switch(intval($req->post('lnk_type'))) {
+                case 1: 
+                    $data['history'] = QuickLink::getQL($req->lnk_linkee, 0, 1);
+
+                    return view('coaching.ql_create', $data);
+                break;
+                case 2:
+                    $data['history'] = CementingExpectations::getCE($req->lnk_linkee, 0, 1);
+
+                    return view('coaching.ce_create', $data);
+                break;
+                case 3: 
+                    $data['history'] = AccountabilitySession::getAS($req->lnk_linkee, 0, 1);
+
+                    return view('coaching.as_create', $data);
+                break;
+                case 4: 
+                    $data['history'] = SkillsDevelopment::getSDA($req->lnk_linkee, 0, 1);
+
+                    return view('coaching.sda_create', $data);
+                break;
+                case 5:
+                    $data['history'] = GettingToKnowYou::getGTKY($req->lnk_linkee, 0, 1);
+
+                    return view('coaching.gtky_create', $data);
+                break;
+                case 6:
+                    $data['history'] = SkillBuilding::getSB($req->lnk_linkee, 0, 1);
+
+                    return view('coaching.sb_create', $data);
+                break;
+                case 7:
+                    $data['history'] = GoalSetting::getGS($req->lnk_linkee, 0, 1);
+
+                    return view('coaching.gs_create', $data);
+                break;
+
+                default: 
+                    return "We Are Still Working In This Linking Session Type.";
+                break;
+            }
+        }
+    /* End Private Functions */
 }

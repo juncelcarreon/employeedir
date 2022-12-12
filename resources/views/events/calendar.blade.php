@@ -1,6 +1,21 @@
 @extends('layouts.main')
 @section('title')
-    Blog Posts | Events > Calendar
+<?php
+    if(Auth::check() && Auth::user()->isAdmin()) {
+        echo 'Blog Posts > Events > Calendar';
+    } else {
+        echo 'Events Calendar';
+    }
+?>
+@endsection
+@section('breadcrumb')
+<?php
+    if(Auth::check() && Auth::user()->isAdmin()) {
+        echo 'Blog Posts <span>/</span> Events <span>></span> Calendar';
+    } else {
+        echo 'Events Calendar';
+    }
+?>
 @endsection
 @section('head')
     <link href='<?= asset('./css/fullcalendar/main.min.css') ?>' rel='stylesheet' />
@@ -16,23 +31,7 @@
 @endsection
 @section('content')
 <style>
-    #events_calendar{
-        width: 1000px;
-        margin: 0 auto;
-    }
-    .fc-scroller {
-        overflow-y: hidden !important;
-    }
-    .fc-view table{
-        background: white;
-    }
-    span.event-tooltip {
-        display: block;
-        background: #22222266;
-        border-radius: 5px;
-        padding: 6px;
-        position: absolute;
-    }
+@include('events.style');
 </style>
 <div class="row">
     <div class="col-md-12">

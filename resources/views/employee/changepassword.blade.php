@@ -3,13 +3,11 @@
 Employee > Change Password
 @endsection
 @section('breadcrumb')
-Employees > Change Password
+Employees <span>></span> Change Password
 @endsection
 @section('content')
 <style type="text/css">
-.form-group label{
-    color: #878;
-}
+@include('employee.style');
 </style>
 <div class="panel panel-primary">
     <div class="panel-heading">

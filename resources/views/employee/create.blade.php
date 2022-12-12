@@ -3,7 +3,7 @@
 Employee > Add Employee
 @endsection
 @section('breadcrumb')
-Employees > Add Employee
+Employees <span>></span> Add Employee
 @endsection
 @section('content') 
 <link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
@@ -16,11 +16,13 @@ Employees > Add Employee
     border-radius: 50%;
     margin: 30px auto 0;
 }
+
 .emp-image img{
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
+
 #bb{
     margin: 0 auto;
 }
@@ -53,6 +55,7 @@ pre{
     border-radius: 0px !important;
     margin-top: -3px;
 }
+@include('employee.style');
 </style>
 <br>
 <form id="create_employee_form" role="form" method="POST" action="{{ route('employee_info.store')}}" enctype="multipart/form-data">

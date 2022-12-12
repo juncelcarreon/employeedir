@@ -3,7 +3,7 @@
 Linking Sessions > Getting To Know You > View Session
 @endsection
 @section('breadcrumb')
-Linking Sessions > Getting To Know You > View Session
+Linking Sessions <span>/</span> Getting To Know You <span>></span> View Session
 @endsection
 @section('content')
 <style>
