@@ -4,19 +4,19 @@
 @endsection
 @section('content')
 <style>
-    .dates_info{
-        color: #000; 
-        border: none;
-        padding: 16px;
-        width: 160px;
-    }
-    th{
-        text-align: center; 
-        vertical-align: bottom;
-    }
-    .dtfc-fixed-left{
-        background-color: #fff !important;
-    }
+.dates_info{
+    color: #000; 
+    border: none;
+    padding: 16px;
+    width: 160px;
+}
+th{
+    text-align: center; 
+    vertical-align: bottom;
+}
+.dtfc-fixed-left{
+    background-color: #fff !important;
+}
 </style>
 <div class="panel panel-default">
     <div class="panel-heading">

@@ -236,294 +236,113 @@ class EmployeeInfoController extends Controller
 
 	public function downloadInactive(Request $request)
 	{
+		$styleArray = [
+			'font' => [
+				'bold' => true,
+				'size' => 14
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+			],
+			'borders' => [
+				'bottom' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '3a75fb',
+				],
+				'endColor' => [
+					'argb' => '3a75fb',
+				],
+			],
+		];
+
 		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 		$worksheet = $spreadsheet->getActiveSheet();
-		//$employees = User::allExceptSuperAdmin()->get();
 		$employees = $this->model->download_inactive($request);
-		$COUNT = 0;
-		$EID = 1;
-		$LAST_NAME = 2;
-		$FIRST_NAME = 3;
-		$MIDDLE_NAME = 4;
-		$FULLNAME = 5;
-		$ROLE = 6;
-		$SUPERVISOR = 7;
-		$MANAGER = 8;
-		$DIVISION = 9;
-		$DEPT = 10;
-		$DEPT_CODE = 11;
-		$ACCOUNT = 12;
-		$EXT = 13;
-		$ALIAS = 14;
-		$PROD_DATE = 15;
-		$STATUS = 16;
-		$HIRED_DATE = 17;
-		$WAVE = 18;
-		$EMAIL = 19;
-		$GENDER = 20;
-		$BDAY = 21;
-		$CITYADD = 22;
-		$HOMEADD = 23;
-		$CIVILSTAT = 24;
-		$CONTACTNUM = 25;
-		$INCASECON = 26;
-		$INCASEREL = 27;
-		$INCASERELCON = 28;
-		$INCASERELADD = 29;
-		$TIN = 30;
-		$SSS = 31;
-		$PHILHEALTH = 32;
-		$HMDF = 33;
-		$RESIGNATIONDATE = 34;
 
-		$worksheet->getCell(getNameFromNumber($COUNT + 1) . 1 )->setValue('Count'); 
-		$worksheet->getCell(getNameFromNumber($EID + 1) . 1 )->setValue('EID');
-		$worksheet->getCell(getNameFromNumber($LAST_NAME + 1) . 1 )->setValue('Last Name');
-		$worksheet->getCell(getNameFromNumber($FIRST_NAME + 1) . 1 )->setValue('First Name');
-		$worksheet->getCell(getNameFromNumber($MIDDLE_NAME + 1) . 1 )->setValue('Middle Name');
-		$worksheet->getCell(getNameFromNumber($FULLNAME + 1) . 1 )->setValue('Name');
-		$worksheet->getCell(getNameFromNumber($ROLE + 1) . 1 )->setValue('Role');
-		$worksheet->getCell(getNameFromNumber($SUPERVISOR + 1) . 1 )->setValue('Supervisor');
-		$worksheet->getCell(getNameFromNumber($MANAGER + 1) . 1 )->setValue('Manager');
-		$worksheet->getCell(getNameFromNumber($DIVISION + 1) . 1 )->setValue('Division');
-		$worksheet->getCell(getNameFromNumber($DEPT + 1) . 1 )->setValue('Dept');
-		$worksheet->getCell(getNameFromNumber($DEPT_CODE + 1) . 1 )->setValue('Dept Code');
-		$worksheet->getCell(getNameFromNumber($ACCOUNT + 1) . 1 )->setValue('Account');
-		$worksheet->getCell(getNameFromNumber($EXT + 1) . 1 )->setValue('EXT');
-		$worksheet->getCell(getNameFromNumber($ALIAS + 1) . 1 )->setValue('Phone/Pen Names');
-		$worksheet->getCell(getNameFromNumber($PROD_DATE + 1) . 1 )->setValue('Prod Date');
-		$worksheet->getCell(getNameFromNumber($STATUS + 1) . 1 )->setValue('Status');
-		$worksheet->getCell(getNameFromNumber($HIRED_DATE + 1) . 1 )->setValue('Hire Date');
-		$worksheet->getCell(getNameFromNumber($WAVE + 1) . 1 )->setValue('Wave');
-		$worksheet->getCell(getNameFromNumber($EMAIL + 1) . 1 )->setValue('Email');
-		$worksheet->getCell(getNameFromNumber($GENDER + 1 ) . 1 )->setValue('Gender');
-		$worksheet->getCell(getNameFromNumber($BDAY + 1) . 1 )->setValue('Bday');
-		$worksheet->getCell(getNameFromNumber($CITYADD + 1) . 1 )->setValue('City Address');
-		$worksheet->getCell(getNameFromNumber($HOMEADD + 1) . 1 )->setValue('Home Address');
-		$worksheet->getCell(getNameFromNumber($CIVILSTAT + 1) . 1 )->setValue('Civil Stat');
-		$worksheet->getCell(getNameFromNumber($CONTACTNUM + 1) . 1 )->setValue('Number');
-		$worksheet->getCell(getNameFromNumber($INCASECON + 1) . 1 )->setValue('Contact Person');
-		$worksheet->getCell(getNameFromNumber($INCASEREL + 1) . 1 )->setValue('Relationship');
-		$worksheet->getCell(getNameFromNumber($INCASERELCON + 1) . 1 )->setValue('Number');
-		$worksheet->getCell(getNameFromNumber($INCASERELADD + 1) . 1 )->setValue('Address');
-		$worksheet->getCell(getNameFromNumber($TIN + 1) . 1 )->setValue('TIN');
-		$worksheet->getCell(getNameFromNumber($SSS + 1) . 1 )->setValue('SSS');
-		$worksheet->getCell(getNameFromNumber($PHILHEALTH + 1) . 1 )->setValue('Philhealth');
-		$worksheet->getCell(getNameFromNumber($HMDF + 1) . 1 )->setValue('HMDF');
-		$worksheet->getCell(getNameFromNumber($RESIGNATIONDATE + 1) . 1 )->setValue('Resignation Date');
+		$worksheet->getStyle('A1:AI1')->applyFromArray($styleArray);
+		$worksheet->getStyle('A1:AI1')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
 
-		$worksheet->getColumnDimension(getNameFromNumber($COUNT + 1))->setWidth(7);
-		$worksheet->getColumnDimension(getNameFromNumber($EID + 1))->setWidth(20);
-		$worksheet->getColumnDimension(getNameFromNumber($EXT + 1))->setWidth(5);
-		$worksheet->getColumnDimension(getNameFromNumber($ALIAS + 1))->setWidth(30);
-		$worksheet->getColumnDimension(getNameFromNumber($LAST_NAME + 1))->setWidth(20);
-		$worksheet->getColumnDimension(getNameFromNumber($FIRST_NAME + 1))->setWidth(20);
-		$worksheet->getColumnDimension(getNameFromNumber($MIDDLE_NAME + 1))->setWidth(20);
-		$worksheet->getColumnDimension(getNameFromNumber($FULLNAME + 1))->setWidth(40);
-		$worksheet->getColumnDimension(getNameFromNumber($SUPERVISOR + 1))->setWidth(30);
-		$worksheet->getColumnDimension(getNameFromNumber($MANAGER + 1))->setWidth(30);
-		$worksheet->getColumnDimension(getNameFromNumber($DEPT + 1))->setWidth(25);
-		$worksheet->getColumnDimension(getNameFromNumber($DEPT_CODE + 1))->setWidth(15);
-		$worksheet->getColumnDimension(getNameFromNumber($DIVISION + 1))->setWidth(15);
-		$worksheet->getColumnDimension(getNameFromNumber($ROLE + 1))->setWidth(30);
-		$worksheet->getColumnDimension(getNameFromNumber($ACCOUNT + 1))->setWidth(15);
-		$worksheet->getColumnDimension(getNameFromNumber($PROD_DATE + 1))->setWidth(15);
-		$worksheet->getColumnDimension(getNameFromNumber($STATUS + 1))->setWidth(10);
-		$worksheet->getColumnDimension(getNameFromNumber($HIRED_DATE + 1))->setWidth(10);
-		$worksheet->getColumnDimension(getNameFromNumber($WAVE + 1))->setWidth(8);
-		$worksheet->getColumnDimension(getNameFromNumber($EMAIL + 1))->setWidth(30);
-		$worksheet->getColumnDimension(getNameFromNumber($GENDER + 1))->setWidth(10);
-		$worksheet->getColumnDimension(getNameFromNumber($BDAY + 1))->setWidth(10);
+		$worksheet->getCell('A1')->setValue('#'); 
+		$worksheet->getCell('B1')->setValue('EID');
+		$worksheet->getCell('C1')->setValue('Last Name');
+		$worksheet->getCell('D1')->setValue('First Name');
+		$worksheet->getCell('E1')->setValue('Middle Name');
+		$worksheet->getCell('F1')->setValue('Full Name');
+		$worksheet->getCell('G1')->setValue('Position');
+		$worksheet->getCell('H1')->setValue('Supervisor');
+		$worksheet->getCell('I1')->setValue('Manager');
+		$worksheet->getCell('J1')->setValue('Division');
+		$worksheet->getCell('K1')->setValue('Dept');
+		$worksheet->getCell('L1')->setValue('Dept Code');
+		$worksheet->getCell('M1')->setValue('Account');
+		$worksheet->getCell('N1')->setValue('EXT');
+		$worksheet->getCell('O1')->setValue('Phone/Pen Names');
+		$worksheet->getCell('P1')->setValue('Prod Date');
+		$worksheet->getCell('Q1')->setValue('Status');
+		$worksheet->getCell('R1')->setValue('Hire Date');
+		$worksheet->getCell('S1')->setValue('Wave');
+		$worksheet->getCell('T1')->setValue('Email');
+		$worksheet->getCell('U1')->setValue('Gender');
+		$worksheet->getCell('V1')->setValue('Birthday');
+		$worksheet->getCell('W1')->setValue('City Address');
+		$worksheet->getCell('X1')->setValue('Home Address');
+		$worksheet->getCell('Y1')->setValue('Civil Status');
+		$worksheet->getCell('Z1')->setValue('Number');
+		$worksheet->getCell('AA1')->setValue('Contact Person');
+		$worksheet->getCell('AB1')->setValue('Relationship');
+		$worksheet->getCell('AC1')->setValue('Contact Number');
+		$worksheet->getCell('AD1')->setValue('Address');
+		$worksheet->getCell('AE1')->setValue('TIN');
+		$worksheet->getCell('AF1')->setValue('SSS');
+		$worksheet->getCell('AG1')->setValue('Philhealth');
+		$worksheet->getCell('AH1')->setValue('HMDF');
+		$worksheet->getCell('AI1')->setValue('Resignation Date');
 
-		$row = 2;
-		foreach ($employees as $index => $value) {
-			$worksheet->getCell(getNameFromNumber($COUNT + 1) . $row )->setValue($row-1);
-			$worksheet->getCell(getNameFromNumber($EID + 1) . $row )->setValue($value->eid);
-			$worksheet->getCell(getNameFromNumber($LAST_NAME + 1) . $row )->setValue($value->last_name);
-			$worksheet->getCell(getNameFromNumber($FIRST_NAME + 1) . $row )->setValue($value->first_name);
-			$worksheet->getCell(getNameFromNumber($MIDDLE_NAME + 1) . $row )->setValue($value->middle_name);
-			$worksheet->getCell(getNameFromNumber($FULLNAME + 1) . $row )->setValue($value->first_name." ".$value->last_name);
-			$worksheet->getCell(getNameFromNumber($ROLE + 1) . $row )->setValue($value->position_name);
-			$worksheet->getCell(getNameFromNumber($SUPERVISOR + 1) . $row )->setValue($value->supervisor_name);
-			$worksheet->getCell(getNameFromNumber($MANAGER + 1) . $row )->setValue($value->manager_name);
-			$worksheet->getCell(getNameFromNumber($DIVISION + 1) . $row )->setValue($value->division_name);
-			$worksheet->getCell(getNameFromNumber($DEPT + 1) . $row )->setValue($value->team_name);
-			$worksheet->getCell(getNameFromNumber($DEPT_CODE + 1) . $row )->setValue($value->dept_code);
+		$worksheet->getColumnDimension('A')->setWidth('10');
+		$worksheet->getColumnDimension('B')->setWidth('20');
+		$worksheet->getColumnDimension('C')->setWidth('20');
+		$worksheet->getColumnDimension('D')->setWidth('20');
+		$worksheet->getColumnDimension('E')->setWidth('20');
+		$worksheet->getColumnDimension('F')->setWidth('40');
+		$worksheet->getColumnDimension('G')->setWidth('30');
+		$worksheet->getColumnDimension('H')->setWidth('30');
+		$worksheet->getColumnDimension('I')->setWidth('30');
+		$worksheet->getColumnDimension('J')->setWidth('20');
+		$worksheet->getColumnDimension('K')->setWidth('40');
+		$worksheet->getColumnDimension('L')->setWidth('20');
+		$worksheet->getColumnDimension('M')->setWidth('30');
+		$worksheet->getColumnDimension('N')->setWidth('10');
+		$worksheet->getColumnDimension('O')->setWidth('30');
+		$worksheet->getColumnDimension('P')->setWidth('20');
+		$worksheet->getColumnDimension('Q')->setWidth('10');
+		$worksheet->getColumnDimension('R')->setWidth('20');
+		$worksheet->getColumnDimension('S')->setWidth('10');
+		$worksheet->getColumnDimension('T')->setWidth('30');
+		$worksheet->getColumnDimension('U')->setWidth('10');
+		$worksheet->getColumnDimension('V')->setWidth('20');
+		$worksheet->getColumnDimension('W')->setWidth('100');
+		$worksheet->getColumnDimension('X')->setWidth('100');
+		$worksheet->getColumnDimension('Y')->setWidth('15');
+		$worksheet->getColumnDimension('Z')->setWidth('20');
+		$worksheet->getColumnDimension('AA')->setWidth('40');
+		$worksheet->getColumnDimension('AB')->setWidth('20');
+		$worksheet->getColumnDimension('AC')->setWidth('30');
+		$worksheet->getColumnDimension('AD')->setWidth('100');
+		$worksheet->getColumnDimension('AE')->setWidth('20');
+		$worksheet->getColumnDimension('AF')->setWidth('20');
+		$worksheet->getColumnDimension('AG')->setWidth('20');
+		$worksheet->getColumnDimension('AH')->setWidth('20');
+		$worksheet->getColumnDimension('AI')->setWidth('25');
 
+		$i = 2;
+		foreach ($employees as $key=>$value) {
 			$account = ElinkAccount::find($value->account_id);
-			if ($account) {
-				$worksheet->getCell(getNameFromNumber($ACCOUNT + 1) . $row )->setValue($account->account_name);
-			}
-
-			$civil_status = 'Divorced';
-			switch($value->civil_status) {
-				case 1:
-				$civil_status = 'Single';
-					break;
-				case 2:
-				$civil_status = 'Married';
-					break;
-				case 3:
-				$civil_status = 'Separated';
-					break;
-				case 4:
-				$civil_status = 'Anulled';
-					break;
-			}
-
-			$worksheet->getCell(getNameFromNumber($EXT + 1) . $row )->setValue($value->ext);
-			$worksheet->getCell(getNameFromNumber($ALIAS + 1) . $row )->setValue($value->alias);
-			$worksheet->getCell(getNameFromNumber($PROD_DATE + 1) . $row )->setValue(date("F d, Y", strtotime($value->prod_date)));
-			$worksheet->getCell(getNameFromNumber($STATUS + 1) . $row )->setValue($value->deleted_at == NULL && $value->status == 1 ? 'Active' : 'Inactive');
-			$worksheet->getCell(getNameFromNumber($HIRED_DATE + 1) . $row )->setValue(date("F d, Y", strtotime($value->hired_date)));
-			$worksheet->getCell(getNameFromNumber($WAVE + 1) . $row )->setValue($value->wave);
-			$worksheet->getCell(getNameFromNumber($EMAIL + 1) . $row )->setValue($value->email);
-			$worksheet->getCell(getNameFromNumber($GENDER + 1) . $row )->setValue(genderStringValue($value->gender));
-			$worksheet->getCell(getNameFromNumber($BDAY + 1) . $row )->setValue(date("F d, Y", strtotime($value->birth_date)));
-			$worksheet->getCell(getNameFromNumber($CITYADD + 1) . $row )->setValue($value->address);
-			$worksheet->getCell(getNameFromNumber($HOMEADD + 1) . $row )->setValue($value->town_address);
-			$worksheet->getCell(getNameFromNumber($CIVILSTAT + 1) . $row )->setValue($civil_status);
-			$worksheet->getCell(getNameFromNumber($CONTACTNUM + 1) . $row )->setValue($value->contact_number);
-			$worksheet->getCell(getNameFromNumber($INCASECON + 1) . $row )->setValue($value->em_con_name);
-			$worksheet->getCell(getNameFromNumber($INCASEREL + 1) . $row )->setValue($value->em_con_rel);
-			$worksheet->getCell(getNameFromNumber($INCASERELCON + 1) . $row )->setValue($value->em_con_num);
-			$worksheet->getCell(getNameFromNumber($INCASERELADD + 1) . $row )->setValue($value->em_con_address);
-			$worksheet->getCell(getNameFromNumber($TIN + 1) . $row )->setValue($value->tin);
-			$worksheet->getCell(getNameFromNumber($SSS + 1) . $row )->setValue($value->sss);
-			$worksheet->getCell(getNameFromNumber($PHILHEALTH + 1) . $row )->setValue($value->philhealth);
-			$worksheet->getCell(getNameFromNumber($HMDF + 1) . $row )->setValue($value->pagibig);
-			$worksheet->getCell(getNameFromNumber($RESIGNATIONDATE + 1) . $row )->setValue($value->deleted_at);
-
-		$row++;
-		}
-
-		$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
-		$timestamp = date('m_d_Y_G_i');
-		$writer->save("./public/excel/report/inactives-". $timestamp . ".xlsx");
-
-		$file_name = 'inactives-'.$timestamp.'.xlsx';
-
-		return redirect('public/excel/report/' . $file_name);
-	}
-
-	public function downloadFilter(Request $request)
-	{
-		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-		$worksheet = $spreadsheet->getActiveSheet();
-		$employees = $this->model->download_filter($request);
-		$COUNT = 0;
-		$EID = 1;
-		$LAST_NAME = 2;
-		$FIRST_NAME = 3;
-		$MIDDLE_NAME = 4;
-		$FULLNAME = 5;
-		$ROLE = 6;
-		$SUPERVISOR = 7;
-		$MANAGER = 8;
-		$DIVISION = 9;
-		$DEPT = 10;
-		$DEPT_CODE = 11;
-		$ACCOUNT = 12;
-		$EXT = 13;
-		$ALIAS = 14;
-		$PROD_DATE = 15;
-		$STATUS = 16;
-		$HIRED_DATE = 17;
-		$WAVE = 18;
-		$EMAIL = 19;
-		$GENDER = 20;
-		$BDAY = 21;
-		$CITYADD = 22;
-		$HOMEADD = 23;
-		$CIVILSTAT = 24;
-		$CONTACTNUM = 25;
-		$INCASECON = 26;
-		$INCASEREL = 27;
-		$INCASERELCON = 28;
-		$INCASERELADD = 29;
-		$TIN = 30;
-		$SSS = 31;
-		$PHILHEALTH = 32;
-		$HMDF = 33;
-
-		$worksheet->getCell(getNameFromNumber($COUNT + 1) . 1 )->setValue('Count'); 
-		$worksheet->getCell(getNameFromNumber($EID + 1) . 1 )->setValue('EID');
-		$worksheet->getCell(getNameFromNumber($LAST_NAME + 1) . 1 )->setValue('Last Name');
-		$worksheet->getCell(getNameFromNumber($FIRST_NAME + 1) . 1 )->setValue('First Name');
-		$worksheet->getCell(getNameFromNumber($MIDDLE_NAME + 1) . 1 )->setValue('Middle Name');
-		$worksheet->getCell(getNameFromNumber($FULLNAME + 1) . 1 )->setValue('Name');
-		$worksheet->getCell(getNameFromNumber($ROLE + 1) . 1 )->setValue('Role');
-		$worksheet->getCell(getNameFromNumber($SUPERVISOR + 1) . 1 )->setValue('Supervisor');
-		$worksheet->getCell(getNameFromNumber($MANAGER + 1) . 1 )->setValue('Manager');
-		$worksheet->getCell(getNameFromNumber($DIVISION + 1) . 1 )->setValue('Division');
-		$worksheet->getCell(getNameFromNumber($DEPT + 1) . 1 )->setValue('Dept');
-		$worksheet->getCell(getNameFromNumber($DEPT_CODE + 1) . 1 )->setValue('Dept Code');
-		$worksheet->getCell(getNameFromNumber($ACCOUNT + 1) . 1 )->setValue('Account');
-		$worksheet->getCell(getNameFromNumber($EXT + 1) . 1 )->setValue('EXT');
-		$worksheet->getCell(getNameFromNumber($ALIAS + 1) . 1 )->setValue('Phone/Pen Names');
-		$worksheet->getCell(getNameFromNumber($PROD_DATE + 1) . 1 )->setValue('Prod Date');
-		$worksheet->getCell(getNameFromNumber($STATUS + 1) . 1 )->setValue('Status');
-		$worksheet->getCell(getNameFromNumber($HIRED_DATE + 1) . 1 )->setValue('Hire Date');
-		$worksheet->getCell(getNameFromNumber($WAVE + 1) . 1 )->setValue('Wave');
-		$worksheet->getCell(getNameFromNumber($EMAIL + 1) . 1 )->setValue('Email');
-		$worksheet->getCell(getNameFromNumber($GENDER + 1 ) . 1 )->setValue('Gender');
-		$worksheet->getCell(getNameFromNumber($BDAY + 1) . 1 )->setValue('Bday');
-		$worksheet->getCell(getNameFromNumber($CITYADD + 1) . 1 )->setValue('City Address');
-		$worksheet->getCell(getNameFromNumber($HOMEADD + 1) . 1 )->setValue('Home Address');
-		$worksheet->getCell(getNameFromNumber($CIVILSTAT + 1) . 1 )->setValue('Civil Stat');
-		$worksheet->getCell(getNameFromNumber($CONTACTNUM + 1) . 1 )->setValue('Number');
-		$worksheet->getCell(getNameFromNumber($INCASECON + 1) . 1 )->setValue('Contact Person');
-		$worksheet->getCell(getNameFromNumber($INCASEREL + 1) . 1 )->setValue('Relationship');
-		$worksheet->getCell(getNameFromNumber($INCASERELCON + 1) . 1 )->setValue('Number');
-		$worksheet->getCell(getNameFromNumber($INCASERELADD + 1) . 1 )->setValue('Address');
-		$worksheet->getCell(getNameFromNumber($TIN + 1) . 1 )->setValue('TIN');
-		$worksheet->getCell(getNameFromNumber($SSS + 1) . 1 )->setValue('SSS');
-		$worksheet->getCell(getNameFromNumber($PHILHEALTH + 1) . 1 )->setValue('Philhealth');
-		$worksheet->getCell(getNameFromNumber($HMDF + 1) . 1 )->setValue('HMDF');
-
-		$worksheet->getColumnDimension(getNameFromNumber($COUNT + 1))->setWidth(7);
-		$worksheet->getColumnDimension(getNameFromNumber($EID + 1))->setWidth(20);
-		$worksheet->getColumnDimension(getNameFromNumber($EXT + 1))->setWidth(5);
-		$worksheet->getColumnDimension(getNameFromNumber($ALIAS + 1))->setWidth(30);
-		$worksheet->getColumnDimension(getNameFromNumber($LAST_NAME + 1))->setWidth(20);
-		$worksheet->getColumnDimension(getNameFromNumber($FIRST_NAME + 1))->setWidth(20);
-		$worksheet->getColumnDimension(getNameFromNumber($MIDDLE_NAME + 1))->setWidth(20);
-		$worksheet->getColumnDimension(getNameFromNumber($FULLNAME + 1))->setWidth(40);
-		$worksheet->getColumnDimension(getNameFromNumber($SUPERVISOR + 1))->setWidth(30);
-		$worksheet->getColumnDimension(getNameFromNumber($MANAGER + 1))->setWidth(30);
-		$worksheet->getColumnDimension(getNameFromNumber($DEPT + 1))->setWidth(25);
-		$worksheet->getColumnDimension(getNameFromNumber($DEPT_CODE + 1))->setWidth(15);
-		$worksheet->getColumnDimension(getNameFromNumber($DIVISION + 1))->setWidth(15);
-		$worksheet->getColumnDimension(getNameFromNumber($ROLE + 1))->setWidth(30);
-		$worksheet->getColumnDimension(getNameFromNumber($ACCOUNT + 1))->setWidth(15);
-		$worksheet->getColumnDimension(getNameFromNumber($PROD_DATE + 1))->setWidth(15);
-		$worksheet->getColumnDimension(getNameFromNumber($STATUS + 1))->setWidth(10);
-		$worksheet->getColumnDimension(getNameFromNumber($HIRED_DATE + 1))->setWidth(10);
-		$worksheet->getColumnDimension(getNameFromNumber($WAVE + 1))->setWidth(8);
-		$worksheet->getColumnDimension(getNameFromNumber($EMAIL + 1))->setWidth(30);
-		$worksheet->getColumnDimension(getNameFromNumber($GENDER + 1))->setWidth(10);
-		$worksheet->getColumnDimension(getNameFromNumber($BDAY + 1))->setWidth(10);
-
-		$row = 2;
-		foreach ($employees as $index => $value) {
-			$worksheet->getCell(getNameFromNumber($COUNT + 1) . $row )->setValue($row-1);
-			$worksheet->getCell(getNameFromNumber($EID + 1) . $row )->setValue($value->eid);
-			$worksheet->getCell(getNameFromNumber($LAST_NAME + 1) . $row )->setValue($value->last_name);
-			$worksheet->getCell(getNameFromNumber($FIRST_NAME + 1) . $row )->setValue($value->first_name);
-			$worksheet->getCell(getNameFromNumber($MIDDLE_NAME + 1) . $row )->setValue($value->middle_name);
-			$worksheet->getCell(getNameFromNumber($FULLNAME + 1) . $row )->setValue($value->first_name." ".$value->last_name);
-			$worksheet->getCell(getNameFromNumber($ROLE + 1) . $row )->setValue($value->position_name);
-			$worksheet->getCell(getNameFromNumber($SUPERVISOR + 1) . $row )->setValue($value->supervisor_name);
-			$worksheet->getCell(getNameFromNumber($MANAGER + 1) . $row )->setValue($value->manager_name);
-			$worksheet->getCell(getNameFromNumber($DIVISION + 1) . $row )->setValue($value->division_name);
-			$worksheet->getCell(getNameFromNumber($DEPT + 1) . $row )->setValue($value->team_name);
-			$worksheet->getCell(getNameFromNumber($DEPT_CODE + 1) . $row )->setValue($value->dept_code);
-
-			$account = ElinkAccount::find($value->account_id);
-			if ($account) {
-				$worksheet->getCell(getNameFromNumber($ACCOUNT + 1) . $row )->setValue($account->account_name);
-			}
-
 			$civil_status = 'Divorced';
 			switch($value->civil_status) {
 				case 1:
@@ -540,38 +359,226 @@ class EmployeeInfoController extends Controller
 				break;
 			}
 
-			$worksheet->getCell(getNameFromNumber($EXT + 1) . $row )->setValue($value->ext);
-			$worksheet->getCell(getNameFromNumber($ALIAS + 1) . $row )->setValue($value->alias);
-			$worksheet->getCell(getNameFromNumber($PROD_DATE + 1) . $row )->setValue(date("F d, Y", strtotime($value->prod_date)));
-			$worksheet->getCell(getNameFromNumber($STATUS + 1) . $row )->setValue($value->deleted_at == NULL && $value->status == 1 ? 'Active' : 'Inactive');
-			$worksheet->getCell(getNameFromNumber($HIRED_DATE + 1) . $row )->setValue(date("F d, Y", strtotime($value->hired_date)));
-			$worksheet->getCell(getNameFromNumber($WAVE + 1) . $row )->setValue($value->wave);
-			$worksheet->getCell(getNameFromNumber($EMAIL + 1) . $row )->setValue($value->email);
-			$worksheet->getCell(getNameFromNumber($GENDER + 1) . $row )->setValue(genderStringValue($value->gender));
-			$worksheet->getCell(getNameFromNumber($BDAY + 1) . $row )->setValue(date("F d, Y", strtotime($value->birth_date)));
-			$worksheet->getCell(getNameFromNumber($CITYADD + 1) . $row )->setValue($value->address);
-			$worksheet->getCell(getNameFromNumber($HOMEADD + 1) . $row )->setValue($value->town_address);
-			$worksheet->getCell(getNameFromNumber($CIVILSTAT + 1) . $row )->setValue($civil_status);
-			$worksheet->getCell(getNameFromNumber($CONTACTNUM + 1) . $row )->setValue($value->contact_number);
-			$worksheet->getCell(getNameFromNumber($INCASECON + 1) . $row )->setValue($value->em_con_name);
-			$worksheet->getCell(getNameFromNumber($INCASEREL + 1) . $row )->setValue($value->em_con_rel);
-			$worksheet->getCell(getNameFromNumber($INCASERELCON + 1) . $row )->setValue($value->em_con_num);
-			$worksheet->getCell(getNameFromNumber($INCASERELADD + 1) . $row )->setValue($value->em_con_address);
-			$worksheet->getCell(getNameFromNumber($TIN + 1) . $row )->setValue($value->tin);
-			$worksheet->getCell(getNameFromNumber($SSS + 1) . $row )->setValue($value->sss);
-			$worksheet->getCell(getNameFromNumber($PHILHEALTH + 1) . $row )->setValue($value->philhealth);
-			$worksheet->getCell(getNameFromNumber($HMDF + 1) . $row )->setValue($value->pagibig);
+			$worksheet->getCell("A{$i}")->setValue(++$key);
+			$worksheet->getCell("B{$i}")->setValue($value->eid);
+			$worksheet->getCell("C{$i}")->setValue($value->last_name);
+			$worksheet->getCell("D{$i}")->setValue($value->first_name);
+			$worksheet->getCell("E{$i}")->setValue($value->middle_name);
+			$worksheet->getCell("F{$i}")->setValue($value->first_name." ".$value->last_name);
+			$worksheet->getCell("G{$i}")->setValue($value->position_name);
+			$worksheet->getCell("H{$i}")->setValue($value->supervisor_name);
+			$worksheet->getCell("I{$i}")->setValue($value->manager_name);
+			$worksheet->getCell("J{$i}")->setValue($value->division_name);
+			$worksheet->getCell("K{$i}")->setValue($value->team_name);
+			$worksheet->getCell("L{$i}")->setValue($value->dept_code);
+			if ($account) {
+				$worksheet->getCell("M{$i}")->setValue($account->account_name);
+			}
+			$worksheet->getCell("N{$i}")->setValue($value->ext);
+			$worksheet->getCell("O{$i}")->setValue($value->alias);
+			$worksheet->getCell("P{$i}")->setValue(date("F d, Y", strtotime($value->prod_date)));
+			$worksheet->getCell("Q{$i}")->setValue($value->deleted_at == NULL && $value->status == 1 ? 'Active' : 'Inactive');
+			$worksheet->getCell("R{$i}")->setValue(date("F d, Y", strtotime($value->hired_date)));
+			$worksheet->getCell("S{$i}")->setValue($value->wave);
+			$worksheet->getCell("T{$i}")->setValue($value->email);
+			$worksheet->getCell("U{$i}")->setValue(genderStringValue($value->gender));
+			$worksheet->getCell("V{$i}")->setValue(date("F d, Y", strtotime($value->birth_date)));
+			$worksheet->getCell("W{$i}")->setValue($value->address);
+			$worksheet->getCell("X{$i}")->setValue($value->town_address);
+			$worksheet->getCell("Y{$i}")->setValue($civil_status);
+			$worksheet->getCell("Z{$i}")->setValue($value->contact_number);
+			$worksheet->getCell("AA{$i}")->setValue($value->em_con_name);
+			$worksheet->getCell("AB{$i}")->setValue($value->em_con_rel);
+			$worksheet->getCell("AC{$i}")->setValue($value->em_con_num);
+			$worksheet->getCell("AD{$i}")->setValue($value->em_con_address);
+			$worksheet->getCell("AE{$i}")->setValue($value->tin);
+			$worksheet->getCell("AF{$i}")->setValue($value->sss);
+			$worksheet->getCell("AG{$i}")->setValue($value->philhealth);
+			$worksheet->getCell("AH{$i}")->setValue($value->pagibig);
+			$worksheet->getCell("AI{$i}")->setValue(date("F d, Y", strtotime($value->deleted_at)));
 
-		$row++;
+		$i++;
 		}
 
 		$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
 		$timestamp = date('m_d_Y_G_i');
-		$writer->save("./public/excel/report/report". $timestamp . ".xlsx");
+		$writer->save("./excel/report/inactives-". $timestamp . ".xlsx");
+
+		$file_name = 'inactives-'.$timestamp.'.xlsx';
+
+		return redirect('./excel/report/' . $file_name);
+	}
+
+	public function downloadFilter(Request $request)
+	{
+		$styleArray = [
+			'font' => [
+				'bold' => true,
+				'size' => 14
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+			],
+			'borders' => [
+				'bottom' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '3a75fb',
+				],
+				'endColor' => [
+					'argb' => '3a75fb',
+				],
+			],
+		];
+
+		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+		$worksheet = $spreadsheet->getActiveSheet();
+		$employees = $this->model->download_filter($request);
+
+		$worksheet->getStyle('A1:AH1')->applyFromArray($styleArray);
+		$worksheet->getStyle('A1:AH1')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
+
+		$worksheet->getCell('A1')->setValue('#'); 
+		$worksheet->getCell('B1')->setValue('EID');
+		$worksheet->getCell('C1')->setValue('Last Name');
+		$worksheet->getCell('D1')->setValue('First Name');
+		$worksheet->getCell('E1')->setValue('Middle Name');
+		$worksheet->getCell('F1')->setValue('Full Name');
+		$worksheet->getCell('G1')->setValue('Position');
+		$worksheet->getCell('H1')->setValue('Supervisor');
+		$worksheet->getCell('I1')->setValue('Manager');
+		$worksheet->getCell('J1')->setValue('Division');
+		$worksheet->getCell('K1')->setValue('Dept');
+		$worksheet->getCell('L1')->setValue('Dept Code');
+		$worksheet->getCell('M1')->setValue('Account');
+		$worksheet->getCell('N1')->setValue('EXT');
+		$worksheet->getCell('O1')->setValue('Phone/Pen Names');
+		$worksheet->getCell('P1')->setValue('Prod Date');
+		$worksheet->getCell('Q1')->setValue('Status');
+		$worksheet->getCell('R1')->setValue('Hire Date');
+		$worksheet->getCell('S1')->setValue('Wave');
+		$worksheet->getCell('T1')->setValue('Email');
+		$worksheet->getCell('U1')->setValue('Gender');
+		$worksheet->getCell('V1')->setValue('Birthday');
+		$worksheet->getCell('W1')->setValue('City Address');
+		$worksheet->getCell('X1')->setValue('Home Address');
+		$worksheet->getCell('Y1')->setValue('Civil Status');
+		$worksheet->getCell('Z1')->setValue('Number');
+		$worksheet->getCell('AA1')->setValue('Contact Person');
+		$worksheet->getCell('AB1')->setValue('Relationship');
+		$worksheet->getCell('AC1')->setValue('Contact Number');
+		$worksheet->getCell('AD1')->setValue('Address');
+		$worksheet->getCell('AE1')->setValue('TIN');
+		$worksheet->getCell('AF1')->setValue('SSS');
+		$worksheet->getCell('AG1')->setValue('Philhealth');
+		$worksheet->getCell('AH1')->setValue('HMDF');
+
+		$worksheet->getColumnDimension('A')->setWidth('10');
+		$worksheet->getColumnDimension('B')->setWidth('20');
+		$worksheet->getColumnDimension('C')->setWidth('20');
+		$worksheet->getColumnDimension('D')->setWidth('20');
+		$worksheet->getColumnDimension('E')->setWidth('20');
+		$worksheet->getColumnDimension('F')->setWidth('40');
+		$worksheet->getColumnDimension('G')->setWidth('30');
+		$worksheet->getColumnDimension('H')->setWidth('30');
+		$worksheet->getColumnDimension('I')->setWidth('30');
+		$worksheet->getColumnDimension('J')->setWidth('20');
+		$worksheet->getColumnDimension('K')->setWidth('40');
+		$worksheet->getColumnDimension('L')->setWidth('20');
+		$worksheet->getColumnDimension('M')->setWidth('30');
+		$worksheet->getColumnDimension('N')->setWidth('10');
+		$worksheet->getColumnDimension('O')->setWidth('30');
+		$worksheet->getColumnDimension('P')->setWidth('20');
+		$worksheet->getColumnDimension('Q')->setWidth('10');
+		$worksheet->getColumnDimension('R')->setWidth('20');
+		$worksheet->getColumnDimension('S')->setWidth('10');
+		$worksheet->getColumnDimension('T')->setWidth('30');
+		$worksheet->getColumnDimension('U')->setWidth('10');
+		$worksheet->getColumnDimension('V')->setWidth('20');
+		$worksheet->getColumnDimension('W')->setWidth('100');
+		$worksheet->getColumnDimension('X')->setWidth('100');
+		$worksheet->getColumnDimension('Y')->setWidth('15');
+		$worksheet->getColumnDimension('Z')->setWidth('20');
+		$worksheet->getColumnDimension('AA')->setWidth('40');
+		$worksheet->getColumnDimension('AB')->setWidth('20');
+		$worksheet->getColumnDimension('AC')->setWidth('30');
+		$worksheet->getColumnDimension('AD')->setWidth('100');
+		$worksheet->getColumnDimension('AE')->setWidth('20');
+		$worksheet->getColumnDimension('AF')->setWidth('20');
+		$worksheet->getColumnDimension('AG')->setWidth('20');
+		$worksheet->getColumnDimension('AH')->setWidth('20');
+
+		$i = 2;
+		foreach($employees as $key=>$value){
+			$account = ElinkAccount::find($value->account_id);
+			$civil_status = 'Divorced';
+			switch($value->civil_status){
+				case 1:
+					$civil_status = 'Single';
+				break;
+				case 2:
+					$civil_status = 'Married';
+				break;
+				case 3:
+					$civil_status = 'Separated';
+				break;
+				case 4:
+					$civil_status = 'Anulled';
+				break;
+			}
+
+			$worksheet->getCell("A{$i}")->setValue(++$key);
+			$worksheet->getCell("B{$i}")->setValue($value->eid);
+			$worksheet->getCell("C{$i}")->setValue($value->last_name);
+			$worksheet->getCell("D{$i}")->setValue($value->first_name);
+			$worksheet->getCell("E{$i}")->setValue($value->middle_name);
+			$worksheet->getCell("F{$i}")->setValue($value->first_name." ".$value->last_name);
+			$worksheet->getCell("G{$i}")->setValue($value->position_name);
+			$worksheet->getCell("H{$i}")->setValue($value->supervisor_name);
+			$worksheet->getCell("I{$i}")->setValue($value->manager_name);
+			$worksheet->getCell("J{$i}")->setValue($value->division_name);
+			$worksheet->getCell("K{$i}")->setValue($value->team_name);
+			$worksheet->getCell("L{$i}")->setValue($value->dept_code);
+			if($account){
+				$worksheet->getCell("M{$i}")->setValue($account->account_name);
+			}
+			$worksheet->getCell("N{$i}")->setValue($value->ext);
+			$worksheet->getCell("O{$i}")->setValue($value->alias);
+			$worksheet->getCell("P{$i}")->setValue(date("F d, Y", strtotime($value->prod_date)));
+			$worksheet->getCell("Q{$i}")->setValue($value->deleted_at == NULL && $value->status == 1 ? 'Active' : 'Inactive');
+			$worksheet->getCell("R{$i}")->setValue(date("F d, Y", strtotime($value->hired_date)));
+			$worksheet->getCell("S{$i}")->setValue($value->wave);
+			$worksheet->getCell("T{$i}")->setValue($value->email);
+			$worksheet->getCell("U{$i}")->setValue(genderStringValue($value->gender));
+			$worksheet->getCell("V{$i}")->setValue(date("F d, Y", strtotime($value->birth_date)));
+			$worksheet->getCell("W{$i}")->setValue($value->address);
+			$worksheet->getCell("X{$i}")->setValue($value->town_address);
+			$worksheet->getCell("Y{$i}")->setValue($civil_status);
+			$worksheet->getCell("Z{$i}")->setValue($value->contact_number);
+			$worksheet->getCell("AA{$i}")->setValue($value->em_con_name);
+			$worksheet->getCell("AB{$i}")->setValue($value->em_con_rel);
+			$worksheet->getCell("AC{$i}")->setValue($value->em_con_num);
+			$worksheet->getCell("AD{$i}")->setValue($value->em_con_address);
+			$worksheet->getCell("AE{$i}")->setValue($value->tin);
+			$worksheet->getCell("AF{$i}")->setValue($value->sss);
+			$worksheet->getCell("AG{$i}")->setValue($value->philhealth);
+			$worksheet->getCell("AH{$i}")->setValue($value->pagibig);
+
+		$i++;
+		}
+
+		$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+		$timestamp = date('m_d_Y_G_i');
+		$writer->save("./excel/report/report". $timestamp . ".xlsx");
 
 		$file_name = 'report'.$timestamp.'.xlsx';
 
-		return redirect('public/excel/report/' . $file_name);
+		return redirect('./excel/report/' . $file_name);
 	}
 
 	public function profile(Request $request, $id)

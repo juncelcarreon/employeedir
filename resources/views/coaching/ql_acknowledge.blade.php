@@ -25,7 +25,7 @@ Linking Sessions <span>/</span> Quick Link <span>></span> Acknowledge Session
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Linkee</label>
-                        <input type="text" class="form-control" name="lnk_linkee" value="<?= Auth::user()->fullName2() ?>" readonly>
+                        <input type="text" class="form-control" name="lnk_linkee" value="<?= $linkee->fullName2() ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-4">

@@ -157,7 +157,7 @@ class LeaveController extends Controller
 		$data['credits'] = $credits;
 		$data['is_leader'] = count($employees);
 
-		return view('leave.create2', $data);
+		return view('leave.create', $data);
 	}
 
 	public function getLeaveDates($id)
@@ -346,18 +346,18 @@ class LeaveController extends Controller
 			'details'        => $obj
 		];
 
-		Mail::to($employee->email)->send(new LeaveSelfNotification(['emp_name' => strtoupper($employee->first_name)]));
+		// Mail::to($employee->email)->send(new LeaveSelfNotification(['emp_name' => strtoupper($employee->first_name)]));
 
 		$supervisor = User::find($employee->supervisor_id);
 		if(!empty($supervisor->id)) {
 			$data['emp_name'] = strtoupper($supervisor->first_name);
-			Mail::to($supervisor->email)->send(new LeaveNotification($data));
+			// Mail::to($supervisor->email)->send(new LeaveNotification($data));
 		}
 
 		$manager = User::find($employee->manager_id);
 		if(!empty($manager->id)) {
 			$data['emp_name'] = strtoupper($manager->first_name);
-			Mail::to($manager->email)->send(new LeaveNotification($data));
+			// Mail::to($manager->email)->send(new LeaveNotification($data));
 		}
 
 		return redirect("leave" . '/' . $leave_id)->with('success', 'Leave Request Successfully Submitted!!');
@@ -582,7 +582,53 @@ class LeaveController extends Controller
 		$i = 1;
 		$past = date('Y') - 1;
 		$header = array("Leave ID", "EE Number", "EE Name", "Start", "End", "VL", "SL", "EL", "CTO", "BL", "PL", "VLWOP", "SLWOP", "ELWOP", "BLWOP", "PLWOP");
-		$sheet->fromArray([$header], NULL, 'A'.$i); 
+		$sheet->fromArray([$header], NULL, 'A'.$i);
+
+		$styleArray = [
+			'font' => [
+				'bold' => true,
+				'size' => 14
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+			],
+			'borders' => [
+				'bottom' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '3a75fb',
+				],
+				'endColor' => [
+					'argb' => '3a75fb',
+				],
+			],
+		];
+
+		$sheet->getStyle('A1:P1')->applyFromArray($styleArray);
+		$sheet->getStyle('A1:P1')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
+
+		$sheet->getColumnDimension('A')->setWidth('10');
+		$sheet->getColumnDimension('B')->setWidth('20');
+		$sheet->getColumnDimension('C')->setWidth('35');
+		$sheet->getColumnDimension('D')->setWidth('20');
+		$sheet->getColumnDimension('E')->setWidth('20');
+		$sheet->getColumnDimension('F')->setWidth('10');
+		$sheet->getColumnDimension('G')->setWidth('10');
+		$sheet->getColumnDimension('H')->setWidth('10');
+		$sheet->getColumnDimension('I')->setWidth('10');
+		$sheet->getColumnDimension('J')->setWidth('10');
+		$sheet->getColumnDimension('K')->setWidth('10');
+		$sheet->getColumnDimension('L')->setWidth('10');
+		$sheet->getColumnDimension('M')->setWidth('10');
+		$sheet->getColumnDimension('N')->setWidth('10');
+		$sheet->getColumnDimension('O')->setWidth('10');
+		$sheet->getColumnDimension('P')->setWidth('10');
+
 		$i++;
 		$leave_id = isset($obj[0]) ? $obj[0]->leave_id : 0;
 		$ename = isset($obj[0]) ? $obj[0]->emp_name : '';
@@ -623,7 +669,20 @@ class LeaveController extends Controller
 					$slwop,
 					$elwop
 				];
-				$sheet->fromArray([$body], NULL, 'A'.$i); 
+				$sheet->fromArray([$body], NULL, "A{$i}", true);
+				$sheet->getStyle("F{$i}:P{$i}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+				if($vl > 0) { $sheet->getStyle("F{$i}")->getFont()->setBold(true); }
+				if($sl > 0) { $sheet->getStyle("G{$i}")->getFont()->setBold(true); }
+				if($el > 0) { $sheet->getStyle("H{$i}")->getFont()->setBold(true); }
+				if($cto > 0) { $sheet->getStyle("I{$i}")->getFont()->setBold(true); }
+				if($bl > 0) { $sheet->getStyle("J{$i}")->getFont()->setBold(true); }
+				if($pl > 0) { $sheet->getStyle("K{$i}")->getFont()->setBold(true); }
+				if($blwop > 0) { $sheet->getStyle("L{$i}")->getFont()->setBold(true); }
+				if($plwop > 0) { $sheet->getStyle("M{$i}")->getFont()->setBold(true); }
+				if($vlwop > 0) { $sheet->getStyle("N{$i}")->getFont()->setBold(true); }
+				if($slwop > 0) { $sheet->getStyle("O{$i}")->getFont()->setBold(true); }
+				if($elwop > 0) { $sheet->getStyle("P{$i}")->getFont()->setBold(true); }
+
 				$i++;
 				$vl = 0;
 				$sl = 0;
@@ -672,8 +731,21 @@ class LeaveController extends Controller
 				$slwop,
 				$elwop
 			];
-			$sheet->fromArray([$body], NULL, 'A'.$i); 
+			$sheet->fromArray([$body], NULL, "A{$i}", true);
+			$sheet->getStyle("F{$i}:P{$i}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+			if($vl > 0) { $sheet->getStyle("F{$i}")->getFont()->setBold(true); }
+			if($sl > 0) { $sheet->getStyle("G{$i}")->getFont()->setBold(true); }
+			if($el > 0) { $sheet->getStyle("H{$i}")->getFont()->setBold(true); }
+			if($cto > 0) { $sheet->getStyle("I{$i}")->getFont()->setBold(true); }
+			if($bl > 0) { $sheet->getStyle("J{$i}")->getFont()->setBold(true); }
+			if($pl > 0) { $sheet->getStyle("K{$i}")->getFont()->setBold(true); }
+			if($blwop > 0) { $sheet->getStyle("L{$i}")->getFont()->setBold(true); }
+			if($plwop > 0) { $sheet->getStyle("M{$i}")->getFont()->setBold(true); }
+			if($vlwop > 0) { $sheet->getStyle("N{$i}")->getFont()->setBold(true); }
+			if($slwop > 0) { $sheet->getStyle("O{$i}")->getFont()->setBold(true); }
+			if($elwop > 0) { $sheet->getStyle("P{$i}")->getFont()->setBold(true); }
 		}
+
 		ob_end_clean();
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="leave-report-'.date('mdY-His').'.xlsx"');
@@ -798,11 +870,11 @@ class LeaveController extends Controller
 			if(empty($manager)) {
 				$data['leader_name'] = 'HR DEPARTMENT';
 
-				Mail::to('hrd@elink.com.ph')->send(new LeaveReminder($data));
+				// Mail::to('hrd@elink.com.ph')->send(new LeaveReminder($data));
 			} else {
 				$data['leader_name'] = strtoupper($manager->first_name); 
 
-				Mail::to($manager->email)->send(new LeaveReminder($data));
+				// Mail::to($manager->email)->send(new LeaveReminder($data));
 			}
 
 			return back()->with('success', 'Leave request successfully recommended for approval.');
@@ -938,7 +1010,7 @@ class LeaveController extends Controller
 		];
 
 		if($leave_request->save()){
-			Mail::to($employee->email)->send(new LeaveApproved($data));
+			// Mail::to($employee->email)->send(new LeaveApproved($data));
 
 			return back()->with('success', 'Leave request successfully approved. . .');
 		} else {
@@ -977,7 +1049,7 @@ class LeaveController extends Controller
 		];
 
 		if($leave_request->save()){
-			Mail::to($employee->email)->send(new LeaveDeclined($data));
+			// Mail::to($employee->email)->send(new LeaveDeclined($data));
 
 			return back()->with('success', 'Leave request successfully declined.');
 		} else {
@@ -1624,51 +1696,5 @@ class LeaveController extends Controller
 		}
 
 		return $sql;
-	}
-
-	public function test()
-	{
-		$id_obj = Auth::user()->id;
-		$obj = DB::select($this->newQuery($id_obj));
-		$year = date('Y');
-		$employees = DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id_obj} OR `employee_info`.`supervisor_id`={$id_obj})");
-		$credits = (object) [
-			'past_credit'     => 0,
-			'current_credit'  => 0,
-			'used_credit'     => 0,
-			'total_credits'   => 0
-		];
-
-		if(count($obj) > 0) {
-			$credits = $obj[0];
-
-			switch ($credits->employee_category) {
-				case 1:
-					$div = 20;
-				break;
-				case 2:
-					$div = 14;
-				break;
-				case 3:
-					$div = 10;
-				break;
-				case 4:
-					$div = 10;
-				break;
-			}
-
-			$different_in_months = DateHelper::getDifferentMonths($credits->hired_date);
-			$monthly_accrual = (($div / 12) * $different_in_months) + $credits->monthly_accrual;
-			$credits->monthly_accrual = $monthly_accrual;
-			$credits->current_credit = ($monthly_accrual + $credits->past_credit) - ($credits->used_jan_to_jun + $credits->used_jul_to_dec);
-		}
-
-		$data['employees'] = User::AllExceptSuperAdmin()->get();
-		$data['leave_types'] = (count($employees) > 0) ? LeaveType::where('status' , '<>', 3)->get() : LeaveType::where('status' , '<>', 3)->where('id', '<>', 8)->get();
-		$data['blocked_dates'] = $this->getBlockedDates();
-		$data['credits'] = $credits;
-		$data['is_leader'] = count($employees);
-
-		return view('leave.create3', $data);
 	}
 }

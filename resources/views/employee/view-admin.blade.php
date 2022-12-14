@@ -2,6 +2,12 @@
 @section('title')
 Employee > View Profile
 @endsection
+@section('head')
+<link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
+<style type="text/css">
+@include('employee.style');
+</style>
+@endsection
 @section('breadcrumb')
 <?php
     if(empty($myprofile)) {
@@ -10,309 +16,264 @@ Employee > View Profile
         echo 'My Profile';
     }
 ?>
-
 @endsection
 @section('content')
-<link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
-<style type="text/css">
-.emp-image{
-    width: 150px;
-    height: 150px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 50%;
-    margin: 30px auto 0;
-}
-.emp-image img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.card-title{
-    font-size: 16px;
-    line-height: 21px;
-    margin-top: 15px;
-    font-weight: 400;
-    color: #000;
-}
-.card-subtitle{
-    font-size: 12px;
-    color: #878;
-}
-.label-profile{
-    padding-left: 15px; 
-    padding-right: 15px;
-}
-.section-header h4 {
-    display: inline-block;
-}
-.section-subheading{
-    background: #5bc0de !important;
-}
-#linkees{
-    width: 100%;
-    flex-wrap: wrap;
-}
-#linkees .linkee{
-    font-size: 12px;
-    padding: 5px;
-}
-@include('employee.style');
-</style>
 {{ Form::open(array('url' => 'employee_info/' . $employee->id,'files' => true ,'id' => 'edit_employee_form')) }}
 {{ Form::hidden('_method', 'PUT') }}
 {{ csrf_field() }}
-<div class="col-md-3 p-0">
-    <div class="section-header">
-        <h4>Profile Picture</h4>
-    </div>
-    <div class="panel panel-container">
-        <div class="row no-padding">
-            <div class="text-center">
-                <div class="emp-image">
-                    <img src="<?= $employee->profile_img ?>" alt="image" />
+<div class="row">
+    <div class="col-md-3 pr-0">
+        <div class="section-header">
+            <h4>Profile Picture</h4>
+        </div>
+        <div class="panel panel-container">
+            <div class="row no-padding">
+                <div class="text-center">
+                    <div class="emp-profile-img">
+                        <img src="<?= $employee->profile_img ?>" alt="image" />
+                    </div>
+                    <br>
+                    <h4 class="card-title m-t-10"><?= $employee->fullname() ?></h4>
+                    <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
+                    <h6 class="card-subtitle"><?= $employee->team_name ?></h6>
+                    <hr>
                 </div>
+                <span class="pull-left label-profile">date hired: <i><?= $employee->prettydatehired() ?></i></span>
                 <br>
-                <h4 class="card-title m-t-10"><?= $employee->fullname() ?></h4>
-                <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
-                <h6 class="card-subtitle"><?= $employee->team_name ?></h6>
-                <hr>
-            </div>
-            <span class="pull-left label-profile">date hired: <i><?= $employee->prettydatehired() ?></i></span>
-            <br>
-            <br>
-        </div>
-    </div>
-</div>
-<div class="col-md-9">
-    <div class="section-header">
-        <h4>Employee Information</h4>
-<?php
-    if(empty($myprofile)) {
-?>
-        <a href="<?= url('employees') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
-<?php
-    }
-?>
-    </div>
-    <div class="panel panel-body mb-0">
-        @include('employee.fields.personalv')
-    </div>
-<?php
-    if(isset($details->fathers_name) || $details->fathers_bday != '1970-01-01' || isset($details->mothers_name) || $details->mothers_bday != '1970-01-01' || isset($details->spouse_name) || $details->spouse_bday != '1970-01-01') {
-?>
-    <div class="section-header section-subheading">
-        <h4>Other Information</h4>
-    </div>
-    <div class="panel panel-body mb-0">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Father's Name</label>
-                    <input class="form-control" name="fathers_name" value="<?= isset($details->fathers_name) ? $details->fathers_name : "" ?>" readonly />
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Father's Birthday</label>
-                    <input class="form-control" name="fathers_bday" value="<?= $details->fathers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->fathers_bday )) ?>" autocomplete="off" readonly />
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Complete Mother's Maiden Name</label>
-                    <input class="form-control" name="mothers_name" value="<?= isset($details->mothers_name) ? $details->mothers_name : "" ?>" readonly />
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Mother's Birthday</label>
-                    <input class="form-control" name="mothers_bday" value="<?= $details->mothers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->mothers_bday )) ?>" autocomplete="off" readonly />
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Spouse's Name</label>
-                    <input class="form-control" name="spouse_name" value="<?= isset($details->spouse_name) ? $details->spouse_name : "" ?>" readonly />
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Spouse's Birthday</label>
-                    <input class="form-control" name="spouse_bday" value="<?= $details->spouse_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->spouse_bday )) ?>" autocomplete="off" readonly />
-                </div>
+                <br>
             </div>
         </div>
     </div>
-<?php
-    }
-    if(!empty($dependents[0]->dependent)) {
-?>
-    <div class="section-header section-subheading">
-        <h4>Dependents Information</h4>
-    </div>
-    <div class="panel panel-body mb-0">
-        <div class="row text-center">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <strong>Dependent's Name</strong>
+    <div class="col-md-9">
+        <div class="section-header">
+            <h4>Employee Information</h4>
+    <?php
+        if(empty($myprofile)) {
+    ?>
+            <a href="<?= url('employees') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
+    <?php
+        }
+    ?>
+        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.personalv')
+        </div>
+    <?php
+        if(isset($details->fathers_name) || $details->fathers_bday != '1970-01-01' || isset($details->mothers_name) || $details->mothers_bday != '1970-01-01' || isset($details->spouse_name) || $details->spouse_bday != '1970-01-01') {
+    ?>
+        <div class="section-header section-subheading">
+            <h4>Other Information</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Father's Name</label>
+                        <input class="form-control" name="fathers_name" value="<?= isset($details->fathers_name) ? $details->fathers_name : "" ?>" readonly />
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <strong>Birthday</strong>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Father's Birthday</label>
+                        <input class="form-control" name="fathers_bday" value="<?= $details->fathers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->fathers_bday )) ?>" autocomplete="off" readonly />
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <strong>Generali Number</strong>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Complete Mother's Maiden Name</label>
+                        <input class="form-control" name="mothers_name" value="<?= isset($details->mothers_name) ? $details->mothers_name : "" ?>" readonly />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Mother's Birthday</label>
+                        <input class="form-control" name="mothers_bday" value="<?= $details->mothers_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->mothers_bday )) ?>" autocomplete="off" readonly />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Spouse's Name</label>
+                        <input class="form-control" name="spouse_name" value="<?= isset($details->spouse_name) ? $details->spouse_name : "" ?>" readonly />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Spouse's Birthday</label>
+                        <input class="form-control" name="spouse_bday" value="<?= $details->spouse_bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($details->spouse_bday )) ?>" autocomplete="off" readonly />
+                    </div>
                 </div>
             </div>
         </div>
     <?php
-        for($i=0;$i<count($dependents);$i++) {
+        }
+        if(!empty($dependents[0]->dependent)) {
     ?>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <input class="form-control" name="dependent_name[]" value="<?= $dependents[$i]->dependent ?>" readonly />
+        <div class="section-header section-subheading">
+            <h4>Dependents Information</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <strong>Dependent's Name</strong>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <strong>Birthday</strong>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <strong>Generali Number</strong>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <input class="form-control" name="dependent_bday[]" value="<?= $dependents[$i]->bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($dependents[$i]->bday)) ?>" autocomplete="off" readonly />
+        <?php
+            for($i=0;$i<count($dependents);$i++) {
+        ?>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input class="form-control" name="dependent_name[]" value="<?= $dependents[$i]->dependent ?>" readonly />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input class="form-control" name="dependent_bday[]" value="<?= $dependents[$i]->bday == '1970-01-01' ? '' : date("m/d/Y", strtotime($dependents[$i]->bday)) ?>" autocomplete="off" readonly />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input class="form-control" name="generali_num[]" value="<?= $dependents[$i]->generali_num ?>" autocomplete="off" readonly />
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <input class="form-control" name="generali_num[]" value="<?= $dependents[$i]->generali_num ?>" autocomplete="off" readonly />
+        <?php
+            }
+        ?>
+        </div>
+    <?php
+        }
+        if(@$details->em_con_name != '' || @$details->em_con_rel != '' || @$details->em_con_num != '' || @$details->em_con_address != '') {
+    ?>
+        <div class="section-header section-subheading">
+            <h4>In Case of Emergency</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>In case of emergency please contact.</label>
+                        <input type="text" name="em_con_name" class="form-control" value="<?= @$details->em_con_name ?>" readonly />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Relationship</label>
+                        <input type="text" name="em_con_rel" class="form-control" value="<?= @$details->em_con_rel ?>" readonly />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="text" name="em_con_num" class="form-control" value="<?= @$details->em_con_num ?>" readonly />
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea name="em_con_address" class="form-control" rows="4" readonly><?= @$details->em_con_address ?></textarea>
+                    </div>
                 </div>
             </div>
         </div>
     <?php
         }
     ?>
-    </div>
-<?php
-    }
-    if(@$details->em_con_name != '' || @$details->em_con_rel != '' || @$details->em_con_num != '' || @$details->em_con_address != '') {
-?>
-    <div class="section-header section-subheading">
-        <h4>In Case of Emergency</h4>
-    </div>
-    <div class="panel panel-body mb-0">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label>In case of emergency please contact.</label>
-                    <input type="text" name="em_con_name" class="form-control" value="<?= @$details->em_con_name ?>" readonly />
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Relationship</label>
-                    <input type="text" name="em_con_rel" class="form-control" value="<?= @$details->em_con_rel ?>" readonly />
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Contact Number</label>
-                    <input type="text" name="em_con_num" class="form-control" value="<?= @$details->em_con_num ?>" readonly />
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label>Address</label>
-                    <textarea name="em_con_address" class="form-control" rows="4" readonly><?= @$details->em_con_address ?></textarea>
-                </div>
-            </div>
+        <div class="section-header section-subheading">
+            <h4>User Access</h4>
         </div>
-    </div>
-<?php
-    }
-?>
-    <div class="section-header section-subheading">
-        <h4>User Access</h4>
-    </div>
-    <div class="panel panel-body mb-0">
-        @include('employee.fields.user_accessv')
-    </div>
-<?php
-    if(count($linkees) > 0) {
-?>
-    <div class="section-header section-subheading">
-        <h4>Linkees</h4>
-    </div>
-    <div class="panel panel-body mb-0">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="my-2 d-flex gap-2 p-2" id="linkees">
-                <?php
-                    foreach($linkees as $linkee) {
-                ?>
-                    <div class="border border-success rounded-pill linkee" id="linkee-<?= $linkee->id ?>">
-                        <span><?= $linkee->last_name ?>, <?= $linkee->first_name ?></span>
-                    </div>
-                <?php
-                    }
-                ?>
-                </div>
-            </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.user_accessv')
         </div>
-    </div>
-<?php
-    }
-?>
-    <div class="section-header section-subheading">
-        <h4>Job Related</h4>
-    </div>
-    <div class="panel panel-body mb-0">
-        @include('employee.fields.job_relatedv')
-    </div>
-<?php
-    if(@$employee->sss != '' || @$employee->pagibig != '' || @$employee->philhealth != '' || @$employee->tin != '') {
-?>
-    <div class="section-header section-subheading">
-        <h4>Government Numbers</h4>
-    </div>
-    <div class="panel panel-body mb-0">
-        @include('employee.fields.governmentv')
-    </div>
-<?php
-    }
-?>
-    <div class="section-header section-subheading">
-        <h4>Login Credentials</h4>
-    </div>
-    <div class="panel panel-body">
-        @include('employee.fields.loginv')
-        <div class="col-md-12">
-        @auth
-        @if(Auth::user()->id == $employee->id && !empty($myprofile))
-            <br>
-            <div class="row">
-                <div class="col-md-3 d-flex">
-                    <a type="button" class="btn btn-default" href="<?= url("employee/{$employee->id}/changepassword") ?>">Change Password</a>
-                    &nbsp;
-                    <a class="btn btn-primary" href="<?= url('update-profile') ?>">Update Selected Information</a>
-                </div>
-            </div>
-        @endif
-        @if(Auth::user()->isAdmin() && empty($myprofile))
-            <br>
+    <?php
+        if(count($linkees) > 0) {
+    ?>
+        <div class="section-header section-subheading">
+            <h4>Linkees</h4>
+        </div>
+        <div class="panel panel-body mb-0">
             <div class="row">
                 <div class="col-md-12">
-                    <a type="button" class="btn btn-default" href="<?= url("employee/{$employee->id}/changepassword") ?>">Change Password</a>
-                    @if($employee->isActive())
-                    <a class="btn btn-primary" href="<?= url("employee_info/{$employee->id}/edit") ?>">Update Profile</a>
-                    <a href="#" class="pull-right btn btn-danger delete_btn" data-toggle="modal" data-target="#messageModal" data-id="<?= $employee->id ?>">Deactivate Employee</a>
-                    @else
-                    <a class="btn btn-primary" href="<?= url("employees/{$employee->id}/reactivate") ?>">Reactivate Employee</a>
-                    @endif
+                    <div class="my-2 flex gap-2 p-2" id="linkees">
+                    <?php
+                        foreach($linkees as $linkee) {
+                    ?>
+                        <div class="border border-success rounded-pill linkee p-5" id="linkee-<?= $linkee->id ?>">
+                            <span><?= $linkee->last_name ?>, <?= $linkee->first_name ?></span>
+                        </div>
+                    <?php
+                        }
+                    ?>
+                    </div>
                 </div>
             </div>
-        @endif
-        @endauth
+        </div>
+    <?php
+        }
+    ?>
+        <div class="section-header section-subheading">
+            <h4>Job Related</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.job_relatedv')
+        </div>
+    <?php
+        if(@$employee->sss != '' || @$employee->pagibig != '' || @$employee->philhealth != '' || @$employee->tin != '') {
+    ?>
+        <div class="section-header section-subheading">
+            <h4>Government Numbers</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.governmentv')
+        </div>
+    <?php
+        }
+    ?>
+        <div class="section-header section-subheading">
+            <h4>Login Credentials</h4>
+        </div>
+        <div class="panel panel-body mb-0">
+            @include('employee.fields.loginv')
+            <div class="col-md-12">
+            @auth
+            @if(Auth::user()->id == $employee->id && !empty($myprofile))
+                <br>
+                <div class="row">
+                    <div class="col-md-3 d-flex">
+                        <a type="button" class="btn btn-default" href="<?= url("employee/{$employee->id}/changepassword") ?>">Change Password</a>
+                        &nbsp;
+                        <a class="btn btn-primary" href="<?= url('update-profile') ?>">Update Selected Information</a>
+                    </div>
+                </div>
+            @endif
+            @if(Auth::user()->isAdmin() && empty($myprofile))
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <a type="button" class="btn btn-default" href="<?= url("employee/{$employee->id}/changepassword") ?>">Change Password</a>
+                        @if($employee->isActive())
+                        <a class="btn btn-primary" href="<?= url("employee_info/{$employee->id}/edit") ?>">Update Profile</a>
+                        <a href="#" class="pull-right btn btn-danger delete_btn" data-toggle="modal" data-target="#messageModal" data-id="<?= $employee->id ?>">Deactivate Employee</a>
+                        @else
+                        <a class="btn btn-primary" href="<?= url("employees/{$employee->id}/reactivate") ?>">Reactivate Employee</a>
+                        @endif
+                    </div>
+                </div>
+            @endif
+            @endauth
+            </div>
         </div>
     </div>
 </div>

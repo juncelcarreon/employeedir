@@ -73,19 +73,45 @@ class CoachingController extends Controller
 
     public function downloadLinking()
     {
+        $styleArray = [
+            'font' => [
+                'bold' => true,
+                'size' => 14
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ],
+            'borders' => [
+                'bottom' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                ],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'rotation' => 90,
+                'startColor' => [
+                    'argb' => '3a75fb',
+                ],
+                'endColor' => [
+                    'argb' => '3a75fb',
+                ],
+            ],
+        ];
+
         $writesheet = new Spreadsheet();
         $writer = IOFactory::createWriter($writesheet, "Xlsx");
         $sheet = $writesheet->getActiveSheet();
-        // $sheet->getColumnDimensionByColumn('A')->setAutoSize(false);
+        $sheet->getStyle('A1:I1')->applyFromArray($styleArray);
+        $sheet->getStyle('A1:I1')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
         $sheet->getColumnDimension('A')->setWidth('20');
-        $sheet->getColumnDimension('B')->setWidth('20');
+        $sheet->getColumnDimension('B')->setWidth('30');
         $sheet->getColumnDimension('C')->setWidth('30');
         $sheet->getColumnDimension('D')->setWidth('25');
         $sheet->getColumnDimension('E')->setWidth('25');
         $sheet->getColumnDimension('F')->setWidth('30');
         $sheet->getColumnDimension('G')->setWidth('100');
-        $sheet->getColumnDimension('H')->setWidth('15');
-        $sheet->getColumnDimension('I')->setWidth('20');
+        $sheet->getColumnDimension('H')->setWidth('20');
+        $sheet->getColumnDimension('I')->setWidth('40');
         $i = 1;
         $header = array("Date", "Employee Number", "Linkee","Linking Type","Linker","Focus", "Comments","Status","Link");
         $sheet->fromArray([$header], NULL, 'A'.$i);
@@ -109,9 +135,8 @@ class CoachingController extends Controller
             ];
             $sheet->fromArray([$body], NULL, 'A'.$i); 
             $sheet->setCellValue("I{$i}", $lk->link);
-            $sheet->getCell("I{$i}")->getHyperlink()->setUrl($lk->link);
-            $sheet->getStyle("I{$i}")->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLUE);
             $sheet->getStyle("G{$i}")->getAlignment()->setWrapText(true);
+            $sheet->getStyle("A{$i}:I{$i}")->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
             $i++;
         }
 
@@ -188,9 +213,10 @@ class CoachingController extends Controller
             }
 
             $data['obj'] = $ql;
-            $data['linker'] = User::withTrashed()->find($ql->lnk_linker);
             $data['management'] = $this->isManagement();
             $data['pending_menu'] = 1;
+            $data['linker'] = User::find($ql->lnk_linker);
+            $data['linkee'] = User::withTrashed()->find($ql->lnk_linkee);
 
             return view('coaching.ql_acknowledge', $data);
         }
@@ -226,10 +252,10 @@ class CoachingController extends Controller
             }
 
             $data['obj'] = $ql;
-            $data['linker'] = User::withTrashed()->find($ql->lnk_linker);
-            $data['linkee'] = User::withTrashed()->find($ql->lnk_linkee);
             $data['management'] = $this->isManagement();
             $data['ql'] = 1;
+            $data['linker'] = User::withTrashed()->find($ql->lnk_linker);
+            $data['linkee'] = User::withTrashed()->find($ql->lnk_linkee);
 
             return view('coaching.ql_view', $data);
         }
@@ -311,9 +337,10 @@ class CoachingController extends Controller
             }
 
             $data['obj'] = $ce;
-            $data['linker'] = User::withTrashed()->find($ce->lnk_linker);
             $data['management'] = $this->isManagement();
             $data['pending_menu'] = 1;
+            $data['linker'] = User::withTrashed()->find($ce->lnk_linker);
+            $data['linkee'] = User::withTrashed()->find($ce->lnk_linkee);
 
             return view('coaching.ce_acknowledge', $data);
         }
@@ -435,9 +462,10 @@ class CoachingController extends Controller
             }
 
             $data['obj'] = $as;
-            $data['linker'] = User::withTrashed()->find($as->lnk_linker);
             $data['management'] = $this->isManagement();
             $data['pending_menu'] = 1;
+            $data['linker'] = User::withTrashed()->find($as->lnk_linker);
+            $data['linkee'] = User::withTrashed()->find($as->lnk_linkee);
 
             return view('coaching.as_acknowledge', $data);
         }
@@ -558,9 +586,10 @@ class CoachingController extends Controller
             }
 
             $data['obj'] = $sda;
-            $data['linker'] = User::withTrashed()->find($sda->lnk_linker);
             $data['management'] = $this->isManagement();
             $data['pending_menu'] = 1;
+            $data['linker'] = User::withTrashed()->find($sda->lnk_linker);
+            $data['linkee'] = User::withTrashed()->find($sda->lnk_linkee);
 
             return view('coaching.sda_acknowledge', $data);
         }
@@ -708,9 +737,10 @@ class CoachingController extends Controller
             }
 
             $data['obj'] = $gtky;
-            $data['linker'] = User::withTrashed()->find($gtky->lnk_linker);
             $data['management'] = $this->isManagement();
             $data['pending_menu'] = 1;
+            $data['linker'] = User::withTrashed()->find($gtky->lnk_linker);
+            $data['linkee'] = User::withTrashed()->find($gtky->lnk_linkee);
 
             return view('coaching.gtky_acknowledge', $data);
         }
@@ -830,9 +860,10 @@ class CoachingController extends Controller
             }
 
             $data['obj'] = $sb;
-            $data['linker'] = User::withTrashed()->find($sb->lnk_linker);
             $data['management'] = $this->isManagement();
             $data['pending_menu'] = 1;
+            $data['linker'] = User::withTrashed()->find($sb->lnk_linker);
+            $data['linkee'] = User::withTrashed()->find($sb->lnk_linkee);
 
             return view('coaching.sb_acknowledge', $data);
         }
@@ -999,9 +1030,10 @@ class CoachingController extends Controller
             }
 
             $data['obj'] = $gs;
-            $data['linker'] = User::withTrashed()->find($gs->lnk_linker);
             $data['management'] = $this->isManagement();
             $data['pending_menu'] = 1;
+            $data['linker'] = User::withTrashed()->find($gs->lnk_linker);
+            $data['linkee'] = User::withTrashed()->find($gs->lnk_linkee);
 
             return view('coaching.gs_acknowledge', $data);
         }

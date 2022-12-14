@@ -1,32 +1,132 @@
-ol.breadcrumb li span{
-    display: inline-block;
-    color: #ccc;
-    padding: 0 5px;
+/* Linkees */
+#linkees{
+    width: 100%;
+    flex-wrap: wrap;
 }
 
-.header-container{
+#linkees .linkee{
+    font-size: 12px;
+    padding: 1px;
+}
+
+#linkees .linkee button{
+    border: 0;
+    border-radius: 40px !important;
+    padding: 3px !important;
+    line-height:  1 !important;
+}
+
+#linkees-select{
+    max-width: 80%;
+    margin: 20px 0 0;
+}
+/* End Linkees */
+
+/* Search */
+.alphabet-search{
+    display: inline-flex;
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 10px;
+}
+
+.alphabet-search li{
+    margin-right: 10px;
+}
+
+.alphabet-search li.m-t-5{
+    margin-top: -5px
+}
+
+.alphabet-search form button{
+    height: 35px;
+    margin: 1px 0 0;
+}
+
+.alphabet-search #search_employee{
+    padding: 5px;
+}
+
+.alphabet-search select{
+    cursor: pointer !important;
+    padding: 7px; 
+    border-radius: 0px !important; 
+    font-size: 11px !important;
+}
+
+.alphabet-search select.d-none{
+    display: none;
+}
+
+.alphabet-search select#month_list{
+    width: 200px; 
+}
+
+.alphabet-search .fa-filter{
+    color: #777; 
+    font-size: 18px; 
+    padding: 5px;
+}
+
+.alphabet-search .btn-clear{
+    margin: 0px;
+    height: 30px;
+}
+/* End Search */
+
+/* Employee Profile */
+.emp-profile{
+    background-color: #fff;
+    padding: 10px; 
+    margin: 0 auto;
+    border-bottom: 1px solid #ddd;
+}
+
+.emp-profile .emp-image{
+    width: 60px; 
+    height: 60px;
+    margin: 15px;
     position: relative;
-    z-index: 10;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
-.pagination>li:first-child>a, .pagination>li:first-child>span{
-    border-top-left-radius: 0px !important;
-    border-bottom-left-radius: 0px !important;
+.emp-profile .emp-image img{
+    width: 100%;
+    height: 100%;
+    object-fit:cover;
 }
 
-.pagination>li:last-child>a, .pagination>li:last-child>span {
-    border-top-right-radius: 0px !important;
-    border-bottom-right-radius: 0px !important;
+.emp-profile .employee-description{
+    color: #777;
+    font-size: 12px;
+}
+.emp-profile .employee-email{
+    color: #0c59a2;
 }
 
-.p-0{
-    padding: 0 !important;
+.emp-profile h4.timeline-title{
+    font-size: 17px; 
+    text-transform: uppercase;
+}
+.emp-profile h4.timeline-title a{
+    transition: linear 0.3s;
 }
 
-.d-flex{
-    display: flex;
-    justify-content:space-between;
-    align-items: center;
+.emp-profile h4.timeline-title a:hover{
+    padding-left: 5px;
+}
+
+.emp-profile h5{
+    color: #455;
+}
+
+.emp-profile h3, h6.employee-account{
+    color: #777;
+}
+
+.emp-profile h6 span.name-format{
+    color: #808080;
 }
 
 .emp-profile .fa-eye, .emp-profile .fa-pencil{
@@ -41,6 +141,174 @@ ol.breadcrumb li span{
     color: #008000;
 }
 
+.emp-profile-img{
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 30px auto 0;
+}
+.emp-profile-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.employee-details-value{
+    font-size: 14px;
+    line-height: 21px;
+    color: #000;
+}
+
+.employee-email{
+    font-size: 14px;
+    line-height: 21px;
+    color: #0c59a2;
+    word-break: break-all;
+    margin: 0;
+}
+
+.employee-email:last-child{
+    margin: 0 0 10px;
+}
+/* End Employee Profile */
+
+/* Pagination */
+.pagination{
+    margin: 0 !important;
+}
+
+.pagination>li>a, .pagination>li>span{
+    border-radius: 0px !important;
+}
+/* End Pagination */
+
+/* Modal */
+#modalMovements .modal-body{
+    max-height:500px; 
+    min-height: 450px; 
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#modalMovements .dataTables_wrapper{
+    margin: 0;
+}
+
+#modalMovements #transferForm tr{
+    background-color: #fd9a47;
+}
+
+#modalMovements #transferForm .select2{
+    width: 100% !important;
+}
+
+#modalMovements .modal-title{
+    display:inline-block;
+}
+/* End Modal */
+
+/* Others */
+ol.breadcrumb li span{
+    display: inline-block;
+    color: #ccc;
+    padding: 0 5px;
+}
+
+.section-header h4 {
+    display: inline-block;
+}
+
+.section-subheading{
+    background: #5bc0de !important;
+}
+
+.card-title{
+    font-size: 16px;
+    line-height: 21px;
+    margin-top: 15px;
+    font-weight: 400;
+    color: #000;
+}
+.card-subtitle{
+    font-size: 12px;
+    color: #878;
+}
+
+.header-container{
+    position: relative;
+    z-index: 10;
+}
+
+.mt-20{
+    margin:20px auto 0 !important;
+}
+
+.mb-0{
+    margin-bottom: 0 !important;
+}
+
+.mb-5{
+    margin: 0 auto 5px !important;
+}
+
+.p-5{
+    padding: 5px !important;
+}
+
+.p-0{
+    padding: 0 !important;
+}
+
+.pr-0{
+    padding-right: 0 !important;
+}
+
+.d-flex{
+    display: flex !important;
+    justify-content:space-between;
+    align-items: center;
+}
+
+.flex{
+    display: flex;
+}
+
 .form-group label.control-label{
     color: #878;
 }
+
+.label-profile{
+    padding: 0 15px;
+}
+
+#bb{
+    margin: 0 auto;
+}
+
+#dependentsDiv .btn{
+    width: 100%;
+}
+
+pre{
+    border: 0px solid transparent;
+    border-radius: 0px !important;
+    margin-top: -3px;
+}
+
+.word-break-all {
+    word-break: break-all;
+}
+
+#view_profile .form-group label{
+    font-weight: 600;
+    color: #878;
+    margin: 0;
+}
+
+#view_profile address{
+    margin-bottom: 10px;
+    white-space: pre-line;
+}
+/* End Others */

@@ -26,7 +26,7 @@ Linking Sessions <span>/</span> Skills Development Activities <span>></span> Ack
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Linkee</label>
-                        <input type="text" class="form-control" name="lnk_linkee_name" value="<?= Auth::user()->fullName2() ?>" readonly>
+                        <input type="text" class="form-control" name="lnk_linkee_name" value="<?= $linkee->fullName2() ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-4">

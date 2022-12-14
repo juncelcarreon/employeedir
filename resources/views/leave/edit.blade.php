@@ -1,12 +1,12 @@
 @extends('layouts.main')
 @section('title')
-    Request | Leave > Edit
+Leave > Edit
 @endsection
 @section('content')
-<style>
+<style type="text/css">
 @include('leave.leave-style');
 </style>
-<form action="<?= url('leave/update') ?>" method="post" id="leave_form">
+<form action="<?= url('leave/update') ?>" method="post" id="leave_form" autocomplete="off">
     {{ csrf_field() }}
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -65,10 +65,10 @@
                 </div>
             </div>
         </div>
-        <div class="panel-heading panel-subheading" style="position:relative;">
+        <div class="panel-heading panel-subheading">
             LEAVE DATES
 
-            <input type="text" name="number_of_days" value="<?= $leave_request->number_of_days ?>" class="form-control _numOfDaysField" list="leave_days" placeholder="No. of Days" autocomplete="off" readonly style="width:100px;position:absolute;right:15px;top:50%;transform:translateY(-50%);">
+            <input type="text" name="number_of_days" value="<?= $leave_request->number_of_days ?>" class="form-control _numOfDaysField" list="leave_days" id="number_of_days" placeholder="No. of Days" readonly>
         </div>
         <div class="panel-body timeline-container">
             <div class="flex-center position-ref full-height">
@@ -93,7 +93,7 @@
                     <div class="row entry-row">
                         <div class="col-md-4">
                             <div class="form-group">
-                            <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" autocomplete="off" value="<?= date('m/d/Y', strtotime($leave->date)) ?>" required>
+                            <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" value="<?= date('m/d/Y', strtotime($leave->date)) ?>" required>
                             </div> 
                         </div>
                         <div class="col-md-3">
@@ -114,7 +114,7 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <button type="button" class="btn btn-primary" id="_addLeaveItem" style="width:100%;">
+                                <button type="button" class="btn btn-primary width-100" id="_addLeaveItem">
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                 </button>
                             </div>
@@ -129,7 +129,7 @@
                     <div id="main_row_<?= $filed_days[$i]->id ?>" class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" autocomplete="off" value="<?= date('m/d/Y', strtotime($filed_days[$i]->date)) ?>" required>
+                                <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" value="<?= date('m/d/Y', strtotime($filed_days[$i]->date)) ?>" required>
                             </div> 
                         </div>
                         <div class="col-md-3">
@@ -150,7 +150,7 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <button type="button" data-type="main" data-id="<?= $filed_days[$i]->id ?>" class="btn btn-danger" onclick="removeThisLeave(this)" style="width:100%;">
+                                <button type="button" data-type="main" data-id="<?= $filed_days[$i]->id ?>" class="btn btn-danger width-100" onclick="removeThisLeave(this)">
                                     <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                                 </button>
                             </div>
@@ -213,10 +213,10 @@
                     <?php
                     if($is_leader > 0) {
                     ?>
-                    <div class="col-md-4" id="cto-data" <?= (count($cto_dates) > 0) ? 'style="display: block;"' : 'style="display: none;"' ?>>
+                    <div class="col-md-4" id="cto-data">
                         <div class="form-group cto-dates">
                             <strong>CTO Dates: </strong>
-                            <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" autocomplete="off" value="<?= (count($cto_dates) > 0) ? date('m/d/Y', strtotime($cto_row->date)) : '' ?>">
+                            <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" value="<?= (count($cto_dates) > 0) ? date('m/d/Y', strtotime($cto_row->date)) : '' ?>">
                             <button type="button" class="btn btn-primary" id="_addCTODay">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             </button>
@@ -226,7 +226,7 @@
                             for($i = 1; $i < count($cto_dates); $i++) {
                             ?>
                             <div class="form-group cto-dates" id="cto_<?= $cto_dates[$i]->id ?>">
-                                <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" autocomplete="off" value="<?= date('m/d/Y', strtotime($cto_dates[$i]->date)) ?>">
+                                <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" value="<?= date('m/d/Y', strtotime($cto_dates[$i]->date)) ?>">
                                 <button type="button" class="btn btn-danger" data-id="<?= $cto_dates[$i]->id ?>" onclick="removeCTO(this)">
                                     <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                                 </button>
@@ -251,14 +251,13 @@
                     <div class="col-md-12">
                         <div class="report-date-box">
                             <q>I will report for work on 
-                            <input type="text" name="report_date" class="datepicker" placeholder="date" autocomplete="off" value="<?= date('m/d/Y',strtotime($leave_request->report_date)) ?>" required>
+                            <input type="text" name="report_date" class="datepicker" placeholder="date" value="<?= date('m/d/Y',strtotime($leave_request->report_date)) ?>" required>
                             If i fail to do so on the said date without any justifiable cause.
                             I can considered to have abandoned my employment. I understand that any misrepresentation I make on this request is a serious offense and shall be a valid ground for disciplinary action against me.</q>
                         </div>
                     </div>
                 </div>
-                <!-- REASON -->
-                <div class="col-md-12" style="border-top: 1px solid rgba(0,0,0,.125); padding-top: 15px; margin-top: 25px"></div>
+                <div class="division"></div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <strong>Reason: </strong>
@@ -283,7 +282,7 @@
 <div id="row_~~id~~" class="row">
     <div class="col-md-4">
         <div class="form-group">
-            <input id="date_picker_~~id~~"  type="text" name="leave_date[]" class="form-control _datesFiled" placeholder="Leave Date" autocomplete="off" required>
+            <input id="date_picker_~~id~~"  type="text" name="leave_date[]" class="form-control _datesFiled" placeholder="Leave Date" required>
         </div> 
     </div>
     <div class="col-md-3">
@@ -304,7 +303,7 @@
     </div>
     <div class="col-md-2">
         <div class="form-group">
-            <button type="button" data-type="sub" data-id="~~id~~" class="btn btn-danger" onclick="removeThisLeave(this)" style="width:100%;">
+            <button type="button" data-type="sub" data-id="~~id~~" class="btn btn-danger width-100" onclick="removeThisLeave(this)">
                 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
             </button>
         </div>
@@ -314,7 +313,7 @@
 </script>
 <script id="tmpl_addCTODay" type="text/template">
 <div class="form-group cto-dates" id="cto_~~id~~">
-    <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" autocomplete="off">
+    <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date">
     <button type="button" class="btn btn-danger" data-id="~~id~~" onclick="removeCTO(this)">
         <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
     </button>
@@ -369,7 +368,6 @@ function removeCTO(obj){
     $("#cto_" + id).remove();
 }
 
-//disable remaining checkbox Leave type
 function ckChange(ckType){
     var ckName = document.getElementsByName(ckType.name);
     var checked = document.getElementById(ckType.id);
@@ -387,7 +385,17 @@ function ckChange(ckType){
 $(function(){
     activeMenu($('#menu-leaves'));
 
-    $('#opportunity-table').DataTable();
+<?php
+    if(count($cto_dates) > 0) {
+?>
+    $('#cto-data').show();
+<?php
+    } else {
+?>
+    $('#cto-data').hide();
+<?php
+    }
+?>
 
     checkCategory();
 
@@ -405,7 +413,7 @@ $(function(){
             return info;
         },
         minDate         : +14
-    });   
+    });
 
     $('.cto_datepicker').datepicker();
 
@@ -503,45 +511,6 @@ $(function(){
         }
     });
 
-    // $("#leave_form").validate({
-    //     rules : {
-    //         employee_id: "required",
-    //         position : "required",
-    //         department: "required",
-    //         date_filed: "required",
-    //         //leave_date_from : "required",
-    //         //leave_date_to : "required",
-    //         number_of_days : "required",
-    //         //leave_type_id : "required",
-    //         report_date : "required",
-    //         reason : "required",
-    //         contact_number: "required"
-    //     },
-    //     submitHandler : function(form, event){
-    //         var validator = this;
-    //         if($('input[name="leave_type_id"]:checked').length == 0 && $('input[name="leave_cto"]:checked').length == 0){
-    //             alert('Please Select Leave Type');
-    //             return;
-    //         }
-    //         if($('input[name="leave_cto"]:checked').length > 0 && $('select[name="pay_type_id"]').val()){
-    //             var cto = 0;
-    //             $('.cto-dates').each(function() {
-    //                 if($(this).find('input').val() !== '') { cto++; }
-    //             });
-
-    //             if(cto == 0) {
-    //                 alert('Please Select CTO Dates');
-    //                 return;
-    //             }
-    //         }
-    //         $("._thisPayType").attr("disabled",false);
-    //         $("._thisPayType").attr("readonly",true);
-    //         $("#register-button").hide();
-
-    //         form.submit();
-    //     }
-    // });
-
     $("._lengthDaySel").on("change",function(){
         console.log("change has come");
         console.log(computeTotalField());
@@ -559,21 +528,6 @@ $(function(){
             $('#cto-data').css({'display' : 'block'});
         }
     });
-
-    // $('#progress1').change(function() {
-    //     $('select.non_reg').attr('disabled', true);
-    //     $('select.non_reg').val(0);
-    //     if($(this).prop('checked')) {
-    //         $('select[name="pay_type[]"]').removeAttr('disabled');
-    //     }
-    // });
-
-    // $('#progress8').change(function() {
-    //     $('#cto-data').css({'display' : 'none'});
-    //     if($(this).prop('checked')) {
-    //         $('#cto-data').css({'display' : 'block'});
-    //     }
-    // });
 
 <?php
     if($leave_request->leave_type_id == 1) {

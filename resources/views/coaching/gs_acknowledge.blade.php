@@ -26,7 +26,7 @@ Linking Sessions <span>/</span> Goal Setting <span>></span> Acknowledge Session
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Linkee</label>
-                        <input type="text" class="form-control" name="lnk_linkee" value="<?= Auth::user()->fullName2() ?>" readonly>
+                        <input type="text" class="form-control" name="lnk_linkee" value="<?= $linkee->fullName2() ?>" readonly>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -39,8 +39,6 @@ Linking Sessions <span>/</span> Goal Setting <span>></span> Acknowledge Session
         </div>
         <div class="panel-subheading">
             Goal Setting Session
-
-            <a id="btn-history" class="btn btn-warning pull-right" href="#" data-toggle="modal" data-target="#modal-history"><i class="fa fa-history"></i> History</a>
         </div>
         <div class="panel-body">
             <div class="row d-flex">

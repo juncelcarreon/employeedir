@@ -49,6 +49,9 @@ h1, h2, h3, h4, h5, h6 {
 li a.selected{
     font-weight: 900!important;
 }
+.pagination{
+    margin: 0 !important;
+}
 .pagination>li:first-child>a, .pagination>li:first-child>span{
     border-top-left-radius: 0px !important;
     border-bottom-left-radius: 0px !important;
@@ -62,6 +65,9 @@ li a.selected{
 }
 select{
     cursor: pointer !important;
+}
+.my-20{
+    margin: 20px auto !important;
 }
 </style>
 <div class="col-md-12">
@@ -95,20 +101,20 @@ select{
                         @endforeach
                     </select>
                     @else
-                    <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->department) ? '' : 'display: none;' }}" id="departments_list">
+                    <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;<?= isset($request->department) ? '' : 'display: none;' ?>" id="departments_list">
                         <option disabled selected>Search by department:</option>
                         @foreach( $departments as $department)
                         <option <?php echo $request->department == $department->department_name ? "selected" : "";?> >{{ $department->department_name}}</option>
                         @endforeach
                         </select>
                     @endif
-                    <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->position) ? '' : 'display: none;' }}" id="position_list">
+                    <select style="padding: 7px; border-radius: 0px !important; font-size: 11px !important;<?= isset($request->position) ? '' : 'display: none;' ?>" id="position_list">
                         <option disabled selected>Search by Position:</option>
                         @foreach( $positions as $position)
                         <option <?php echo $request->position == $position->position_name ? "selected" : "";?> >{{ $position->position_name}}</option>
                         @endforeach
                     </select>
-                    <select style="width: 200px; border-color: #ddd; padding: 7px; border-radius: 0px !important; font-size: 11px !important;{{ isset($request->birthmonth) ? '' : 'display: none;' }}" id="month_list">
+                    <select style="width: 200px; border-color: #ddd; padding: 7px; border-radius: 0px !important; font-size: 11px !important;<?= isset($request->birthmonth) ? '' : 'display: none;' ?>" id="month_list">
                         <option disabled selected>Search by Birth Month:</option>
                         @for( $m = 1; $m <= 12 ; $m++)
                         <option value="{{ $m }}" <?php echo $request->birthmonth == $m ? "selected" : "";?> >{{ date('F', mktime(0,0,0,$m, 1, date('Y'))) }}</option>
@@ -147,7 +153,7 @@ select{
         <div class="emp-profile" style="padding: 10px; margin-bottom: 0px;">
             <div class="row">
                 <div class="col-md-1" style="float: left; width: 100px;">
-                    <div style="background-image: url({{$employee->profile_img}}); width: 60px; height: 60px;margin: 15px; background-size: cover; background-repeat: no-repeat; background-position: 50% 50%; border-radius: 50%;">
+                    <div style="background-image: url(<?=$employee->profile_img?>); width: 60px; height: 60px;margin: 15px; background-size: cover; background-repeat: no-repeat; background-position: 50% 50%; border-radius: 50%;">
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -205,7 +211,7 @@ select{
     @endforeach
 </div>
 <div class="col-md-12 header-container" style="margin-top: 0px;">
-    <div class="pull-right">
+    <div class="pull-right my-20">
         {{ $employees->appends(Illuminate\Support\Facades\Input::except('page'))->links() }}
     </div>
 </div>

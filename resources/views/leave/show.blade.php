@@ -1,24 +1,10 @@
 @extends('layouts.main')
 @section('title')
-    Request | Leave > View
+Leave > View
 @endsection
 @section('content')
 <style type="text/css">
-	small.leave-success{
-		color: green;
-	}
-	small.leave-danger{
-		color: #ff0000;
-	}
-	.type_of_leave p{
-		margin: 0;
-	}
-	.type_of_leave small{
-		display: block;
-		color: #3a75fb;
-		font-size: 12px !important;
-		padding-left: 10px;
-	}
+@include('leave.leave-style');
 </style>
 <div class="panel panel-default">
 	<div class="panel-heading">
@@ -34,23 +20,21 @@
 	</div>
 	<div class="panel panel-body">
 		<div class="row" id="printable">
-			<center>
-				<img src="http://www.elink.com.ph/wp-content/uploads/2016/01/elink-logo-site.png" style="width: 80px; height: 80px;"> 
-				<b style="font-size: 18px;">&nbsp;eLink Systems & Concepts Corp.</b>
+			<div class="print-title">
+				<img src="http://www.elink.com.ph/wp-content/uploads/2016/01/elink-logo-site.png" alt="eLink Systems & Concepts Corp."> 
+				<h4>&nbsp;eLink Systems & Concepts Corp.</h4>
 				<br>
 				<br>
-				<b style="font-size: 20px;">LEAVE APPLICATION REQUEST</b>
-			</center>
+				<h3>LEAVE APPLICATION REQUEST</h3>
+			</div>
 
-			<div class="col-md-12" style="border-top: 1px solid rgba(0,0,0,.125); padding-top: 15px; margin-top: 15px; padding-left: 0px;">
-            </div>
-			<br>
+			<div class="division"></div>
 			<br>
 
             <div class="row">
                 <div class="col-md-4">
-                    <label style="margin-left: 10px;">Date filed:</label>
-                    <p style="margin-left: 10px;"><?= slashedDate($leave_request->date_filed) ?></p>
+                    <label class="ml-10">Date filed:</label>
+                    <p class="ml-10"><?= slashedDate($leave_request->date_filed) ?></p>
                 </div>
 
                 <div class="col-md-8">
@@ -154,8 +138,7 @@
 				<br>
 				<br>
 			</div>
-			<div class="col-md-12" style="border-top: 1px solid rgba(0,0,0,.125); padding-top: 15px; margin-top: 0px; padding-left: 0px;">
-            </div>
+			<div class="division"></div>
             <div class="col-md-6">
                 <label><?= strtoupper($employee->first_name) ?>'s Remaining Leave Credits:</label>
                 <?php
@@ -168,11 +151,11 @@
                 ?>
                 <p>PTO Balance: <b><?= (($credits->is_regular == 1) ? number_format($credits->current_credit,2) : '0.00') ?></b></p>
             </div>
-			<div class="col-md-6" style="direction: rtl">
+			<div class="col-md-6 form-direction">
             <?php
         	if($employee->supervisor_id == Auth::user()->id && empty($leave_request->recommending_approval_by_signed_date) && $leave_request->approve_status_id == 0) {
             ?>
-				    <form action="<?= url('leave/recommend') ?>" method="POST" style="display: inline-flex;">
+				    <form action="<?= url('leave/recommend') ?>" method="POST">
 				        {{ csrf_field() }}
 				        <input type="hidden" name="leave_id" value="<?= $leave_request->id ?>">
 				        <button type="submit" class="btn btn-primary">Recommend</button>
@@ -181,7 +164,7 @@
 			}
 			if($leave_request->isForNoted() && ($leave_request->approve_status_id == 0 || $leave_request->approve_status_id == 3)) {
 			?>
-                    <form action="<?= url('leave/noted') ?>" method="POST" style="display: inline-flex;">
+                    <form action="<?= url('leave/noted') ?>" method="POST">
                         {{ csrf_field() }}
                         <input type="hidden" name="leave_id" value="<?= $leave_request->id ?>">
                         <button type="submit" class="btn btn-primary">Noted</button>
@@ -201,7 +184,7 @@
 				}
 				if($leave_request->approve_status_id != 1) {
 			?>
-					<form action="<?= url('leave/approve') ?>" method="POST" style="display: inline-flex;">
+					<form action="<?= url('leave/approve') ?>" method="POST">
 					{{ csrf_field() }}
 						<input type="hidden" name="leave_id" value="<?= $leave_request->id ?>">
 						<button type="submit" class="btn btn-primary">Approve</button>
@@ -257,9 +240,9 @@ $(function() {
 <div id="declinemodal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header" style="background-color: #0086CD;">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: white !important;opacity: 1;">×</button>
-                <h4 class="modal-title"><b style="color: white">Reason for declining</b></h4>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h4 class="modal-title">Reason for declining</h4>
             </div>
             <div class="modal-body">
                 <div clas="row">
@@ -269,13 +252,13 @@ $(function() {
                             <p>You are about to decline a leave request. You may write a reason why.</p>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" name="reason_for_disapproval" style="resize: vertical;" required></textarea>
+                            <textarea class="form-control" name="reason_for_disapproval" required></textarea>
                             <input type="hidden" name="leave_id" value="<?= $leave_request->id ?>">
                         </div>
                         <div class="col-md-12">
                             <br>
-                            <button type="submit" class="btn btn-primary pull-right" style="margin-top: 5px;">Submit</button>
-                            <button type="button" class="btn btn-default pull-right" style="margin-top: 5px; margin-right: 5px;" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
                 </div>

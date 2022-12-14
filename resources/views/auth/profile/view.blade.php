@@ -70,6 +70,10 @@ address{
 table tbody tr td span{
     display: none;
 }
+#DataTables_Table_0_wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+}
 </style>
 <div class="col-md-3 p-0">
     <div class="section-header">
@@ -273,8 +277,6 @@ table tbody tr td span{
     <div class="panel panel-body">
         <div class="row">
             <div class="col-md-12">
-                <br>
-                <br>
                 <table class="table">
                     <thead>
                         <tr>

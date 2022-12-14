@@ -1,52 +1,66 @@
 .panel-heading a{
     color: #fff;
 }
+
 .panel-heading a:not(.btn).active, .panel-heading a:not(.btn):hover{
-    color: #ffc107;
     text-decoration: none;
+    font-weight: bold;
 }
+
 .panel-subheading{
     background: #5bc0de !important;
 }
+
 .dataTables_wrapper{
     margin: 0 !important;
 }
+
 ._table tr .td-option{
     width: 100px;
     text-align: center;
 }
+
 ._table tr.even{
     background: #ddd !important;
 }
+
 ._table tr td span{
     display: none;
 }
+
 ._table tr td small{
     font-size:75% !important;
 }
+
 .table > thead > tr > th {
     height: auto;
     text-align: center;
 }
+
 .btn-dark{
     background: #343a40;
     color: #fff !important;
 }
+
 .btn-dark:hover{
     background: #000;
     color: #fff;
 }
+
 .leave-success{
     color: #008000;
 }
+
 .form-group strong {
     display: block;
     margin-bottom: 10px;
 }
+
 .form-group button {
     display: block;
     width: 100%;
 }
+
 .division{
     border-top: 1px solid rgba(0,0,0,.125);
     padding-top: 15px;
@@ -54,9 +68,11 @@
     width: 100%;
     clear: both;
 }
+
 .input-group-addon {
     cursor: pointer;
 }
+
 .input-group-addon:hover {
     opacity: .6;
 }

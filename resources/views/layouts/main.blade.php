@@ -122,10 +122,12 @@
         </div><!--/.row-->
         <div class="page-content">
             @yield('content')
-            <div class="col-md-12">
-                <center>
-                    <small style="color: #999;font-weight: 400; padding: 40px 0px;">Copyright {{ date('Y')}} eLink Systems & Concepts   Corp.</small>
-                </center>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-center" style="color: #999;font-weight: 400; padding: 30px 0 40px;">
+                        Copyright {{ date('Y')}} eLink Systems & Concepts   Corp.
+                    </div>
+                </div>
             </div>
         </div>
     </div>  <!--/.main-->

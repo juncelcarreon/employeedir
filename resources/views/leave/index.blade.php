@@ -1,66 +1,52 @@
 @extends('layouts.main')
 @section('title')
-Request > Leave > <?= ucfirst($type) ?> List
-@endsection
-@section('breadcrumb')
-Request > Leave > <?= ucfirst($type) ?> List
+Leave > <?= ucfirst($type) ?> List
 @endsection
 @section('content')
 <style type="text/css">
-    .panel-heading a{ color: #fff; }
-    .panel-heading a.text-danger{ color: #ff0000; }
-    .panel-heading a.active{ text-decoration: underline; }
-    .font-bold{ font-weight: 700; }
-    .td-option{ width: 100px; text-align: center; }
-    td span{ display: none; }
-    tr.even{ background: #ddd !important; }
-    .btn-dark{ background: #343a40; }
-    .btn-dark:hover{ background: #000; color: #fff; }
-    small{font-size:75% !important;}
+@include('leave.leave-style');
 </style>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <a href="<?= url('leave') ?>"<?= ($type == 'pending') ? ' class="active"' : '' ?>>Pending Leaves</a> | 
-        <a href="<?= url('approved-leaves') ?>"<?= ($type == 'approve') ? ' class="active"' : '' ?>>Approved Leaves</a> | 
-        <a href="<?= url('cancelled-leaves') ?>" class="text-danger<?= ($type == 'cancelled') ? ' active' : '' ?>">Cancelled Leaves</a> <!-- | -->
+        <a href="<?= url('leave') ?>" title="Pending Leaves"<?= ($type == 'pending') ? ' class="active"' : '' ?>>PENDING</a> | 
+        <a href="<?= url('approved-leaves') ?>" title="Approved Leaves"<?= ($type == 'approve') ? ' class="active"' : '' ?>>APPROVED</a> | 
+        <a href="<?= url('cancelled-leaves') ?>" title="Cancelled Leaves"<?= ($type == 'cancelled') ? ' class="active"' : '' ?>>CANCELLED</a>
 
         <a href="<?= url('leave/create') ?>" class="btn btn-primary pull-right"><span class="fa fa-edit"></span>&nbsp; File A Leave</a>
         <?php
         if(Auth::check()) {
             if(Auth::user()->dept_code == 'OE01' && !Auth::user()->isAdmin()) {
         ?>
-                <a href="<?= url('approved-lists') ?>" class="btn btn-success pull-right" style="margin-right:10px;"><span class="fa fa-check"></span>&nbsp; Approved Leaves</a>
+        <a href="<?= url('approved-lists') ?>" class="btn btn-success pull-right"><span class="fa fa-check"></span>&nbsp; Approved Leaves</a>
         <?php
             }
             if(Auth::user()->isAdmin()) {
         ?>
-                <a href="<?= url('expanded-credits') ?>" class="btn btn-info pull-right" style="margin-right:10px;"><span class="fa fa-money"></span>&nbsp; Leave Credits</a>
-                <a href="<?= url('leave-report') ?>" class="btn btn-success pull-right" style="margin-right:10px;"><span class="fa fa-file"></span>&nbsp; Leave Report</a>
+        <a href="<?= url('expanded-credits') ?>" class="btn btn-info pull-right"><span class="fa fa-money"></span>&nbsp; Leave Credits</a>
+        <a href="<?= url('leave-report') ?>" class="btn btn-success pull-right"><span class="fa fa-file"></span>&nbsp; Leave Report</a>
         <?php
             }
         }
         if($is_leader > 0) {
         ?>
-        <a href="<?= url('for-approval') ?>" class="btn btn-dark pull-right" style="margin-right:10px;"><span class="fa fa-users"></span>&nbsp; Team Leave</a>
+        <a href="<?= url('for-approval') ?>" class="btn btn-dark pull-right"><span class="fa fa-users"></span>&nbsp; Team Leave</a>
         <?php
         }
         ?>
     </div>
     <div class="pane-body panel">
-        <br>
-        <br>
-        <table class="_table">
+        <table id="table_leave">
             <thead>
                 <tr>
-                    <th style="width:50px;">#</th>
-                    <th style="width:100px;">Employee</th>
-                    <th style="width:180px;">Leave Type - Reason</th>
-                    <th style="width:100px;">Leave<br> Dates</th>
-                    <th style="width:80px;">Pay<br> Status</th>
-                    <th style="width:40px;">No. Of<br> Days</th>
+                    <th class="w-50">#</th>
+                    <th class="w-100">Employee</th>
+                    <th class="w-180">Leave Type - Reason</th>
+                    <th class="w-100">Leave<br> Dates</th>
+                    <th class="w-80">Pay<br> Status</th>
+                    <th class="w-50">No. Of<br> Days</th>
                     <th>Status</th>
                     <th>Date<br> Requested</th>
-                    <th style="width:60px;">Options</th>
+                    <th class="w-60">Options</th>
                 </tr>
             </thead>
             <tbody>
@@ -122,7 +108,7 @@ Request > Leave > <?= ucfirst($type) ?> List
 $(function () {
     activeMenu($('#menu-leaves'));
 
-    $('._table').DataTable({"pageLength": 50}); 
+    $('#table_leave').DataTable({"pageLength": 50});
 });
 </script>
 @endsection

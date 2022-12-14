@@ -25,9 +25,15 @@
                         <div class="form-group">
                             <strong>Recipient: </strong>
                             <select name="employee_id" class="form-control select2" <?= Auth::user()->isAdmin() ? '' : 'readonly' ?>>
-                                @foreach($employees as $employee)
-                                    <option value="<?= $employee->id ?>" data-position="<?= $employee->position_name ?>" data-department="<?= $employee->team_name ?>" <?= Auth::user()->id == $employee->id ? ' selected' : '' ?>><?= $employee->fullName2() ?></option>
-                                @endforeach
+                            <?php
+                            foreach($employees as $employee) {
+                                if(empty($employee->deleted_at) && $employee->status == 1) {
+                            ?>
+                                <option value="<?= $employee->id ?>" data-position="<?= $employee->position_name ?>" data-department="<?= $employee->team_name ?>" <?= Auth::user()->id == $employee->id ? ' selected' : '' ?>><?= $employee->fullName2() ?></option>
+                            <?php
+                                }
+                            }
+                            ?>
                             </select>
                         </div> 
                     </div>
