@@ -27,10 +27,11 @@ Employees <span>></span> Edit Employee Profile
                         <img src="<?= $employee->profile_img ?>" id="profile_image" alt="image" />
                     </div>
                     <br> 
-                    <label id="bb" class="btn btn-default"> Upload Photo
-                        <input type="file" id="image_uploader" class="btn btn-small" name="profile_image"/>
+                    <label id="bb" class="btn btn-default">
+                        <span class="fa fa-cloud-upload"></span> Upload Photo
+                        <input type="file" id="image_uploader" class="btn btn-small" name="profile_image" accept="image/png, image/jpg, image/jpeg" />
                     </label>    
-                    <h4 class="card-title m-t-10"><?= $employee->fullname() ?></h4>
+                    <h4 class="card-title"><?= $employee->fullname() ?></h4>
                     <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
                     <h6 class="card-subtitle"><?= $employee->team_name ?></h6>
                     <hr>
@@ -41,6 +42,7 @@ Employees <span>></span> Edit Employee Profile
             </div>
         </div>
     </div>
+
     <div class="col-md-9">
         <div class="section-header">
             <h4>Employee Information</h4>
@@ -265,7 +267,6 @@ Employees <span>></span> Edit Employee Profile
     </div>
 </div>
 {{ Form::close() }}
-<!-- Modal -->
 <div class="modal fade" id="modalMovements" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -497,12 +498,14 @@ $(function(){
 <?php
     if(count($dependents) > 1) {
         for($i = 1; $i < count($dependents); $i++) {
-        ?>
+            if(!empty($dependents[$i]->dependent) || !empty($dependents[$i]->generali_num)) {
+?>
         addDep();
         $("#dep_name_" + <?= $i ?>).val("<?= $dependents[$i]->dependent ?>");
         $("#dep_bday_" + <?= $i ?>).val("<?= $dependents[$i]->bday == '1970-01-01' ? '' : date("m/d/Y",strtotime($dependents[$i]->bday)) ?>");
         $("#dep_generali_" + <?= $i ?>).val("<?= $dependents[$i]->generali_num ?>");
-        <?php
+<?php
+            }
         }
     }
 ?>

@@ -72,6 +72,14 @@
     margin: 0px;
     height: 30px;
 }
+
+.alphabet{
+    font-weight: 500 !important;
+}
+
+.alphabet.selected{
+    font-weight: bold !important;
+}
 /* End Search */
 
 /* Employee Profile */
@@ -101,6 +109,7 @@
     color: #777;
     font-size: 12px;
 }
+
 .emp-profile .employee-email{
     color: #0c59a2;
 }
@@ -111,6 +120,7 @@
 }
 .emp-profile h4.timeline-title a{
     transition: linear 0.3s;
+    font-weight: 500;
 }
 
 .emp-profile h4.timeline-title a:hover{
@@ -228,17 +238,15 @@ ol.breadcrumb li span{
     font-size: 16px;
     line-height: 21px;
     margin-top: 15px;
-    font-weight: 400;
-    color: #000;
-}
-.card-subtitle{
-    font-size: 12px;
-    color: #878;
 }
 
 .header-container{
     position: relative;
     z-index: 10;
+}
+
+.mx-5{
+    margin:0 5px !important;
 }
 
 .mt-20{
@@ -251,6 +259,14 @@ ol.breadcrumb li span{
 
 .mb-5{
     margin: 0 auto 5px !important;
+}
+
+.m-0{
+    margin: 0 auto !important;
+}
+
+.p-10{
+    padding: 10px !important;
 }
 
 .p-5{
@@ -273,6 +289,20 @@ ol.breadcrumb li span{
 
 .flex{
     display: flex;
+}
+
+.row.d-flex-wrap{
+    margin: auto -10px;
+}
+
+.d-flex-wrap .col-md-3{
+    padding: 0 10px;
+    float: none;
+}
+
+.justify-center{
+    justify-content:center !important;
+    text-align: center;
 }
 
 .form-group label.control-label{
@@ -310,5 +340,84 @@ pre{
 #view_profile address{
     margin-bottom: 10px;
     white-space: pre-line;
+}
+
+#DataTables_Table_0_wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#DataTables_Table_0 tr td{
+    display: none;
+}
+
+#employee-card{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#employee-card .panel-card{
+    padding: 30px 10px 10px;
+}
+
+#employee-card .emp-profile-img img{
+    width: 100%;
+    height: auto;
+    transform: translate(-50%,-50%);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+}
+
+#employee-card h4.card-title a{
+    color: #444;
+    font-weight: 500 !important;
+}
+
+#employee-card h4.card-title a:hover{
+    color: #30A5FF;
+    text-decoration: none;
+}
+
+#employee-card h5, #employee-card .employee-email{
+    font-size: 12px !important;
+}
+
+#employee-card h5 span{
+    display: block;
+}
+
+#employee-card h5 .employee-email, .employee-email-description{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#employee-card .name-format{
+    display: block;
+    color: #808080;
+}
+
+#employee-card .text-align-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#employee-card .fa-eye, #employee-card .fa-pencil{
+    color: #3A75FB;
+}
+
+#employee-card .fa-user-times{
+    color: #ff0000;
+}
+
+#employee-card .fa-user-plus{
+    color: #008000;
+}
+
+#employee-card a:hover .fa{
+    opacity: .6;
 }
 /* End Others */

@@ -24,7 +24,7 @@ Employee <span>></span> View Profile
                         <img src="<?= $employee->profile_img ?>" alt="image" />
                     </div>
                     <br>
-                    <h4 class="card-title m-t-10"><?= $employee->fullname() ?></h4>
+                    <h4 class="card-title"><?= $employee->fullname() ?></h4>
                     <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
                     <h6 class="card-subtitle"><?= $employee->team_name ?></h6>
                     <hr>

@@ -25,8 +25,8 @@ Employees
                         </form>
                     </li>
                     <li>
-                        <a href="<?= url('employees-card') ?>" class="btn btn-info">
-                            <i class="fa fa-id-card"></i> &nbsp; Card Type View
+                        <a href="<?= url('employees') ?>" class="btn btn-info">
+                            <i class="fa fa-list"></i> &nbsp; List Type View
                         </a>
                     </li>
                 </ul>
@@ -124,18 +124,27 @@ Employees
         </div>
 <?php
     }
+?>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row" id="employee-card">
+<?php
+$count = 1;
+$row = 1;
     foreach($employees as $employee) {
 ?>
-        <div class="col-md-12 p-0">
-            <div class="emp-profile">
-                <div class="row d-flex">
-                    <div class="col-md-1">
-                        <div class="emp-image">
-                            <img src="<?= $employee->profile_img ?>" alt="<?= $employee->fullname() ?>" />
+            <div class="col-md-3" data-row="<?= $row ?>">
+                <div class="section-header p-10">
+                    <h4 class="m-0"><span class="fa fa-id-card" title="Employee ID"></span>&nbsp;&nbsp; <?= $employee->eid ?></h4>
+                </div>
+                <div class="panel panel-container panel-card">
+                    <div class="text-center">
+                        <div class="emp-profile-img m-0">
+                            <img src="<?= $employee->profile_img ?>" alt="image" />
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <h4 class="timeline-title name-format">
+                        <h4 class="card-title">
                         <?php
                         if(Auth::check() && (Auth::user()->id == $employee->supervisor_id || Auth::user()->id == $employee->manager_id)) {
                         ?>
@@ -146,60 +155,35 @@ Employees
                         }
                         ?>
                         </h4>
-                        <h5><?= $employee->position_name ?></h5>
-                        <h6 class="employee-account"><?= $employee->team_name ?> <?= isset($employee->account) ? "- ". $employee->account->account_name : "" ; ?></h6>
-                    </div>
-                    <div class="col-md-4">
-                        <h5>
-                            <span class="fa fa-id-card" title="Employee ID"></span>
-                            <span class="employee-description">&nbsp;&nbsp;<?= $employee->eid ?></span>
-                        </h5>
-                        <h5>
-                            <span class="fa fa-envelope" title="Email Address"></span>&nbsp;&nbsp;
+                        <h6 class="card-subtitle card-position"><?= $employee->position_name ?></h6>
+                        <h6 class="card-subtitle card-team"><?= $employee->team_name ?></h6>
+                        <h5 class="card-subtitle">
+                            <span class="fa fa-envelope mb-5" title="Email Address"></span>
                             <span class="employee-description employee-email"><?= $employee->email ?></span>
                         </h5>
-                    <?php
-                    if(isset($employee->ext) && $employee->ext != '--' && $employee->ext != '') {
-                    ?>
-                        <h5>
-                            <span class="fa fa-phone" title="Extension Number"></span>
-                            <span class="employee-description" >&nbsp;&nbsp;<?= $employee->ext ?></span>
-                        </h5>
-                    <?php
-                    }
-                    if(isset($employee->alias) && $employee->alias != '--' && $employee->alias != '') {
-                    ?>
-                        <h5>
-                            <span class="fa fa-mobile" title="Phone Name"></span>
-                            <span class="employee-description" >&nbsp;&nbsp;<?= $employee->alias ?></span>
-                        </h5>
-                    <?php
-                    }
-                    ?>
-                    </div>
-                    <div class="col-md-4">
                         <h6>
-                            <span class="fa fa-user" title="Supervisor"></span>
-                            <span class="name-format">Immediate Superior: </span>
+                            <span class="name-format mb-5">Immediate Superior: </span>
                             <?= $employee->supervisor_name ?>
                         </h6>
                         <h6>
-                            <span class="fa fa-user" title="Manager"></span>
-                            <span class="name-format">Manager: </span>
+                            <span class="name-format mb-5">Manager: </span>
                             <?= $employee->manager_name ?>
                         </h6>
                     </div>
+                    <br>
                 </div>
             </div>
+<?php
+if($count % 4 == 0) { $row++; }
+$count++;
+}
+?>
         </div>
-        <?php
-        }
-        ?>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12 header-container">
-        <div class="pull-right mt-20">
+        <div class="text-center mt-20">
             <?= $employees->appends(Illuminate\Support\Facades\Input::except('page'))->links() ?>
         </div>
     </div>
@@ -211,7 +195,36 @@ function rfc3986EncodeURIComponent (str) {
     return encodeURIComponent(str).replace(/[!'()*]/g, escape);
 }
 $(function() {
+    var name_h = 21;
+    var position_h = 13;
+    var team_h = 13;
+
     activeMenu($('#menu-active-employees'));
+
+    $('#employee-card .col-md-3').each(function(key){
+        var row = $(this).data('row'),
+            name = $(this).find('h4.card-title'),
+            position = $(this).find('h6.card-position'),
+            team = $(this).find('h6.card-team');
+
+        if(name_h != name.height()) {
+            var h = (name_h > name.height()) ? name_h : name.height();
+
+            $('#employee-card .col-md-3[data-row="'+row+'"]').find('h4.card-title').addClass('text-align-center').height(h);
+        }
+
+        if(position_h != position.height()) {
+            var h = (position_h > position.height()) ? position_h : position.height();
+
+            $('#employee-card .col-md-3[data-row="'+row+'"]').find('h6.card-position').addClass('text-align-center').height(h);
+        }
+
+        if(team_h != team.height()) {
+            var h = (team_h > team.height()) ? team_h : team.height();
+
+            $('#employee-card .col-md-3[data-row="'+row+'"]').find('h6.card-team').addClass('text-align-center').height(h);
+        }
+    });
 
     $('#sort_option_list').change(function(){
         switch($(this).val()){

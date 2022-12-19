@@ -274,19 +274,37 @@ class LeaveController extends Controller
 		return view('leave/upload');
 	}
 
-    public function store(Request $request)
-    {
+	public function store(Request $request)
+	{
 		ini_set('memory_limit', '-1');
 		$obj = [
 			'leave_date' => $request->leave_date,
 			'length'     => $request->length,
 			'pay_type'   => $request->pay_type
 		];
+
 		$leave = new LeaveRequest();
 		$datetime = new DateTime();
 		$employee = User::withTrashed()->find($request->employee_id);
 		$report_date = $datetime->createFromFormat('m/d/Y', $request->report_date)->format("Y-m-d H:i:s");
 		$date_filed = $datetime->createFromFormat('m/d/Y', $request->date_filed)->format("Y-m-d H:i:s");
+		$leave_type_id = empty($request->leave_type_id) ? $request->leave_cto : $request->leave_type_id;
+		if(!empty($request->leave_cto)) {
+			if(!empty($request->leave_type_id) && $request->leave_type_id == 5) {
+				$leave_type_id = 99; // CTO & VL
+			}
+
+			if(count($request->cto_date) == count($request->leave_date)) {
+				$leave_type_id = $request->leave_cto; //JUST CTO
+			} else {
+				$leave_type_id = 99; // CTO & VL
+			}
+		}
+
+		$leave_data = LeaveRequest::where('employee_id', $request->employee_id)->where('filed_by_id', Auth::user()->id)->where('recommending_approval_by_id', $employee->supervisor_id)->where('approved_by_id', $employee->manager_id)->where('number_of_days', $request->number_of_days)->whereRaw("DATE(report_date) = '".date('Y-m-d', strtotime($report_date))."'")->where('reason', $request->reason)->where('contact_number', $request->contact_number)->where('pay_type_id', $request->pay_type_id)->whereRaw("DATE(date_filed) = '".date('Y-m-d', strtotime($date_filed))."'")->where('leave_type_id', $leave_type_id)->first();
+		if(!empty($leave_data)) {
+			return redirect("leave" . '/' . $leave_data->id)->with('success', 'Leave Request Successfully Submitted!!');
+		}
 
 		$leave->employee_id = $request->employee_id;
 		$leave->filed_by_id = Auth::user()->id;
@@ -298,18 +316,7 @@ class LeaveController extends Controller
 		$leave->contact_number = $request->contact_number;
 		$leave->pay_type_id = $request->pay_type_id;
 		$leave->date_filed = $date_filed;
-		$leave->leave_type_id = (empty($request->leave_type_id) ? $request->leave_cto : $request->leave_type_id);
-		if(!empty($request->leave_cto)) {
-			if(!empty($request->leave_type_id) && $request->leave_type_id == 5) {
-				$leave->leave_type_id = 99; // CTO & VL
-			}
-
-			if(count($request->cto_date) == count($request->leave_date)) {
-				$leave->leave_type_id = $request->leave_cto; //JUST CTO
-			} else {
-				$leave->leave_type_id = 99; // CTO & VL
-			}
-		}
+		$leave->leave_type_id = $leave_type_id;
 		$leave->save();
 		$leave_id = $leave->id;
 
@@ -465,7 +472,7 @@ class LeaveController extends Controller
 			$credits->current_credit = ($monthly_accrual + $credits->past_credit) - ($credits->used_jan_to_jun + $credits->used_jul_to_dec);
 		}
 
-		$obj = LeaveRequestDetails::where('leave_id',$id)->where('status',1)->where('pay_type','<>',3)->get();
+		$obj = LeaveRequestDetails::where('leave_id',$id)->where('status','<>',0)->where('pay_type','<>',3)->get();
 		$cto = LeaveRequestDetails::where('leave_id',$id)->where('status','<>',0)->where('pay_type',3)->get();
 		if(count($obj) > 0) { $row = $obj[0]; }
 		if(count($cto) > 0) { $cto_row = $cto[0]; }

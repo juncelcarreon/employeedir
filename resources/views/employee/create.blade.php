@@ -12,9 +12,9 @@ Employee > Add Employee
 Employees <span>></span> Add Employee
 @endsection
 @section('content')
-<div class="row">
-    <form id="create_employee_form" role="form" method="POST" action="{{ route('employee_info.store')}}" enctype="multipart/form-data">
-        {{ csrf_field() }}
+<form id="create_employee_form" role="form" method="POST" action="{{ route('employee_info.store')}}" enctype="multipart/form-data" autocomplete="off">
+    {{ csrf_field() }}
+    <div class="row">
         <div class="col-md-3 pr-0">
             <div class="section-header">
                 <h4>Profile Picture </h4>
@@ -23,13 +23,14 @@ Employees <span>></span> Add Employee
                 <div class="row no-padding">
                     <div class="text-center">
                         <div class="emp-profile-img">
-                            <img src="<?= asset('img/nobody_m.original.jpg') ?>" id="profile_image" alt="image" />
+                            <img src="<?= asset('./img/nobody_m.original.jpg') ?>" id="profile_image" alt="image" />
                         </div>
                         <br>
-                        <label id="bb" class="btn btn-default"> Upload Photo
-                            <input type="file" id="image_uploader" class="btn btn-small" name="profile_image" />
+                        <label id="bb" class="btn btn-default"> 
+                            <span class="fa fa-cloud-upload"></span> Upload Photo
+                            <input type="file" id="image_uploader" class="btn btn-small" name="profile_image" accept="image/png, image/jpg, image/jpeg" />
                         </label> 
-                        <h4 class="card-title m-t-10"></h4>
+                        <h4 class="card-title"></h4>
                         <h6 class="card-subtitle"></h6>
                         <h6 class="card-subtitle"></h6>
                     </div>
@@ -82,7 +83,7 @@ Employees <span>></span> Add Employee
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="asterisk-required">Birthdate</label>
-                            <input type="text" class="form-control datetimepicker" name="birth_date" placeholder="MM/DD/YYYY" autocomplete="off" required />
+                            <input type="text" class="form-control datetimepicker" name="birth_date" placeholder="MM/DD/YYYY" required />
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -152,7 +153,7 @@ Employees <span>></span> Add Employee
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Father's Birthday</label>
-                            <input type="text" class="form-control datetimepicker" name="fathers_bday" placeholder="MM/DD/YYYY" autocomplete="off" />
+                            <input type="text" class="form-control datetimepicker" name="fathers_bday" placeholder="MM/DD/YYYY" />
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -164,7 +165,7 @@ Employees <span>></span> Add Employee
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Mother's Birthday</label>
-                            <input type="text" class="form-control datetimepicker" name="mothers_bday" placeholder="MM/DD/YYYY" autocomplete="off" />
+                            <input type="text" class="form-control datetimepicker" name="mothers_bday" placeholder="MM/DD/YYYY" />
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -176,7 +177,7 @@ Employees <span>></span> Add Employee
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Spouse's Birthday</label>
-                            <input type="text" class="form-control datetimepicker" name="spouse_bday" placeholder="MM/DD/YYYY" autocomplete="off" />
+                            <input type="text" class="form-control datetimepicker" name="spouse_bday" placeholder="MM/DD/YYYY" />
                         </div>
                     </div>
                 </div>
@@ -210,12 +211,12 @@ Employees <span>></span> Add Employee
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <input type="text" class="form-control datetimepicker" name="dependent_bday[]" placeholder="MM/DD/YYYY" autocomplete="off" />
+                            <input type="text" class="form-control datetimepicker" name="dependent_bday[]" placeholder="MM/DD/YYYY" />
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <input type="text" class="form-control" name="generali_num[]" placeholder="xxxx-xxx-xxxx" autocomplete="off" />
+                            <input type="text" class="form-control" name="generali_num[]" placeholder="xxxx-xxx-xxxx" />
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -410,19 +411,19 @@ Employees <span>></span> Add Employee
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Hire Date</label>
-                            <input type="text" class="form-control datetimepicker" placeholder="MM/DD/YYYY" name="hired_date" autocomplete="off" />
+                            <input type="text" class="form-control datetimepicker" placeholder="MM/DD/YYYY" name="hired_date" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Production Date</label>
-                            <input type="text" class="form-control datetimepicker" placeholder="MM/DD/YYYY" name="prod_date" autocomplete="off" />
+                            <input type="text" class="form-control datetimepicker" placeholder="MM/DD/YYYY" name="prod_date" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Regularization Date</label>
-                            <input type="text" type="text" name="regularization_date" class="form-control datetimepicker" placeholder="MM/DD/YYYY" autocomplete="off" />
+                            <input type="text" type="text" name="regularization_date" class="form-control datetimepicker" placeholder="MM/DD/YYYY" />
                         </div>
                     </div>
                     <input type="hidden" name="status_id" value="1" />
@@ -534,8 +535,8 @@ Employees <span>></span> Add Employee
                 </div>
             </div>
         </div>
-    </form>
-</div>
+    </div>
+</form>
 @endsection
 @section('scripts')
 <script id="tmpl_addDependents" type="text/template">
@@ -547,12 +548,12 @@ Employees <span>></span> Add Employee
     </div>
     <div class="col-md-3">
         <div class="form-group">
-            <input type="text" id="dep_bday_~id~" class="form-control datetimepicker" name="dependent_bday[]" placeholder="MM/DD/YYYY" autocomplete="off" />
+            <input type="text" id="dep_bday_~id~" class="form-control datetimepicker" name="dependent_bday[]" placeholder="MM/DD/YYYY" />
         </div>
     </div>
     <div class="col-md-3">
         <div class="form-group">
-            <input type="text" class="form-control" name="generali_num[]" placeholder="xxxx-xxx-xxxx" autocomplete="off" />
+            <input type="text" class="form-control" name="generali_num[]" placeholder="xxxx-xxx-xxxx" />
         </div>
     </div>
     <div class="col-md-2">

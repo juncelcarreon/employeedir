@@ -33,7 +33,7 @@ Employee > View Profile
                         <img src="<?= $employee->profile_img ?>" alt="image" />
                     </div>
                     <br>
-                    <h4 class="card-title m-t-10"><?= $employee->fullname() ?></h4>
+                    <h4 class="card-title"><?= $employee->fullname() ?></h4>
                     <h6 class="card-subtitle"><?= $employee->position_name ?></h6>
                     <h6 class="card-subtitle"><?= $employee->team_name ?></h6>
                     <hr>
@@ -131,6 +131,7 @@ Employee > View Profile
             </div>
         <?php
             for($i=0;$i<count($dependents);$i++) {
+                if(!empty($dependents[$i]->dependent) || !empty($dependents[$i]->generali_num)) {
         ?>
             <div class="row">
                 <div class="col-md-4">
@@ -150,6 +151,7 @@ Employee > View Profile
                 </div>
             </div>
         <?php
+                }
             }
         ?>
         </div>
@@ -324,20 +326,6 @@ var changed = false;
 var ctr = 1;
 
 $(function(){
-<?php
-    if(count($dependents) > 1):
-        for($i = 1; $i < count($dependents); $i++):
-?>
-            addDep();
-            $("#dep_name_" + <?php echo $i ?>).val("<?php echo $dependents[$i]->dependent ?>");
-            $("#dep_bday_" + <?= $i ?>).val("<?= $dependents[$i]->bday == '1970-01-01' ? '' : date("m/d/Y",strtotime($dependents[$i]->bday)) ?>");
-            $("#dep_generali_" + <?= $i ?>).val("<?= $dependents[$i]->generali_num ?>");
-<?php
-        endfor;
-    endif;
-?>
-});
-
 <?php
     if(empty($myprofile)) {
 ?>

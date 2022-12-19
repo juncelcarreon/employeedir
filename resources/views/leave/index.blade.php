@@ -1,11 +1,16 @@
 @extends('layouts.main')
 @section('title')
-Leave > <?= ucfirst($type) ?> List
+Request | Leave > <?= ucfirst($type) ?> List
 @endsection
-@section('content')
+@section('head')
 <style type="text/css">
 @include('leave.leave-style');
 </style>
+@endsection
+@section('breadcrumb')
+Request <span>/</span> Leave <span>></span> <?= ucfirst($type) ?> List
+@endsection
+@section('content')
 <div class="panel panel-default">
     <div class="panel-heading">
         <a href="<?= url('leave') ?>" title="Pending Leaves"<?= ($type == 'pending') ? ' class="active"' : '' ?>>PENDING</a> | 

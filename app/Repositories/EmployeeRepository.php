@@ -404,7 +404,7 @@ class EmployeeRepository implements RepositoryInterface
         return redirect()->back()->with('success', "Successfully updated employee information");
     }
 
-    public function employees(Request $request){
+    public function employees(Request $request, $is_card = null){
         $departments = EmployeeDepartment::orderBy('department_name')->get();;
         $positions = User::allExceptSuperAdmin()->select('position_name')->distinct()->orderBy('position_name')->get();
 
@@ -428,18 +428,6 @@ class EmployeeRepository implements RepositoryInterface
                         ->orWhere('position_name', 'LIKE', '%'.$request->get('keyword').'%')
                         ->orWhere('ext', 'LIKE', '%'.$request->get('keyword').'%');
                     });
-
-                    // $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(10);
-
-                    // foreach($employees as $key=>$employee) {
-                    //     $manager = User::find($employee->manager_id);
-                    //     $supervisor = User::find($employee->supervisor_id);
-
-                    //     $employee->manager_name = (empty($manager) ? 'NO MANAGER' : $employee->manager_name);
-                    //     $employee->supervisor_name = (empty($supervisor) ? 'NO SUPERVISOR' : $employee->supervisor_name);
-                    // }
-
-                    // return view('employee.employees')->with('employees', $employees )->with('request', $request)->with('departments', $departments)->with('positions', $positions);
                 }
 
                 if ($request->has('department') && $request->get('department') != "") {
@@ -480,7 +468,13 @@ class EmployeeRepository implements RepositoryInterface
                     });
                 }
 
-                $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(10);
+                if(empty($is_card)) {
+                    $view = 'employee.employees';
+                    $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(10);
+                } else {
+                    $view = 'employee.card';
+                    $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(12);
+                }
 
                 foreach($employees as $key=>$employee) {
                     $manager = User::find($employee->manager_id);
@@ -490,7 +484,7 @@ class EmployeeRepository implements RepositoryInterface
                     $employee->supervisor_name = (empty($supervisor) ? 'NO SUPERVISOR' : $employee->supervisor_name);
                 }
 
-                return view('employee.employees')->with('employees', $employees)->with('request', $request)->with('departments', $departments)->with('positions', $positions);
+                return view($view)->with('employees', $employees)->with('request', $request)->with('departments', $departments)->with('positions', $positions);
             }
         }
 
@@ -513,7 +507,13 @@ class EmployeeRepository implements RepositoryInterface
                 ->orWhere('ext', 'LIKE', '%'.$request->get('keyword').'%');
             });
 
-            $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(10);
+            if(empty($is_card)) {
+                $view = 'guest.employees';
+                $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(10);
+            } else {
+                $view = 'guest.card';
+                $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(12);
+            }
 
             foreach($employees as $key=>$employee) {
                 $manager = User::find($employee->manager_id);
@@ -523,7 +523,7 @@ class EmployeeRepository implements RepositoryInterface
                 $employee->supervisor_name = (empty($supervisor) ? 'NO SUPERVISOR' : $employee->supervisor_name);
             }
 
-            return view('guest.employees')->with('employees', $employees )->with('request', $request)->with('departments', $departments)->with('positions', $positions);
+            return view($view)->with('employees', $employees )->with('request', $request)->with('departments', $departments)->with('positions', $positions);
         }
 
         if ($request->has('alphabet') && $request->get('alphabet') != "") {
@@ -545,7 +545,13 @@ class EmployeeRepository implements RepositoryInterface
             $employees = $employees->whereRaw('MONTH(birth_date) = '. $request->get('birthmonth'));
         }
 
-        $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(10);
+        if(empty($is_card)) {
+            $view = 'guest.employees';
+            $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(10);
+        } else {
+            $view = 'guest.card';
+            $employees = $employees->where('id', '<>', 1)->orderBy('last_name', 'ASC')->paginate(12);
+        }
 
         foreach($employees as $key=>$employee) {
             $manager = User::find($employee->manager_id);
@@ -555,9 +561,9 @@ class EmployeeRepository implements RepositoryInterface
             $employee->supervisor_name = (empty($supervisor) ? 'NO SUPERVISOR' : $employee->supervisor_name);
         }
 
-        return view('guest.employees')->with('employees', $employees )->with('request', $request)->with('departments', $departments)->with('positions', $positions);
+        return view($view)->with('employees', $employees )->with('request', $request)->with('departments', $departments)->with('positions', $positions);
     }
-    
+
     public function download_filter(Request $request){
         $departments = EmployeeDepartment::all();
         $positions = User::allExceptSuperAdmin()->select('position_name')->distinct()->get();

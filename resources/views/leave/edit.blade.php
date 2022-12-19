@@ -2,10 +2,15 @@
 @section('title')
 Leave > Edit
 @endsection
-@section('content')
+@section('head')
 <style type="text/css">
 @include('leave.leave-style');
 </style>
+@endsection
+@section('breadcrumb')
+Request <span>/</span> Leave <span>></span> Edit
+@endsection
+@section('content')
 <form action="<?= url('leave/update') ?>" method="post" id="leave_form" autocomplete="off">
     {{ csrf_field() }}
     <div class="panel panel-default">
@@ -278,6 +283,8 @@ Leave > Edit
         </div>
     </div>
 </form>
+@endsection
+@section('scripts')
 <script id="tmpl_addLeaveDay" type="text/template">
 <div id="row_~~id~~" class="row">
     <div class="col-md-4">
@@ -319,8 +326,6 @@ Leave > Edit
     </button>
 </div>
 </script>
-@endsection
-@section('scripts')
 <script type="text/javascript">
 var ctr = 1;
 var locked_days = [<?php foreach($blocked_dates as $b) { echo '"'.$b.'"'.","; } ?>];
@@ -358,7 +363,7 @@ function removeThisLeave(obj){
     }
     computeTotalField();
     if(type == "main")
-        $.post('/leave/rack',{id : id, total : $("._numOfDaysField").val(), leave : {{ $filed_days[0]->leave_id }}},function(e){
+        $.post('/leave/rack',{id : id, total : $("._numOfDaysField").val(), leave : <?= $filed_days[0]->leave_id ?>},function(e){
             console.log(e);
         },'json');
 }

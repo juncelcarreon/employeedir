@@ -1,11 +1,16 @@
 @extends('layouts.main')
 @section('title')
-Leaves > Create
+Request | Leaves > File a Leave
 @endsection
-@section('content')
+@section('head')
 <style type="text/css">
 @include('leave.leave-style');
 </style>
+@endsection
+@section('breadcrumb')
+Request <span>/</span> Leave <span>></span> File a Leave
+@endsection
+@section('content')
 <form action="<?= url('leave') ?>" method="post" id="leave_form" autocomplete="off">
     {{ csrf_field() }}
     <div class="panel panel-default">

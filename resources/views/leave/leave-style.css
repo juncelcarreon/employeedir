@@ -57,6 +57,10 @@
 #leave_credits_table_filter, #leave_credits_table_info, #leave_credits_table_paginate {
     display: none !important;
 }
+
+#table_leave_dates_wrapper{
+    margin: -25px auto 0 !important;
+}
 /* End DataTable */
 
 /* Custom Widths */
@@ -225,6 +229,12 @@ input:checked + .slider:before {
 /* End Modal */
 
 /* Others */
+ol.breadcrumb li span{
+    display: inline-block;
+    color: #ccc;
+    padding: 0 5px;
+}
+
 .cto-dates input{
     display: inline-block;
     vertical-align: middle;

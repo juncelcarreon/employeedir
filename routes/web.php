@@ -39,6 +39,7 @@ Route::get('/', function () {
  */
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('employees', 'EmployeeInfoController@employees');
+Route::get('employees-card', 'EmployeeInfoController@card');
 Route::get('profile/{id}', 'EmployeeInfoController@profile');
 
 /*

@@ -292,4 +292,96 @@ class LeaveRequest extends Model
         return $leave_details;
     }
 
+    public static function getLeave2($leave_type = 'pending', $id = null, $type = 'list', $is_separated = null)
+    {
+        $leave = DB::table('leave_request')
+            ->join('employee_info', 'leave_request.employee_id', '=', 'employee_info.id')
+            ->select('leave_request.*', 'employee_info.supervisor_id', 'employee_info.manager_id', 'employee_info.last_name', 'employee_info.first_name');
+
+        switch ($leave_type) {
+            case 'approve':
+                $leave = $leave->where('leave_request.approve_status_id', 1);
+                break;
+            case 'cancelled':
+                $leave = $leave->where('leave_request.approve_status_id', 2);
+                break;
+            case 'separated':
+                $leave = $leave->whereRaw("(`leave_request`.`approve_status_id` IS NOT NULL");
+                break;
+            default:
+                $leave = $leave->whereRaw("(`leave_request`.`approve_status_id` = 0 OR `leave_request`.`approve_status_id` = 3)");
+                break;
+        }
+
+        if(!empty($id) && $type == 'list') {
+            $leave = $leave->where('leave_request.employee_id', $id);
+        }
+
+        if(!empty($id) && $type == 'team') {
+            $leave = $leave->whereRaw("(`employee_info`.`manager_id`={$id} OR `employee_info`.`supervisor_id`={$id})");
+        }
+
+        if(empty($is_separated)) {
+            $leave = $leave->whereNull('employee_info.deleted_at')->where('employee_info.status', 1);
+        }
+
+        $leave = $leave->where('leave_request.status', 1)
+            ->orderByDesc('leave_request.date_filed')
+            ->paginate(50);
+
+        $leave_details  = [];
+        foreach($leave as $key=>$value) {
+            $details = DB::select("SELECT * FROM `leave_request_details` WHERE `leave_request_details`.`leave_id` = {$value->id} AND `leave_request_details`.`status` != 0 AND `leave_request_details`.`pay_type` != 3 ORDER BY `leave_request_details`.`date`");
+
+            if(!empty($details)) {
+                $leave_details[$key] = $value;
+                $leave_details[$key]->leave_details = $details;
+            }
+        }
+
+        $data = [];
+        $no = 1;
+        foreach($leave_details as $i=>$request) {
+            $reason = "";
+            $num_days = 0;
+            $dates = [];
+            $pay_status = [];
+            foreach($request->leave_details as $detail):
+                array_push($dates, date('M d, Y', strtotime($detail->date)));
+                array_push($pay_status, (($detail->pay_type) ? 'With Pay' : 'Without Pay'));
+                $num_days += $detail->length;
+            endforeach;
+
+            $leave_status = "Pending <br> <small>(Recommendation / Approval)</small>";
+            switch($request->approve_status_id) {
+                case 1:
+                    $leave_status = 'Approved';
+                    break;
+                case 2:
+                    $leave_status = 'Not Approved';
+                    break;
+                case 3:
+                    $leave_status = "Pending <br> <small>(Approval)</small>";
+                    break;
+            }
+
+            $reason = $request->pay_type_id == 1 ? "Planned - " : "Unplanned - ";
+            $reason .= (strlen($request->reason) > 80) ? substr($request->reason, 0, 80)." ..." : $request->reason;
+
+            $data[$i][0] = $no;
+            $data[$i][1] = $request->first_name. " " .$request->last_name;
+            $data[$i][2] = $reason;
+            $data[$i][3] = '<span>'.strtotime($dates[0]).'</span>'.implode('<br>', $dates);
+            $data[$i][4] = implode('<br>', $pay_status);
+            $data[$i][5] = (float) $num_days;
+            $data[$i][6] = $leave_status;
+            $data[$i][7] = '<span>'.strtotime($request->date_filed).'</span>'.date("M d, Y",strtotime($request->date_filed));
+            $data[$i][8] = '<a href="'.url("leave/{$request->id}").'" title="View" class="btn_view"><span class="fa fa-eye"></span></a>';
+
+        $no++;
+        }
+
+        return $data;
+    }
+
 }

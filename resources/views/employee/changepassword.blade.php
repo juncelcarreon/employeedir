@@ -26,7 +26,7 @@ Employees <span>></span> Change Password
                     if($errors->any()) {
                     ?>
                     <div class="form-group text-center">
-                        <span class="message-{{session('errors')->first('status') }}">{{session('errors')->first('message') }}</span>
+                        <span class="message-<?= session('errors')->first('status') ?>"><?= session('errors')->first('message') ?></span>
                     </div>
                     <?php
                     }
@@ -50,7 +50,7 @@ Employees <span>></span> Change Password
                     <div class="form-group password">
                         <label class="control-label col-sm-2">Confirm Password</label>
                         <div class="col-sm-10">
-                            <input type="password"  class="form-control" placeholder="Confirm Password" name="confirm_password" />
+                            <input type="password" class="form-control" placeholder="Confirm Password" name="confirm_password" />
                         </div>
                     </div>
                     <div class="form-group">

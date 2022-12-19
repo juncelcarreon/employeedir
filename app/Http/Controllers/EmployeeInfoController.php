@@ -200,6 +200,11 @@ class EmployeeInfoController extends Controller
 		return $this->model->employees($request);
 	}
 
+	public function card(Request $request)
+	{
+		return $this->model->employees($request, 1);
+	}
+
 	public function searchMovements(Request $request)
 	{
 		return MovementsTransfer::where('mv_employee_no',$request->get("emp_no"))->leftJoin('employee_department','movements.mv_dept','=','employee_department.id')->orderBy('mv_transfer_date', 'DESC')->get();

@@ -104,7 +104,7 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Regularization Date</label>
-            <input type="text" name="regularization_date" class="form-control datetimepicker" value="<?= @$employee->regularization_date == '1970-01-01' ? '' : @$employee->regularization_date ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
+            <input type="text" name="regularization_date" class="form-control datetimepicker" value="<?= @$employee->regularization_date == '1970-01-01' ? '' : date('m/d/Y', strtotime(@$employee->regularization_date)) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
         </div>
     </div>
     <input type="hidden" name="status_id" value="{{@$employee->status || 1}}" />
@@ -123,7 +123,7 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Resignation Date </label>
-            <input type="text" class="form-control datetimepicker" name="resignation_date" value="<?= @$details->resignation_date == '1970-01-01' ? '' : @$details->resignation_date ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
+            <input type="text" class="form-control datetimepicker" name="resignation_date" value="<?= @$details->resignation_date == '1970-01-01' ? '' : date('m/d/Y', strtotime(@$details->resignation_date)) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
         </div>
     </div>
     <div class="col-md-4">

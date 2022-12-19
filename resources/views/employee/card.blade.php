@@ -20,8 +20,8 @@ Employees <span>></span> Active Employees
             <a href="/download-filter?<?= (empty($_SERVER['QUERY_STRING']) ? '' : $_SERVER['QUERY_STRING']) ?>" class="btn btn-success" >
                 <i class="glyphicon glyphicon-arrow-down"></i>&nbsp; Download Employee Information
             </a>
-            <a href="<?= url('employees-card') ?>" class="btn btn-info">
-                <i class="fa fa-id-card"></i> &nbsp; Card Type View
+            <a href="<?= url('employees') ?>" class="btn btn-info">
+                <i class="fa fa-list"></i> &nbsp; List Type View
             </a>
             <br>
             <br>
@@ -113,7 +113,7 @@ Employees <span>></span> Active Employees
                     </select>
                 </li>
                 <li>
-                    <a href="<?= url('employees') ?>" class="btn btn-default btn-clear">Clear Filter</a>
+                    <a href="<?= url('employees-card') ?>" class="btn btn-default btn-clear">Clear Filter</a>
                 </li>
             </ul>
         </div>
@@ -132,64 +132,46 @@ if(count($employees) == 0) {
         </div>
 <?php
 }
+?>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row" id="employee-card">
+
+<?php
+$count = 1;
+$row = 1;
 foreach($employees as $employee) {
 ?>
-        <div class="col-md-12 p-0">
-            <div class="emp-profile">
-                <div class="row d-flex">
-                    <div class="col-md-1">
-                        <div class="emp-image">
-                            <img src="<?= $employee->profile_img ?>" alt="<?= $employee->fullname() ?>" />
+            <div class="col-md-3" data-row="<?= $row ?>">
+                <div class="section-header p-10">
+                    <h4 class="m-0"><span class="fa fa-id-card" title="Employee ID"></span>&nbsp;&nbsp; <?= $employee->eid ?></h4>
+                </div>
+                <div class="panel panel-container panel-card">
+                    <div class="text-center">
+                        <div class="emp-profile-img m-0">
+                            <img src="<?= $employee->profile_img ?>" alt="image" />
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <h4 class="timeline-title name-format">
+                        <h4 class="card-title">
                             <a href="<?= url("employee_info/{$employee->id}") ?>"><?= $employee->fullname() ?></a>
                         </h4>
-                        <h5><?= $employee->position_name ?></h5>
-                        <h6 class="employee-account"><?= $employee->team_name ?> <?= isset($employee->account) ? "- ". $employee->account->account_name : "" ; ?></h6>
-                    </div>
-                    <div class="col-md-3">
-                        <h5>
-                            <span class="fa fa-id-card" title="Employee ID">&nbsp;&nbsp;</span>
-                            <span class="employee-description"><?= $employee->eid ?></span>
-                        </h5>
-                        <h5 class="employee-email-description">
-                            <span class="fa fa-envelope" title="Email Address">&nbsp;&nbsp;</span>
+                        <h6 class="card-subtitle card-position"><?= $employee->position_name ?></h6>
+                        <h6 class="card-subtitle card-team"><?= $employee->team_name ?></h6>
+                        <h5 class="card-subtitle">
+                            <span class="fa fa-envelope mb-5" title="Email Address"></span>
                             <span class="employee-description employee-email" title="<?= $employee->email ?>"><?= $employee->email ?></span>
                         </h5>
-                    <?php
-                    if(isset($employee->ext) && $employee->ext != '--' && $employee->ext != '') {
-                    ?>
-                        <h5>
-                            <span class="fa fa-phone" title="Extension Number">&nbsp;&nbsp;</span>
-                            <span class="employee-description" ><?= $employee->ext ?></span>
-                        </h5>
-                    <?php
-                    }
-                    if(isset($employee->alias) && $employee->alias != '--' && $employee->alias != '') {
-                    ?>
-                        <h5>
-                            <span class="fa fa-mobile" title="Phone Name">&nbsp;&nbsp;</span>
-                            <span class="employee-description" ><?= $employee->alias ?></span>
-                        </h5>
-                    <?php
-                    }
-                    ?>
-                    </div>
-                    <div class="col-md-3">
                         <h6>
-                            <span class="fa fa-user" title="Supervisor"></span>
-                            <span class="name-format">Immediate Superior: </span>
+                            <span class="name-format mb-5">Immediate Superior: </span>
                             <?= $employee->supervisor_name ?>
                         </h6>
                         <h6>
-                            <span class="fa fa-user" title="Manager"></span>
-                            <span class="name-format">Manager: </span>
+                            <span class="name-format mb-5">Manager: </span>
                             <?= $employee->manager_name ?>
                         </h6>
-                    </div>
-                    <div class="col-md-2">
+                        <hr>
                         <div class="options">
                             <a href="<?= url("employee_info/{$employee->id}") ?>" title="View">
                                 <i class="fa fa-eye"></i>
@@ -202,15 +184,20 @@ foreach($employees as $employee) {
                             </a>
                         </div>
                     </div>
+                    <br>
                 </div>
             </div>
-        </div>
 <?php
+if($count % 4 == 0) { $row++; }
+$count++;
 }
 ?>
+        </div>
     </div>
+</div>
+<div class="row">
     <div class="col-md-12 header-container">
-        <div class="pull-right mt-20">
+        <div class="mt-20 text-center">
             <?= $employees->appends(Illuminate\Support\Facades\Input::except('page'))->links() ?>
         </div>
     </div>
@@ -222,7 +209,36 @@ function rfc3986EncodeURIComponent (str) {
     return encodeURIComponent(str).replace(/[!'()*]/g, escape);
 }
 $(function() {
+    var name_h = 21;
+    var position_h = 13;
+    var team_h = 13;
+
     activeMenu($('#menu-active-employees'));
+
+    $('#employee-card .col-md-3').each(function(key){
+        var row = $(this).data('row'),
+            name = $(this).find('h4.card-title'),
+            position = $(this).find('h6.card-position'),
+            team = $(this).find('h6.card-team');
+
+        if(name_h != name.height()) {
+            var h = (name_h > name.height()) ? name_h : name.height();
+
+            $('#employee-card .col-md-3[data-row="'+row+'"]').find('h4.card-title').addClass('text-align-center').height(h);
+        }
+
+        if(position_h != position.height()) {
+            var h = (position_h > position.height()) ? position_h : position.height();
+
+            $('#employee-card .col-md-3[data-row="'+row+'"]').find('h6.card-position').addClass('text-align-center').height(h);
+        }
+
+        if(team_h != team.height()) {
+            var h = (team_h > team.height()) ? team_h : team.height();
+
+            $('#employee-card .col-md-3[data-row="'+row+'"]').find('h6.card-team').addClass('text-align-center').height(h);
+        }
+    });
 
     $('.delete_btn').click(function(){
         $('#messageModal .modal-title').html('Delete Employee');

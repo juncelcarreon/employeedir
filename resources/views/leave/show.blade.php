@@ -1,11 +1,16 @@
 @extends('layouts.main')
 @section('title')
-Leave > View
+Request | Leave > View Information
 @endsection
-@section('content')
+@section('head')
 <style type="text/css">
 @include('leave.leave-style');
 </style>
+@endsection
+@section('breadcrumb')
+Request <span>/</span> Leave <span>></span> View Information
+@endsection
+@section('content')
 <div class="panel panel-default">
 	<div class="panel-heading">
 		LEAVE REQUEST INFORMATION
@@ -38,7 +43,7 @@ Leave > View
                 </div>
 
                 <div class="col-md-8">
-                    <table class="table table-bordered table-striped table-primary">
+                    <table class="table table-bordered table-striped table-primary" id="table_leave_dates">
                         <thead>
                             <tr>
                                 <th>Leave Date</th>
