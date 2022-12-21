@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\File;
 
 class SettingController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('setting.index');
     }
 
-    public function updateHierarchy(Request $request){
+    public function updateHierarchy(Request $request)
+    {
         if ($request->hasFile("file")) {
             File::delete('public/img/company-hierarchy.jpeg');
 
@@ -23,7 +25,8 @@ class SettingController extends Controller
         return back()->with('success', "Successfully changed the Employee Hierarchy Image.");
     }
 
-    public function updateAttendance(Request $request){
+    public function updateAttendance(Request $request)
+    {
         if ($request->hasFile("file")) {
             File::delete('public/attachment/attendance.pdf');
 
@@ -34,7 +37,8 @@ class SettingController extends Controller
         return back()->with('success', "Successfully changed the Company Policy - Attendance.");
     }
 
-    public function updateDirectives(Request $request){
+    public function updateDirectives(Request $request)
+    {
         if ($request->hasFile("file")) {
             File::delete('public/attachment/directives.pdf');
 
@@ -45,7 +49,8 @@ class SettingController extends Controller
         return back()->with('success', "Successfully changed the Company Policy - Directives.");
     }
 
-    public function updateDresscode(Request $request){
+    public function updateDresscode(Request $request)
+    {
         if ($request->hasFile("file")) {
             File::delete('public/attachment/dresscode.pdf');
 

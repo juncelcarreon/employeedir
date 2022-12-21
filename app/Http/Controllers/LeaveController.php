@@ -1305,29 +1305,114 @@ class LeaveController extends Controller
 
 	public function xlsCredits()
 	{ 
+		$styleArray = [
+			'font' => [
+				'bold' => true,
+				'size' => 14
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+			],
+			'borders' => [
+				'bottom' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '3a75fb',
+				],
+				'endColor' => [
+					'argb' => '3a75fb',
+				],
+			],
+		];
+
 		$writesheet = new Spreadsheet();
 		$writer = IOFactory::createWriter($writesheet, "Xlsx");
 		$sheet = $writesheet->getActiveSheet();
+		$sheet->getStyle('A1:H1')->applyFromArray($styleArray);
+		$sheet->getStyle('A1:H1')->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
+		$sheet->getColumnDimension('A')->setWidth('15');
+		$sheet->getColumnDimension('B')->setWidth('40');
+		$sheet->getColumnDimension('C')->setWidth('40');
+		$sheet->getColumnDimension('D')->setWidth('30');
+		$sheet->getColumnDimension('E')->setWidth('15');
+		$sheet->getColumnDimension('F')->setWidth('15');
+		$sheet->getColumnDimension('G')->setWidth('15');
+		$sheet->getColumnDimension('H')->setWidth('15');
 		$i = 1;
+		$present = date('Y');
 		$past = date('Y') - 1;
-		$header = array("Employee ID", "Employee Name", "Position", $past." PTO for Conversion", $past." PTO", date('Y')." PTO", "Used PTO", "PTO Balance");
-		$sheet->fromArray([$header], NULL, 'A'.$i); 
-		$i++;
+		$header = array("Employee ID", "Employee Name", "Position", "{$past} PTO for Conversion", "{$past} PTO", "{$present} PTO", "Used PTO", "PTO Balance");
+		$sheet->fromArray([$header], NULL, 'A'.$i);
 		$obj = DB::select($this->newQuery());
-		foreach($obj as $employee){
+
+		$i++;
+		foreach($obj as $employee) {
+			$div = 0;
+			switch($employee->employee_category):
+				case 1: $div = 20; break;
+				case 2: $div = 14; break;
+				case 3: $div = 10; break;
+				case 4: $div = 10; break;
+			endswitch;
+			$different_in_months = DateHelper::getDifferentMonths($employee->hired_date);
+			$monthly_accrual = (($div / 12) * $different_in_months) + $employee->monthly_accrual;
+			$employee->monthly_accrual = $monthly_accrual;
+			$employee->current_credit = ($monthly_accrual + $employee->past_credit) - ($employee->used_jan_to_jun + $employee->used_jul_to_dec);
+
+			$pto_forwarded = $employee->past_credit - $employee->conversion_credit;
+			$pto_accrue = $employee->current_credit;
+			$loa = abs($employee->loa);
+			$use_jan_jun = $employee->used_jan_to_jun;
+			$pto_expired = $employee->expired_credit;
+			$balance = $pto_forwarded + $pto_accrue - $loa - $use_jan_jun - $pto_expired;
+
 			$body = [
 				$employee->eid,
 				strtoupper($employee->employee_name),
 				$employee->position_name,
-				number_format($employee->conversion_credit,1),
-				number_format($employee->past_credit - $employee->conversion_credit,1),
-				number_format($employee->current_credit,1),
-				number_format($employee->used_credit,1),
-				number_format($employee->total_credits,1)
+				number_format($employee->conversion_credit),
+				number_format($employee->past_credit,2),
+				number_format($monthly_accrual,2),
+				number_format($employee->used_jan_to_jun + $employee->used_jul_to_dec, 2),
+				(($employee->is_regular == 1) ? number_format($employee->current_credit,2) : '0.00')
 			];
-			$sheet->fromArray([$body], NULL, 'A'.$i); 
+
+			$color = 'eea236';
+			if($employee->is_regular == 1) {
+				if($employee->current_credit > 0) { $color = '8ad919'; }
+				if($employee->current_credit < 0) { $color = 'f9243f'; }
+			}
+
+			$balanceStyle = [
+				'font' => [
+					'bold' => true
+				],
+				'fill' => [
+					'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+					'rotation' => 90,
+					'startColor' => [
+						'argb' => $color,
+					],
+					'endColor' => [
+						'argb' => $color,
+					],
+				],
+			];
+
+			$sheet->fromArray([$body], NULL, 'A'.$i);
+			$sheet->getStyle("C{$i}")->getAlignment()->setWrapText(true);
+			$sheet->getStyle("D{$i}:H{$i}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+			$sheet->getStyle("D{$i}:H{$i}")->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle("H{$i}")->applyFromArray($balanceStyle);
+			$sheet->getStyle("H{$i}")->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
 		$i++;
 		}
+
 		ob_end_clean();
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="leave-credits-'.date('mdY-His').'.xlsx"');
@@ -1527,7 +1612,9 @@ class LeaveController extends Controller
 			WHERE
 				`employee_info`.`status` = 1 AND 
 				`employee_info`.`deleted_at` IS NULL AND 
-				`employee_info`.`eid` LIKE 'ESCC-%'";
+				`employee_info`.`eid` LIKE 'ESCC-%'
+			ORDER BY
+				`employee_info`.`eid`";
 
 		if($id) {
 			$sql.=" AND `employee_info`.`id` = {$id}";
@@ -1704,4 +1791,21 @@ class LeaveController extends Controller
 
 		return $sql;
 	}
+
+	// public function test(Request $request)
+	// {
+	// 	$columns = array(
+	// 		array('dt' => 0 ),
+	// 		array('dt' => 1 ),
+	// 		array('dt' => 2 ),
+	// 		array('dt' => 3 ),
+	// 		array('dt' => 4 ),
+	// 		array('dt' => 5 ),
+	// 		array('dt' => 6 ),
+	// 		array('dt' => 7 ),
+	// 		array('dt' => 8 )
+	// 	);
+
+	// 	echo json_encode(LeaveRequest::getLeave2($request, $columns));
+	// }
 }

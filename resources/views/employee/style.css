@@ -195,6 +195,14 @@
 /* End Pagination */
 
 /* Modal */
+.modal-header{
+    background-color: #0086cd !important;
+}
+
+.modal-header h4{
+    color: #fff !important;
+}
+
 #modalMovements .modal-body{
     max-height:500px; 
     min-height: 450px; 
@@ -206,7 +214,7 @@
     margin: 0;
 }
 
-#modalMovements #transferForm tr{
+#modalMovements #transferForm > tr{
     background-color: #fd9a47;
 }
 
@@ -347,7 +355,7 @@ pre{
     padding: 0 !important;
 }
 
-#DataTables_Table_0 tr td{
+#DataTables_Table_0_wrapper tr td span {
     display: none;
 }
 

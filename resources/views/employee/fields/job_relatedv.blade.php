@@ -85,19 +85,19 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Hire Date</label>
-            <input type="text" class="form-control" name="hired_date" value="<?= @$employee->datehired() ?>" readonly />
+            <input type="text" class="form-control" name="hired_date" value="<?= (!empty(@$employee->hired_date) && date('Y-m-d', strtotime(@$employee->hired_date)) != '1970-01-01') ? date('m/d/Y', strtotime(@$employee->hired_date)) : '' ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Production Date</label>
-            <input type="text" class="form-control" name="prod_date" value="<?= @$employee->prodDate() ?>" readonly />
+            <input type="text" class="form-control" name="prod_date" value="<?= (!empty(@$employee->prod_date) && date('Y-m-d', strtotime(@$employee->prod_date)) != '1970-01-01') ? date('m/d/Y', strtotime(@$employee->prod_date)) : '' ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Regularization Date</label>
-            <input type="text" name="regularization_date" class="form-control" value="<?= @$employee->regularization_date == '1970-01-01' ? '' : date('m/d/Y', strtotime(@$employee->regularization_date)) ?>" autocomplete="off" readonly />
+            <input type="text" name="regularization_date" class="form-control" value="<?= (!empty(@$employee->regularization_date) && @$employee->regularization_date != '1970-01-01') ? date('m/d/Y', strtotime(@$employee->regularization_date)) : '' ?>" autocomplete="off" readonly />
         </div>
     </div>
     <div class="col-md-4">
@@ -115,25 +115,25 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Resignation Date </label>
-            <input type="text" class="form-control" name="resignation_date" value="<?= @$details->resignation_date == '1970-01-01' ? '' : date('m/d/Y', strtotime(@$details->resignation_date)) ?>" readonly />
+            <input type="text" class="form-control" name="resignation_date" value="<?= (isset($details->resignation_date) && $details->resignation_date != '1970-01-01') ? date('m/d/Y', strtotime($details->resignation_date)) :  ''  ?>" readonly />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <?php
             $rehirable = 'No';
-            if(@$details->rehirable) {
+            if(isset($details->rehirable) && $details->rehirable) {
                 $rehirable = 'Yes';
             }
             ?>
             <label>Rehirable</label>
-            <input type="text" class="form-control" name="rehirable" value="<?= @$rehirable ?>" readonly />
+            <input type="text" class="form-control" name="rehirable" value="<?= $rehirable ?>" readonly />
         </div>
     </div> 
     <div class="col-md-12">
         <div class="form-group">
             <label>Reason</label>
-            <input type="text" name="rehire_reason" class="form-control" value="<?= @$details->rehire_reason ?>" readonly />
+            <input type="text" name="rehire_reason" class="form-control" value="<?= isset($details->rehire_reason) ? $details->rehire_reason : '' ?>" readonly />
         </div>
     </div>
     <div class="col-md-12">

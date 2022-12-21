@@ -71,7 +71,7 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Avega Number</label>
-            <input type="text" class="form-control" name="avega_num" value="<?= $details->avega_num ?>" placeholder="xx-xx-xxxxx-xxxxx-xx" />
+            <input type="text" class="form-control" name="avega_num" value="<?= empty($details->avega_num) ? '' : $details->avega_num ?>" placeholder="xx-xx-xxxxx-xxxxx-xx" />
         </div>
     </div>
 </div>
@@ -85,7 +85,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>Home Town Address</label>
-            <textarea name="town_address" class="form-control" rows="4"><?= @$details->town_address ?></textarea>
+            <textarea name="town_address" class="form-control" rows="4"><?= empty($details->town_address) ? '' : $details->town_address ?></textarea>
         </div>
     </div>
 </div>

@@ -64,7 +64,7 @@ class DepartmentController extends Controller
     {
         $employeeDepartment = EmployeeDepartment::find($id);
         $employeeDepartment->delete();
-        
+
         return redirect('department')->with('success', "Successfully deleted department");
     }
 }

@@ -3,13 +3,13 @@
 Employees > Separated Employees > View Profile
 @endsection
 @section('head')
-<link rel="stylesheet" href="{{asset('./css/custom-bootstrap.css')}}">
+<link rel="stylesheet" href="{{asset('public/css/custom-bootstrap.css')}}">
 <style type="text/css">
 @include('employee.style');
 </style>
 @endsection
 @section('breadcrumb')
-Employees <span>/</span> Separated Employees <span>></span> View Profile
+Employees <span>/</span> Separated Employee <span>></span> View Profile
 @endsection
 @section('content')
 <div id="view_profile" class="row">
@@ -35,6 +35,7 @@ Employees <span>/</span> Separated Employees <span>></span> View Profile
             </div>
         </div>
     </div>
+
     <div class="col-md-9">
         <div class="section-header">
             <h4>Employee Information</h4>
@@ -218,7 +219,7 @@ Employees <span>/</span> Separated Employees <span>></span> View Profile
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
                                 <th>Leave Dates</th>
                                 <th>No. Of Days</th>
                                 <th>Status</th>
@@ -251,13 +252,13 @@ Employees <span>/</span> Separated Employees <span>></span> View Profile
                         ?>
                             <tr>
                                 <td><?= ++$no ?></td>
-                                <td><?php echo implode('<br>', $dates); ?></td>
+                                <td><span><?= strtotime($dates[0]) ?></span> <?php echo implode('<br>', $dates); ?></td>
                                 <td><?= (float) $num_days ?></td>
                                 <td><?= $leave_status ?></td>
                                 <td><span><?= strtotime($request->date_filed) ?></span> <?= date("M d, Y",strtotime($request->date_filed)) ?></td>
-                                <td class="td-option">
+                                <td class="td-option text-center">
                                     <a href="<?= url("leave/{$request->id}") ?>" title="View" class="btn_view">
-                                        <span class="fa fa-eye"></span>
+                                        <i class="fa fa-eye"></i>
                                     </a>
                                 </td>
                             </tr>

@@ -71,7 +71,7 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Employee Type</label>
-            <select name="is_regular" class="select2 is_reg_event form-control">
+            <select name="is_regular" class="select2 form-control">
                 <option value="0"<?= $employee->is_regular == 0 ? ' selected' : '' ?>>Probationary</option>
                 <option value="1"<?= $employee->is_regular == 1 ? ' selected' : '' ?>>Regular</option>
                 <option value="2"<?= $employee->is_regular == 2 ? ' selected' : '' ?>>Project Based</option>
@@ -92,22 +92,22 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Hire Date</label>
-            <input type="text" class="form-control datetimepicker" name="hired_date" value="<?= @$employee->datehired() ?>" placeholder="MM/DD/YYYY" />
+            <input type="text" class="form-control datetimepicker" name="hired_date" value="<?= (!empty(@$employee->hired_date) && date('Y-m-d', strtotime(@$employee->hired_date)) != '1970-01-01') ? date('m/d/Y', strtotime(@$employee->hired_date)) : '' ?>" placeholder="MM/DD/YYYY" />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Production Date</label>
-            <input type="text" class="form-control datetimepicker" name="prod_date" value="<?= @$employee->prodDate() ?>" placeholder="MM/DD/YYYY" />
+            <input type="text" class="form-control datetimepicker" name="prod_date" value="<?= (!empty(@$employee->prod_date) && date('Y-m-d', strtotime(@$employee->prod_date)) != '1970-01-01') ? date('m/d/Y', strtotime(@$employee->prod_date)) : '' ?>" placeholder="MM/DD/YYYY" />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label>Regularization Date</label>
-            <input type="text" name="regularization_date" class="form-control datetimepicker" value="<?= @$employee->regularization_date == '1970-01-01' ? '' : date('m/d/Y', strtotime(@$employee->regularization_date)) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
+            <input type="text" name="regularization_date" class="form-control datetimepicker" value="<?= (!empty(@$employee->regularization_date) && @$employee->regularization_date != '1970-01-01') ? date('m/d/Y', strtotime(@$employee->regularization_date)) : '' ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
         </div>
     </div>
-    <input type="hidden" name="status_id" value="{{@$employee->status || 1}}" />
+    <input type="hidden" name="status_id" value="<?= @$employee->status || 1 ?>" />
     <div class="col-md-4">
         <div class="form-group">
             <label>EXT</label>
@@ -123,7 +123,7 @@
     <div class="col-md-4">
         <div class="form-group">
             <label>Resignation Date </label>
-            <input type="text" class="form-control datetimepicker" name="resignation_date" value="<?= @$details->resignation_date == '1970-01-01' ? '' : date('m/d/Y', strtotime(@$details->resignation_date)) ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
+            <input type="text" class="form-control datetimepicker" name="resignation_date" value="<?= (isset($details->resignation_date) && $details->resignation_date != '1970-01-01') ? date('m/d/Y', strtotime(@$details->resignation_date)) : '' ?>" placeholder="MM/DD/YYYY" autocomplete="off" />
         </div>
     </div>
     <div class="col-md-4">
@@ -131,8 +131,8 @@
             <label>Rehirable</label>
             <select class="select2 form-control" name="rehirable">
                 <option disabled>Select</option>
-                <option<?= @$details->rehirable == 1 ? " selected" : "" ; ?> value="1">Yes</option>
-                <option<?= @$details->rehirable == 0 ? " selected" : "" ; ?> value="0">No</option>
+                <option <?= (isset($details->rehirable) && $details->rehirable == 1) ? "selected" : "" ; ?> value="1">Yes</option>
+                <option <?= (isset($details->rehirable) && $details->rehirable == 0) ? "selected" : "" ; ?> value="0">No</option>
             </select>
         </div>
     </div>
@@ -145,7 +145,7 @@
     <div class="col-md-12">
         <div class="form-group">
             <label>Reason</label>
-            <input type="text" name="rehire_reason" class="form-control" value="<?= @$details->rehire_reason ?>" placeholder="State your reason..." />
+            <input type="text" name="rehire_reason" class="form-control" value="<?= isset($details->rehire_reason) ? $details->rehire_reason : '' ?>" placeholder="State your reason..." />
         </div>
     </div>
     <div class="col-md-12">

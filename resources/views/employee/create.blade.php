@@ -12,9 +12,9 @@ Employee > Add Employee
 Employees <span>></span> Add Employee
 @endsection
 @section('content')
-<form id="create_employee_form" role="form" method="POST" action="{{ route('employee_info.store')}}" enctype="multipart/form-data" autocomplete="off">
-    {{ csrf_field() }}
-    <div class="row">
+<div class="row">
+    <form id="create_employee_form" role="form" method="POST" action="{{ route('employee_info.store')}}" enctype="multipart/form-data" autocomplete="off">
+        {{ csrf_field() }}
         <div class="col-md-3 pr-0">
             <div class="section-header">
                 <h4>Profile Picture </h4>
@@ -518,25 +518,23 @@ Employees <span>></span> Add Employee
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <div class="form-group">
-                            <pre><i class="fa fa-info-circle">&nbsp;</i> Password will be generated automatically once saved.</pre>
+                        <div class="form-group mb-0">
+                            <pre class="mb-0"><i class="fa fa-info-circle">&nbsp;</i> Password will be generated automatically once saved.</pre>
                         </div>
                     </div>
                 </div>
-                 <div class="col-md-12">
+                <div class="row">
                     <br>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <button class="btn btn-primary">Save</button>
-                            </div>
+                    <div class="col-md-12">
+                        <div class="form-group mb-0">
+                            <button class="btn btn-primary">Save</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 @endsection
 @section('scripts')
 <script id="tmpl_addDependents" type="text/template">

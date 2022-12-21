@@ -1093,8 +1093,9 @@ class CoachingController extends Controller
             $id = $this->getActiveUser();
             $linkees = Auth::user()->getLinkees();
             $is_leader = DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id} OR `employee_info`.`supervisor_id`={$id})");
+            $allowedUsers = [ 3655 ];
 
-            if (count($is_leader) > 0 || count($linkees) > 0) {
+            if (count($is_leader) > 0 || count($linkees) > 0 || in_array(Auth::user()->id, $allowedUsers)) {
                 return 1;
             }
 

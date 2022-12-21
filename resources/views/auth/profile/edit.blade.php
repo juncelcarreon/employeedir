@@ -28,9 +28,9 @@ if(Auth::user()->id == $employee->id) {
                     <input type="hidden" name="employee_id" value="<?= $employee->id ?>" />
                     <input type="hidden" name="o_current_address" value="<?= $employee->address ?>" />
                     <input type="hidden" name="o_contact_num" value="<?= $employee->contact_number ?>" />
-                    <input type="hidden" name="o_emergency" value="<?= $details->em_con_name ?>" />
-                    <input type="hidden" name="o_emergency_num" value="<?= $details->em_con_num ?>" />
-                    <input type="hidden" name="o_rel" value="<?= $details->em_con_rel ?>" />
+                    <input type="hidden" name="o_emergency" value="<?= isset($details->em_con_name) ? $details->em_con_name : '' ?>" />
+                    <input type="hidden" name="o_emergency_num" value="<?= isset($details->em_con_num) ? $details->em_con_num : '' ?>" />
+                    <input type="hidden" name="o_rel" value="<?= isset($details->em_con_rel) ? $details->em_con_rel : '' ?>" />
                     <input type="hidden" name="o_marital_stat" value="<?= $employee->civil_status ?>" />
                     <div class="form-group">
                         <label class="control-label col-sm-2">Current Address</label>
@@ -47,19 +47,19 @@ if(Auth::user()->id == $employee->id) {
                     <div class="form-group">
                         <label class="control-label col-sm-2">In Case of Emergency, Please Contact</label>
                         <div class="col-sm-10">
-                            <input type="text" name="n_emergency" class="form-control" value="<?= $details->em_con_name ?>" placeholder="Emergency Contact Person" />
+                            <input type="text" name="n_emergency" class="form-control" value="<?= isset($details->em_con_name) ? $details->em_con_name : '' ?>" placeholder="Emergency Contact Person" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2">Contact Person Number</label>
                         <div class="col-sm-10">
-                            <input type="text" name="n_emergency_num" class="form-control" value="<?= $details->em_con_num ?>" placeholder="Emergency Contact Number" />
+                            <input type="text" name="n_emergency_num" class="form-control" value="<?= isset($details->em_con_num) ? $details->em_con_num : '' ?>" placeholder="Emergency Contact Number" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2">Relationship</label>
                         <div class="col-sm-10">
-                            <input type="text" name="n_rel" class="form-control" value="<?= $details->em_con_rel ?>" placeholder="Relationship" />
+                            <input type="text" name="n_rel" class="form-control" value="<?= isset($details->em_con_rel) ? $details->em_con_rel : '' ?>" placeholder="Relationship" />
                         </div>
                     </div>
                     <div class="form-group">

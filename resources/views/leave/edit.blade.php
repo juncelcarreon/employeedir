@@ -11,278 +11,282 @@ Leave > Edit
 Request <span>/</span> Leave <span>></span> Edit
 @endsection
 @section('content')
-<form action="<?= url('leave/update') ?>" method="post" id="leave_form" autocomplete="off">
-    {{ csrf_field() }}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            LEAVE APPLICATION FORM
+<div class="row">
+    <div class="col-md-12">
+        <form action="<?= url('leave/update') ?>" method="post" id="leave_form" autocomplete="off">
+            {{ csrf_field() }}
+            <div class="panel panel-default mb-0">
+                <div class="panel-heading">
+                    LEAVE APPLICATION FORM
 
-            <a href="<?= url("leave/{$leave_request->id}") ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
-        </div>
-        <div class="panel-body timeline-container">
-            <div class="flex-center position-ref full-height">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <strong>Remaining Leave Credits: </strong>
-                            <?php
-                            $pto_forwarded = $credits->past_credit - $credits->conversion_credit;
-                            $pto_accrue = $credits->current_credit;
-                            $loa = abs($credits->loa);
-                            $use_jan_jun = $credits->used_jan_to_jun;
-                            $pto_expired = $credits->expired_credit;
-                            $balance = $pto_forwarded + $pto_accrue - $loa - $use_jan_jun - $pto_expired;
-                            ?>
-                            <p id="p_leave_credits">PTO Balance: <b><?= $credits->is_regular == 1 ? number_format($credits->current_credit,2) : "0.00" ?></b></p>
-                        </div> 
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <strong>Date Filed: </strong>
-                            <p><?= date('m/d/Y',strtotime($leave_request->date_filed)) ?></p>
-                            <input type="hidden" value="<?= date('m/d/Y',strtotime($leave_request->date_filed)) ?>" name="date_filed" class="form-control" placeholder="Date Filed" readonly>
-                        </div> 
+                    <a href="<?= url("leave/{$leave_request->id}") ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
+                </div>
+                <div class="panel-body timeline-container">
+                    <div class="flex-center position-ref full-height">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <strong>Remaining Leave Credits: </strong>
+                                    <?php
+                                    $pto_forwarded = $credits->past_credit - $credits->conversion_credit;
+                                    $pto_accrue = $credits->current_credit;
+                                    $loa = abs($credits->loa);
+                                    $use_jan_jun = $credits->used_jan_to_jun;
+                                    $pto_expired = $credits->expired_credit;
+                                    $balance = $pto_forwarded + $pto_accrue - $loa - $use_jan_jun - $pto_expired;
+                                    ?>
+                                    <p id="p_leave_credits">PTO Balance: <b><?= $credits->is_regular == 1 ? number_format($credits->current_credit,2) : "0.00" ?></b></p>
+                                </div> 
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <strong>Date Filed: </strong>
+                                    <p><?= date('m/d/Y',strtotime($leave_request->date_filed)) ?></p>
+                                    <input type="hidden" value="<?= date('m/d/Y',strtotime($leave_request->date_filed)) ?>" name="date_filed" class="form-control" placeholder="Date Filed" readonly>
+                                </div> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <strong>Name: </strong>
+                                    <p><?= $leave_request->employee->fullName2() ?></p>
+                                    <input type="hidden" name="employee_id" value="<?= $leave_request->employee->id ?>">
+                                    <input type="hidden" name="id" value="<?= $leave_request->id ?>">
+                                </div> 
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <strong>Position: </strong>
+                                    <p><?= $leave_request->employee->position_name ?></p>
+                                    <input type="hidden" id="txtPhone" name="position" class="form-control" placeholder="Position" value="<?= $leave_request->employee->position_name ?>" readonly>
+                                </div> 
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <strong>Department: </strong>
+                                    <p><?= $leave_request->employee->team_name ?></p>
+                                    <input type="hidden" name="department" class="form-control" placeholder="Dept/Section" value="<?= $leave_request->employee->team_name ?>" readonly>
+                                </div> 
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <strong>Name: </strong>
-                            <p><?= $leave_request->employee->fullName2() ?></p>
-                            <input type="hidden" name="employee_id" value="<?= $leave_request->employee->id ?>">
-                            <input type="hidden" name="id" value="<?= $leave_request->id ?>">
-                        </div> 
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <strong>Position: </strong>
-                            <p><?= $leave_request->employee->position_name ?></p>
-                            <input type="hidden" id="txtPhone" name="position" class="form-control" placeholder="Position" value="<?= $leave_request->employee->position_name ?>" readonly>
-                        </div> 
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <strong>Department: </strong>
-                            <p><?= $leave_request->employee->team_name ?></p>
-                            <input type="hidden" name="department" class="form-control" placeholder="Dept/Section" value="<?= $leave_request->employee->team_name ?>" readonly>
-                        </div> 
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="panel-heading panel-subheading">
-            LEAVE DATES
+                <div class="panel-heading panel-subheading">
+                    LEAVE DATES
 
-            <input type="text" name="number_of_days" value="<?= $leave_request->number_of_days ?>" class="form-control _numOfDaysField" list="leave_days" id="number_of_days" placeholder="No. of Days" readonly>
-        </div>
-        <div class="panel-body timeline-container">
-            <div class="flex-center position-ref full-height">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <strong>Leave Date: </strong>
-                        </div> 
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <strong>Length: </strong>
+                    <input type="text" name="number_of_days" value="<?= $leave_request->number_of_days ?>" class="form-control _numOfDaysField" list="leave_days" id="number_of_days" placeholder="No. of Days" readonly>
+                </div>
+                <div class="panel-body timeline-container">
+                    <div class="flex-center position-ref full-height">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <strong>Leave Date: </strong>
+                                </div> 
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <strong>Length: </strong>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <strong>With/Without Pay: </strong>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <strong>With/Without Pay: </strong>
+                        <div class="entry-content">
+                            <div class="row entry-row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                    <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" value="<?= date('m/d/Y', strtotime($leave->date)) ?>" required>
+                                    </div> 
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <select name="length[]" class="form-control _lengthDaySel">
+                                            <option value="1"<?= $leave->length == 1 ? " selected" : "" ?>>Whole Day</option>
+                                            <option value="0.5"<?= $leave->length == 0.5 ? " selected" : "" ?>>Half Day</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <select name="pay_type[]" class="form-control">
+                                            <option value="0"<?= $leave->pay_type == 0 ? " selected" : "" ?>>Without Pay</option>
+                                            <option value="1"<?= $leave->pay_type == 1 ? " selected" : "" ?>>With Pay</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-primary width-100" id="_addLeaveItem">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="field_id[]" value="<?= $leave->id ?>">
+                            </div>
+                        </div>
+                        <div id="_date_form">
+                        <?php
+                        for($i = 1; $i < count($filed_days); $i++) {
+                        ?>
+                            <div id="main_row_<?= $filed_days[$i]->id ?>" class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" value="<?= date('m/d/Y', strtotime($filed_days[$i]->date)) ?>" required>
+                                    </div> 
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <select name="length[]" class="form-control _lengthDaySel">
+                                            <option value="1"<?= $filed_days[$i]->length == 1 ? " selected" : "" ?>>Whole Day</option>
+                                            <option value="0.5"<?= $filed_days[$i]->length == 0.5 ? " selected" : "" ?>>Half Day</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <select name="pay_type[]" class="form-control">
+                                            <option value="0"<?= $filed_days[$i]->pay_type == 0 ? " selected" : "" ?>>Without Pay</option>
+                                            <option value="1"<?= $filed_days[$i]->pay_type == 1 ? " selected" : "" ?>>With Pay</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <button type="button" data-type="main" data-id="<?= $filed_days[$i]->id ?>" class="btn btn-danger width-100" onclick="removeThisLeave(this)">
+                                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="field_id[]" value="<?= $filed_days[$i]->id ?>">
+                            </div>
+                        <?php
+                        }
+                        ?>
                         </div>
                     </div>
                 </div>
-                <div class="entry-content">
-                    <div class="row entry-row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                            <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" value="<?= date('m/d/Y', strtotime($leave->date)) ?>" required>
-                            </div> 
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <select name="length[]" class="form-control _lengthDaySel">
-                                    <option value="1"<?= $leave->length == 1 ? " selected" : "" ?>>Whole Day</option>
-                                    <option value="0.5"<?= $leave->length == 0.5 ? " selected" : "" ?>>Half Day</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <select name="pay_type[]" class="form-control">
-                                    <option value="0"<?= $leave->pay_type == 0 ? " selected" : "" ?>>Without Pay</option>
-                                    <option value="1"<?= $leave->pay_type == 1 ? " selected" : "" ?>>With Pay</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <button type="button" class="btn btn-primary width-100" id="_addLeaveItem">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                        </div>
-                        <input type="hidden" name="field_id[]" value="<?= $leave->id ?>">
-                    </div>
+                <div class="panel-heading panel-subheading">
+                    LEAVE TYPE
                 </div>
-                <div id="_date_form">
-                <?php
-                for($i = 1; $i < count($filed_days); $i++) {
-                ?>
-                    <div id="main_row_<?= $filed_days[$i]->id ?>" class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <input type="text" name="leave_date[]" class="form-control _leaveDate" placeholder="Date Filed" value="<?= date('m/d/Y', strtotime($filed_days[$i]->date)) ?>" required>
-                            </div> 
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <select name="length[]" class="form-control _lengthDaySel">
-                                    <option value="1"<?= $filed_days[$i]->length == 1 ? " selected" : "" ?>>Whole Day</option>
-                                    <option value="0.5"<?= $filed_days[$i]->length == 0.5 ? " selected" : "" ?>>Half Day</option>
-                                </select>
+                <div class="panel-body timeline-container">
+                    <div class="flex-center position-ref full-height">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <strong>Leave Category: </strong>
+                                    <select name="pay_type_id" class="form-control _leaveCategory">
+                                        <option value="1"<?= $leave_request->pay_type_id == 1 ? " selected" : "" ?>>Planned</option>
+                                        <option value="2"<?= $leave_request->pay_type_id == 2 ? " selected" : "" ?>>Unplanned</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <select name="pay_type[]" class="form-control">
-                                    <option value="0"<?= $filed_days[$i]->pay_type == 0 ? " selected" : "" ?>>Without Pay</option>
-                                    <option value="1"<?= $filed_days[$i]->pay_type == 1 ? " selected" : "" ?>>With Pay</option>
-                                </select>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <strong>Type of Leave: </strong>
+                                    <ul class="list-group list-group-flush">
+                                    <?php
+                                    foreach($leave_types as $lv) {
+                                        if($lv->status == 1) {
+                                    ?>
+                                        <li class="list-group-item _planned">
+                                            <label class="switch float-left">
+                                                <input type="checkbox" name="<?= ($lv->id == 8) ? 'leave_cto' : 'leave_type_id' ?>" value="<?= $lv->id ?>" id="progress<?= $lv->id  ?>" class="primary" <?= ($leave_request->leave_type_id == $lv->id || $leave_request->leave_type_id == 99) ? 'checked' : '' ?>>
+                                                <span class="slider"></span>
+                                            </label>&nbsp;
+                                            <span><?= $lv->leave_type_name ?></span>
+                                        </li>
+                                    <?php
+                                        } else {
+                                    ?>
+                                        <li class="list-group-item _unplanned">
+                                            <label class="switch float-left">
+                                                <input type="checkbox" name="leave_type_id" value="<?= $lv->id ?>" id="progress<?= $lv->id  ?>" tabIndex="1" class="primary" onClick="ckChange(this)" <?= $leave_request->leave_type_id == $lv->id ? 'checked' : '' ?>>
+                                                <span class="slider"></span>
+                                            </label>&nbsp;
+                                            <span><?= $lv->leave_type_name ?></span>
+                                        </li>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <button type="button" data-type="main" data-id="<?= $filed_days[$i]->id ?>" class="btn btn-danger width-100" onclick="removeThisLeave(this)">
-                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                        </div>
-                        <input type="hidden" name="field_id[]" value="<?= $filed_days[$i]->id ?>">
-                    </div>
-                <?php
-                }
-                ?>
-                </div>
-            </div>
-        </div>
-        <div class="panel-heading panel-subheading">
-            LEAVE TYPE
-        </div>
-        <div class="panel-body timeline-container">
-            <div class="flex-center position-ref full-height">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <strong>Leave Category: </strong>
-                            <select name="pay_type_id" class="form-control _leaveCategory">
-                                <option value="1"<?= $leave_request->pay_type_id == 1 ? " selected" : "" ?>>Planned</option>
-                                <option value="2"<?= $leave_request->pay_type_id == 2 ? " selected" : "" ?>>Unplanned</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <strong>Type of Leave: </strong>
-                            <ul class="list-group list-group-flush">
                             <?php
-                            foreach($leave_types as $lv) {
-                                if($lv->status == 1) {
+                            if($is_leader > 0) {
                             ?>
-                                <li class="list-group-item _planned">
-                                    <label class="switch float-left">
-                                        <input type="checkbox" name="<?= ($lv->id == 8) ? 'leave_cto' : 'leave_type_id' ?>" value="<?= $lv->id ?>" id="progress<?= $lv->id  ?>" class="primary" <?= ($leave_request->leave_type_id == $lv->id || $leave_request->leave_type_id == 99) ? 'checked' : '' ?>>
-                                        <span class="slider"></span>
-                                    </label>&nbsp;
-                                    <span><?= $lv->leave_type_name ?></span>
-                                </li>
+                            <div class="col-md-4" id="cto-data">
+                                <div class="form-group cto-dates">
+                                    <strong>CTO Dates: </strong>
+                                    <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" value="<?= (count($cto_dates) > 0) ? date('m/d/Y', strtotime($cto_row->date)) : '' ?>">
+                                    <button type="button" class="btn btn-primary" id="_addCTODay">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                                <div id="cto-dates">
+                                    <?php
+                                    for($i = 1; $i < count($cto_dates); $i++) {
+                                    ?>
+                                    <div class="form-group cto-dates" id="cto_<?= $cto_dates[$i]->id ?>">
+                                        <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" value="<?= date('m/d/Y', strtotime($cto_dates[$i]->date)) ?>">
+                                        <button type="button" class="btn btn-danger" data-id="<?= $cto_dates[$i]->id ?>" onclick="removeCTO(this)">
+                                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
                             <?php
-                                } else {
-                            ?>
-                                <li class="list-group-item _unplanned">
-                                    <label class="switch float-left">
-                                        <input type="checkbox" name="leave_type_id" value="<?= $lv->id ?>" id="progress<?= $lv->id  ?>" tabIndex="1" class="primary" onClick="ckChange(this)" <?= $leave_request->leave_type_id == $lv->id ? 'checked' : '' ?>>
-                                        <span class="slider"></span>
-                                    </label>&nbsp;
-                                    <span><?= $lv->leave_type_name ?></span>
-                                </li>
-                            <?php
-                                }
                             }
                             ?>
-                            </ul>
                         </div>
                     </div>
-                    <?php
-                    if($is_leader > 0) {
-                    ?>
-                    <div class="col-md-4" id="cto-data">
-                        <div class="form-group cto-dates">
-                            <strong>CTO Dates: </strong>
-                            <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" value="<?= (count($cto_dates) > 0) ? date('m/d/Y', strtotime($cto_row->date)) : '' ?>">
-                            <button type="button" class="btn btn-primary" id="_addCTODay">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                            </button>
-                        </div>
-                        <div id="cto-dates">
-                            <?php
-                            for($i = 1; $i < count($cto_dates); $i++) {
-                            ?>
-                            <div class="form-group cto-dates" id="cto_<?= $cto_dates[$i]->id ?>">
-                                <input type="text" name="cto_date[]" class="form-control cto_datepicker" placeholder="CTO Date" value="<?= date('m/d/Y', strtotime($cto_dates[$i]->date)) ?>">
-                                <button type="button" class="btn btn-danger" data-id="<?= $cto_dates[$i]->id ?>" onclick="removeCTO(this)">
-                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-                                </button>
+                </div>
+                <div class="panel-heading panel-subheading">
+                    OTHER INFORMATION
+                </div>
+                <div class="panel-body timeline-container">
+                    <div class="flex-center position-ref full-height">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="report-date-box">
+                                    <q>I will report for work on 
+                                    <input type="text" name="report_date" class="datepicker" placeholder="date" value="<?= date('m/d/Y',strtotime($leave_request->report_date)) ?>" required>
+                                    If i fail to do so on the said date without any justifiable cause.
+                                    I can considered to have abandoned my employment. I understand that any misrepresentation I make on this request is a serious offense and shall be a valid ground for disciplinary action against me.</q>
+                                </div>
                             </div>
-                            <?php
-                            }
-                            ?>
                         </div>
-                    </div>
-                    <?php
-                    }
-                    ?>
-                </div>
-            </div>
-        </div>
-        <div class="panel-heading panel-subheading">
-            OTHER INFORMATION
-        </div>
-        <div class="panel-body timeline-container">
-            <div class="flex-center position-ref full-height">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="report-date-box">
-                            <q>I will report for work on 
-                            <input type="text" name="report_date" class="datepicker" placeholder="date" value="<?= date('m/d/Y',strtotime($leave_request->report_date)) ?>" required>
-                            If i fail to do so on the said date without any justifiable cause.
-                            I can considered to have abandoned my employment. I understand that any misrepresentation I make on this request is a serious offense and shall be a valid ground for disciplinary action against me.</q>
+                        <div class="division"></div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <strong>Reason: </strong>
+                                <textarea name="reason" class="form-control" rows="4" required><?= $leave_request->reason ?></textarea>
+                            </div> 
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <strong>Contact Number: </strong>
+                                <input type="text" name="contact_number" class="form-control" value="<?= $leave_request->contact_number ?>" required>
+                            </div> 
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" id="register-button" class="btn btn-primary" value="Update">
+                            <input type="reset" class="btn btn-default" value="Reset">
                         </div>
                     </div>
                 </div>
-                <div class="division"></div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <strong>Reason: </strong>
-                        <textarea name="reason" class="form-control" rows="4" required><?= $leave_request->reason ?></textarea>
-                    </div> 
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <strong>Contact Number: </strong>
-                        <input type="text" name="contact_number" class="form-control" value="<?= $leave_request->contact_number ?>" required>
-                    </div> 
-                </div>
-                <div class="form-group">
-                    <input type="submit" id="register-button" class="btn btn-primary" value="Update">
-                    <input type="reset" class="btn btn-default" value="Reset">
-                </div>
             </div>
-        </div>
+        </form>
     </div>
-</form>
+</div>
 @endsection
 @section('scripts')
 <script id="tmpl_addLeaveDay" type="text/template">

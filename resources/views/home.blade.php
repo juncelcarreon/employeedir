@@ -2,7 +2,7 @@
 @section('title')
 <?= ($dashboard) ? 'Dashboard' : 'Home' ?>
 @endsection
-@section('content')
+@section('head')
 <style>
 .home-title{
 	font-weight: bold !important;
@@ -89,16 +89,28 @@
 .engagement:last-child{
 	border: 0;
 }
+
+.mb-0{
+	margin: 0 !important;
+}
+
+#backtotop{
+	z-index: 999;
+}
 </style>
+@endsection
+@section('content')
 <?php
 if(count($posts) > 0) {
 ?>
-<div class="col-md-12">
-	<h3 class="home-title">Announcement</h3>
+<div class="row">
+	<div class="col-md-12">
+		<h3 class="home-title">Announcement</h3>
+	</div>
 </div>
-<div class="col-md-12">
-	<div class="panel panel-container panel-announcement">
-		<div class="row">
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-container panel-announcement">
 			<div id="myCarousel" class="carousel slide" data-ride="carousel">
 				<ol class="carousel-indicators">
 				<?php
@@ -164,7 +176,7 @@ if(count($posts) > 0) {
 
 <div class="row">
 	<div class="col-md-4">
-		<div class="panel panel-default">
+		<div class="panel panel-default mb-0">
 			<div class="panel-heading">
 				New Hires
 
@@ -229,7 +241,7 @@ if(count($posts) > 0) {
 		</div>
 	</div>
 	<div class="col-md-4">
-		<div class="panel panel-default">
+		<div class="panel panel-default mb-0">
 			<div class="panel-heading">
 				Birthday Celebrants for <?= date('F') ?>
 
@@ -331,7 +343,7 @@ if(count($posts) > 0) {
 		</div>
 	</div>
 	<div class="col-md-4">
-		<div class="panel panel-default">
+		<div class="panel panel-default mb-0">
 			<div class="panel-heading">
 				eLinkgagement Activities
 
@@ -383,10 +395,12 @@ if(count($posts) > 0) {
 		</div>
 	</div>
 </div>
-<div class="col-md-12">
-	<button class="pull-right" id="backtotop">
-		<span class="fa fa-lg fa-arrow-up"></span>&nbsp;Back to top
-	</button>
+<div class="row">
+	<div class="col-md-12">
+		<button class="pull-right" id="backtotop">
+			<span class="fa fa-lg fa-arrow-up"></span>&nbsp;Back to top
+		</button>
+	</div>
 </div>
 @endsection
 @section('scripts')

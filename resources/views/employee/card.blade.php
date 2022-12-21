@@ -20,7 +20,7 @@ Employees <span>></span> Active Employees
             <a href="/download-filter?<?= (empty($_SERVER['QUERY_STRING']) ? '' : $_SERVER['QUERY_STRING']) ?>" class="btn btn-success" >
                 <i class="glyphicon glyphicon-arrow-down"></i>&nbsp; Download Employee Information
             </a>
-            <a href="<?= url('employees') ?>" class="btn btn-info">
+            <a href="employees?<?= (empty($_SERVER['QUERY_STRING']) ? '' : $_SERVER['QUERY_STRING']) ?>" class="btn btn-info">
                 <i class="fa fa-list"></i> &nbsp; List Type View
             </a>
             <br>
@@ -117,9 +117,13 @@ Employees <span>></span> Active Employees
                 </li>
             </ul>
         </div>
+    </div>
+</div>
 <?php
 if(count($employees) == 0) {
 ?>
+<div class="row">
+    <div class="col-md-12">
         <br>
         <br>
         <br>
@@ -130,71 +134,68 @@ if(count($employees) == 0) {
         <div class="text-center">
             <h3>No results found.</h3>
         </div>
-<?php
-}
-?>
-
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="row" id="employee-card">
-
 <?php
-$count = 1;
-$row = 1;
-foreach($employees as $employee) {
+} else {
 ?>
-            <div class="col-md-3" data-row="<?= $row ?>">
-                <div class="section-header p-10">
-                    <h4 class="m-0"><span class="fa fa-id-card" title="Employee ID"></span>&nbsp;&nbsp; <?= $employee->eid ?></h4>
+<div class="row" id="employee-card">
+<?php
+    $count = 1;
+    $row = 1;
+    foreach($employees as $employee) {
+?>
+    <div class="col-md-3" data-row="<?= $row ?>">
+        <div class="section-header p-10">
+            <h4 class="m-0"><span class="fa fa-id-card" title="Employee ID"></span>&nbsp;&nbsp; <?= $employee->eid ?></h4>
+        </div>
+        <div class="panel panel-container panel-card">
+            <div class="text-center">
+                <div class="emp-profile-img m-0">
+                    <img src="<?= $employee->profile_img ?>" alt="image" />
                 </div>
-                <div class="panel panel-container panel-card">
-                    <div class="text-center">
-                        <div class="emp-profile-img m-0">
-                            <img src="<?= $employee->profile_img ?>" alt="image" />
-                        </div>
-                        <h4 class="card-title">
-                            <a href="<?= url("employee_info/{$employee->id}") ?>"><?= $employee->fullname() ?></a>
-                        </h4>
-                        <h6 class="card-subtitle card-position"><?= $employee->position_name ?></h6>
-                        <h6 class="card-subtitle card-team"><?= $employee->team_name ?></h6>
-                        <h5 class="card-subtitle">
-                            <span class="fa fa-envelope mb-5" title="Email Address"></span>
-                            <span class="employee-description employee-email" title="<?= $employee->email ?>"><?= $employee->email ?></span>
-                        </h5>
-                        <h6>
-                            <span class="name-format mb-5">Immediate Superior: </span>
-                            <?= $employee->supervisor_name ?>
-                        </h6>
-                        <h6>
-                            <span class="name-format mb-5">Manager: </span>
-                            <?= $employee->manager_name ?>
-                        </h6>
-                        <hr>
-                        <div class="options">
-                            <a href="<?= url("employee_info/{$employee->id}") ?>" title="View">
-                                <i class="fa fa-eye"></i>
-                            </a>&nbsp;&nbsp;    
-                            <a href="<?= url("employee_info/{$employee->id}/edit") ?>" title="Edit">
-                                <i class="fa fa-pencil"></i>
-                            </a>&nbsp;&nbsp;
-                            <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Deactivate" data-id="<?= $employee->id ?>">
-                                <i class="fa fa-user-times"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <br>
+                <h4 class="card-title">
+                    <a href="<?= url("employee_info/{$employee->id}") ?>"><?= $employee->fullname() ?></a>
+                </h4>
+                <h6 class="card-subtitle card-position"><?= $employee->position_name ?></h6>
+                <h6 class="card-subtitle card-team"><?= $employee->team_name ?></h6>
+                <h5 class="card-subtitle">
+                    <span class="fa fa-envelope mb-5" title="Email Address"></span>
+                    <span class="employee-description employee-email" title="<?= $employee->email ?>"><?= $employee->email ?></span>
+                </h5>
+                <h6>
+                    <span class="name-format mb-5">Immediate Superior: </span>
+                    <?= $employee->supervisor_name ?>
+                </h6>
+                <h6>
+                    <span class="name-format mb-5">Manager: </span>
+                    <?= $employee->manager_name ?>
+                </h6>
+                <hr>
+                <div class="options">
+                    <a href="<?= url("employee_info/{$employee->id}") ?>" title="View">
+                        <i class="fa fa-eye"></i>
+                    </a>&nbsp;&nbsp;    
+                    <a href="<?= url("employee_info/{$employee->id}/edit") ?>" title="Edit">
+                        <i class="fa fa-pencil"></i>
+                    </a>&nbsp;&nbsp;
+                    <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Deactivate" data-id="<?= $employee->id ?>">
+                        <i class="fa fa-user-times"></i>
+                    </a>
                 </div>
             </div>
-<?php
-if($count % 4 == 0) { $row++; }
-$count++;
-}
-?>
+            <br>
         </div>
     </div>
+<?php
+    if($count % 4 == 0) { $row++; }
+    $count++;
+    }
+?>
 </div>
+<?php
+    if($employees->appends(Illuminate\Support\Facades\Input::except('page'))->hasPages()) {
+?>
 <div class="row">
     <div class="col-md-12 header-container">
         <div class="mt-20 text-center">
@@ -202,6 +203,10 @@ $count++;
         </div>
     </div>
 </div>
+<?php
+    }
+}
+?>
 @endsection
 @section('scripts')
 <script type="text/javascript">
