@@ -43,7 +43,7 @@ Linking Sessions <span>/</span> Cementing Expectation <span>></span> Edit Sessio
                 <div class="panel-subheading">
                     Cementing Expectation Session
 
-                    <a id="btn-history" class="btn btn-warning pull-right" href="#" data-toggle="modal" data-target="#modal-history"><i class="fa fa-history"></i> History</a>
+                    <a id="btn-history" class="btn btn-warning pull-right" href="#" data-toggle="modal" data-target="#modal-history"><i class="fa fa-history"></i>&nbsp; History</a>
                 </div>
                 <div class="panel-body">
                     <div class="row d-flex">
@@ -119,6 +119,8 @@ Linking Sessions <span>/</span> Cementing Expectation <span>></span> Edit Sessio
         </form>
     </div>
 </div>
-@include('coaching.modal.cementing_expectation')
+@endsection
+@section('scripts')
 @include('coaching.js-script')
+@include('coaching.modal.cementing_expectation')
 @endsection

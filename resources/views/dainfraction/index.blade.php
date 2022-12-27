@@ -1,37 +1,45 @@
 @extends('layouts.main')
-@section('content')
+@section('title')
+DA Infractions
+@endsection
+@section('head')
 <style type="text/css">
-    .panel-heading a{ color: #fff; }
-    .panel-heading a.text-danger{ color: #ff0000; text-decoration: none; }
-    /*.panel-heading a.active{ text-decoration: underline; }*/
-    .panel-heading a.active{ color: #ffc107; text-decoration: none; }
-    .panel-heading a.active, .panel-heading a:hover{ color: #ffc107; text-decoration: none; }
-    .font-bold{ font-weight: 700; }
-    .td-option{ width: 100px; text-align: center; }
-    td span{ display: none; }
-    tr.even{ background: #ddd !important; }
-    .btn{ color: #fff !important; }
-    small{display: block; font-size: 75% !important;}
+@include('dainfraction.style');
 </style>
+@endsection
+@section('breadcrumb')
+DA Infractions
+@endsection
+@section('content')
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-default">
+        <div class="panel panel-default m-0">
             <div class="panel-heading">
-<!--                 <a href="<?= url('dainfraction') ?>"<?= ($type == 'not-acknowledged') ? ' class="active"' : '' ?>>NOT ACKNOWLEDGED</a> | 
-                <a href="<?= url('dainfraction?status=acknowledged') ?>"<?= ($type == 'acknowledged') ? ' class="active"' : '' ?>>ACKNOWLEDGED</a> -->
                 DA INFRACTIONS
 
+            <?php
+                if(Auth::user()->isAdmin()) {
+            ?>
                 <a href="<?= url('dainfraction/create') ?>" class="btn btn-primary pull-right"><span class="fa fa-edit"></span>&nbsp; File DA Infraction</a>
+            <?php
+                }
+
+                if($is_leader > 0) {
+            ?>
+                <a href="<?= url('team-dainfraction') ?>" class="btn btn-dark pull-right"><span class="fa fa-users"></span>&nbsp; Team DA Infraction</a>
+            <?php
+                }
+            ?>
             </div>
-            <div class="pane-body panel">
+            <div class="pane-body panel m-0">
                 <br>
                 <br>
                 <table class="_table">
                     <thead>
                         <tr>
                             <th style="width:50px;">#</th>
-                            <th>Employee</th>
-                            <th>Title</th>
+                            <th style="width:200px;">Employee</th>
+                            <th style="width:200px;">Title</th>
                             <th>Date</th>
                             <th>Status</th>
                             <th>Date Filed</th>
@@ -55,7 +63,7 @@
                         <tr>
                             <td><?= $i ?></td>
                             <td><?= $infraction->first_name.' '.$infraction->last_name ?></td>
-                            <td><?= $infraction->title ?></td>
+                            <td><?= $infraction->infraction_type.' - '.$infraction->title ?></td>
                             <td><span><?= strtotime($infraction->date) ?></span> <?= date('M d, Y', strtotime($infraction->date)) ?></td>
                             <td><?= $status ?></td>
                             <td><span><?= strtotime($infraction->created_at) ?></span> <?= date("M d, Y",strtotime($infraction->created_at)) ?></td>
@@ -74,11 +82,7 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-$(function () {
-    activeMenu($('#menu-dainfraction'));
-
-    $('._table').DataTable({"pageLength": 50});
-});
-</script>
+@endsection
+@section('scripts')
+@include('dainfraction.script')
 @endsection

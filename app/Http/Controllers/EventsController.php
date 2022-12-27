@@ -28,11 +28,13 @@ class EventsController extends Controller
         if($request->has('start_date')){
             $events->start_date = date("Y-m-d H:i:s", strtotime($request->start_date));
         }
+
         if($request->has('end_date')){
             $events->end_date = date("Y-m-d H:i:s", strtotime($request->end_date));
         }
+
         if($events->save()){
-            return redirect('events/' . $events->id)->with('success', 'Event successfully added!');
+            return redirect(url("events/{$events->id}"))->with('success', 'Event successfully added!');
         } else {
             return back()->with('error', 'Something went wrong.');
         }

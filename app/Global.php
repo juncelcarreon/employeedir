@@ -146,3 +146,31 @@ function breadCrumbs(){
 
 	return ucwords(join(' / ', explode('/', $path)));
 }
+
+function stringLimit($text = null, $max = 50){
+    if(empty($text)) {
+        return '---';
+    }
+
+    return (strlen(htmlentities($text)) > $max) ? substr(htmlentities($text), 0, $max)." ..." : htmlentities($text);
+}
+
+function timekeepingStatus($item = null){
+	if(empty($item)) {
+		return '---';
+	}
+
+    $status = $item->status;
+    if($item->status == 'APPROVED' && !empty($item->approved_reason)) {
+        $status = 'REVERTED';
+    }
+    if($item->status == 'PENDING') {
+        if(empty($item->recommend_date)) {
+            $status .= ' <br><small>(Recommendation / Approval)</small>';
+        } else {
+            $status .= ' <br><small>(Approval)</small>';
+        }
+    }
+
+    return $status;
+}

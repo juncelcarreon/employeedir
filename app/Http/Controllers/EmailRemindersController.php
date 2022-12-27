@@ -6,6 +6,7 @@ use App\Mail\ProbitionaryEmailNotificationA;
 use App\Mail\ProbitionaryEmailNotificationB;
 use App\Mail\LeaveReminder;
 use App\Mail\InfractionReminder;
+use App\Mail\InfractionNODReminder;
 use App\User;
 use App\SentEmailArchives;
 use App\LeaveRequest;
@@ -160,13 +161,24 @@ class EmailRemindersController extends Controller
     {
         ini_set('memory_limit', '-1');
 
-        foreach(DAInfraction::getInfractions(0) as $infraction) {
+        foreach(DAInfraction::getInfractions(null, 'reminder') as $infraction) {
             $difference = strtotime(now()) - strtotime($infraction->created_at);
             $days = abs(round($difference / 86400));
             $archive = SentEmailArchives::where('employee_id', $infraction->employee_id)->where('mail_type', "INFRACTION{$infraction->id}")->first();
+            $supervisor = User::find($infraction->supervisor_id);
+            $manager = User::find($infraction->manager_id);
 
             $data['emp_name'] = strtoupper($infraction->first_name);
             $data['url'] = url("dainfraction/{$infraction->id}");
+
+            $emails = ['juncelcarreon@elink.com.ph'];
+            if(!empty($supervisor->id)) {
+                array_push($emails, $supervisor->email);
+            }
+
+            if(!empty($manager->id)) {
+                array_push($emails, $manager->email);
+            }
 
             if($days >= 1) {
                 if(empty($archive->id)) {
@@ -176,14 +188,20 @@ class EmailRemindersController extends Controller
                     $archives->status       = 0;
                     $archives->save();
 
-                    // Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new InfractionReminder($data));
-                    // Mail::to($infraction->email)->send(new InfractionReminder($data));
+                    if($infraction->infraction_type == 'NTE') {
+                        // // Mail::to($infraction->email)->cc($emails)->send(new InfractionReminder($data));
+                    } else {
+                        // // Mail::to($infraction->email)->cc($emails)->send(new InfractionNODReminder($data));
+                    }
                 } else {
                     if(date('Y-m-d', strtotime($archive->updated_at)) != date('Y-m-d')) {
                         SentEmailArchives::where('id', $archive->id)->update(['updated_at' => date('Y-m-d H:i:s')]);
 
-                        // Mail::to('juncelcarreon@elink.com.ph')->cc('ivybarria@elink.com.ph')->send(new InfractionReminder($data));
-                        // Mail::to($infraction->email)->send(new InfractionReminder($data));
+                        if($infraction->infraction_type == 'NTE') {
+                            // // Mail::to($infraction->email)->cc($emails)->send(new InfractionReminder($data));
+                        } else {
+                            // // Mail::to($infraction->email)->cc($emails)->send(new InfractionNODReminder($data));
+                        }
                     }
                 }
             }
@@ -210,7 +228,7 @@ class EmailRemindersController extends Controller
             $fileDate = Carbon::parse($leave->date_filed);
             if($fileDate->addDays(5)->format('Y-m-d') == $todayDate->format('Y-m-d')){
                 $leave_obj = ['leave' => $leave, 'details' => LeaveRequestDetails::where("leave_id",$leave->id)->get()];
-                // Mail::to($recipients)->send(new LeaveNotification($leave_obj));
+                // // Mail::to($recipients)->send(new LeaveNotification($leave_obj));
             }
         }
     }

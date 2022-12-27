@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-striped table-bordered" id="table-history">
+                <table class="table table-striped" id="table-history">
                     <thead>
                         <tr>
                             <th>Date</th>

@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon; 
 use Illuminate\Support\Facades\DB;
 use App\LeaveRequest;
+use App\UndertimeRequest;
+use App\OvertimeRequest;
+use App\DAInfraction;
 use Spatie\Valuestore\Valuestore;
-
 
 class User extends Authenticatable
 {
@@ -65,9 +67,25 @@ class User extends Authenticatable
     public function scopeRankAndFile($query){
         return $query->where('usertype', '=', 1);
     }
-    
+
     public function scopeLeaveRequestCount(){
         return count(LeaveRequest::getLeave());
+    }
+
+    public function scopeUndertimeRequestCount(){
+        return count(UndertimeRequest::getUndertime());
+    }
+
+    public function scopeOvertimeRequestCount(){
+        return count(OvertimeRequest::getOvertime());
+    }
+
+    public function scopeInfractionCount($id){
+        if($id == 0) {
+            return 0;
+        }
+
+        return count(DAInfraction::getInfractions($id, 'reminder'));
     }
 
     public function scopeFindByCustomName($query, $custom_name){

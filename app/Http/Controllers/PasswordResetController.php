@@ -12,13 +12,13 @@ use Illuminate\Http\Request;
 
 class PasswordResetController extends Controller
 {
-   public function index()
+    public function index()
     {
         return view('auth.passwords.reset');
     }
 
-	public function confirmReset($token)
-	{   
+    public function confirmReset($token)
+    {
         if(!$token){
             abort(404);
         }
@@ -34,10 +34,10 @@ class PasswordResetController extends Controller
         $employee->password = Hash::make($newPassword);
         $employee->save();
 
-         return view('auth.passwords.success');
+        return view('auth.passwords.success');
     }
 
-       public function reset(Request $request)
+    public function reset(Request $request)
     {
         $request->validate([
             'email' => 'required|email'
@@ -53,7 +53,7 @@ class PasswordResetController extends Controller
             return back()->withErrors(['email'=> "Email doesn't exist in our record"]);
         }
 
-	$data = [
+        $data = [
             'token' => Crypt::encrypt($employee[0]->id),
             'email' => $employee[0]->email ?? $employee[0]->email2
         ];
@@ -61,6 +61,5 @@ class PasswordResetController extends Controller
         Mail::to($data['email'])->send(new ResetPasswordMail($data));
 
         return back()->with('Success', 'Password reset message has been sent, kindly check your email. Thank you');
-
     }
 }

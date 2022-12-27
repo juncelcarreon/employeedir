@@ -22,7 +22,7 @@ if($management == 1) {
 if($management == 1) {
 ?>
     | <a href="<?= url('own-linking') ?>" title="Personal Linking Sessions"<?= empty($personal) ? '' : ' class="active"' ?>>Personal</a>
-    <a href="<?= url('download-linking') ?>" class="btn btn-success pull-right"><i class="fa fa-download">&nbsp;</i> DOWNLOAD EXCEL REPORT</a>
+    <a href="<?= url('download-linking') ?>" class="btn btn-success pull-right"><i class="fa fa-download"></i>&nbsp; DOWNLOAD EXCEL REPORT</a>
 <?php
 }
 ?>

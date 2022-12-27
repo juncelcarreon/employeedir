@@ -261,5 +261,7 @@ Linking Sessions <span>/</span> Goal Setting <span>></span> Acknowledge Session
         </form>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

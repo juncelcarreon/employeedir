@@ -10,7 +10,58 @@ ol.breadcrumb li span{
     max-width: 100%;
 }
 
-table >tbody> tr > td {
+textarea{
+    min-height: 100px;
+    resize: vertical;
+}
+
+.division{
+    border-top: 1px solid rgba(0,0,0,.125);
+    padding-top: 15px;
+    margin-top: 15px;
+    width: 100%;
+    float: none;
+}
+
+.table > thead > tr >th {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
+    height: auto !important;
+    min-height: 20px !important;
+}
+
+.table > tbody > tr.even {
+    background: #ddd !important;
+}
+
+table > tbody > tr > td {
     vertical-align: middle !important;
     margin: auto;
+}
+
+table > tbody > tr > td > a > img {
+    height: 50px;
+}
+
+.delete_btn i{
+    color: #ff0000;
+}
+
+.dataTables_wrapper{
+    margin: 0 !important;
+}
+
+.m-0{
+    margin: 0 !important;
+}
+
+.d-none{
+    display: none;
+}
+
+.form-text{
+    color: #ff0000;
+}
+
+.border-required{
+    border: 2px solid #ff0000 !important;
 }

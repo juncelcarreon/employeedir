@@ -6,7 +6,7 @@
         Hi TK Team,
         <br>
         <br>
-        Please verify <?= $obj_details['emp_name'] ?> filed overtime report.
+        Please verify <?= $obj_details['emp_name'] ?>'s filed Overtime Report.
         <br>
         <br>
         Click on to <a href="<?= $obj_details['url'] ?>">view</a>. 

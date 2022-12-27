@@ -115,5 +115,7 @@ Linking Sessions <span>/</span> Accountability Setting <span>></span> Acknowledg
         </form>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

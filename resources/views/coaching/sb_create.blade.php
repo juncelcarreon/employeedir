@@ -45,7 +45,7 @@ Linking Sessions <span>/</span> Skill Building <span>></span> New Session
                 <div class="panel-subheading">
                     Skill Building Session
 
-                    <a id="btn-history" class="btn btn-warning pull-right" href="#" data-toggle="modal" data-target="#modal-history"><i class="fa fa-history"></i> History</a>
+                    <a id="btn-history" class="btn btn-warning pull-right" href="#" data-toggle="modal" data-target="#modal-history"><i class="fa fa-history"></i>&nbsp; History</a>
                 </div>
                 <div class="panel-body">
                     <div class="row d-flex">
@@ -121,6 +121,8 @@ Linking Sessions <span>/</span> Skill Building <span>></span> New Session
         </form>
     </div>
 </div>
-@include('coaching.modal.skill_building')
+@endsection
+@section('scripts')
 @include('coaching.js-script')
+@include('coaching.modal.skill_building')
 @endsection

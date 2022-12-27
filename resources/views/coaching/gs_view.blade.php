@@ -248,5 +248,7 @@ Linking Sessions <span>/</span> Goal Setting <span>></span> View Session
         </div>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

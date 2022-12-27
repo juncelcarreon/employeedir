@@ -189,5 +189,7 @@ Linking Sessions <span>/</span> Getting To Know You <span>></span> Acknowledge S
         </form>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

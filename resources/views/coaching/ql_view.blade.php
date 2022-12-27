@@ -65,5 +65,7 @@ Linking Sessions <span>/</span> Quick Link <span>></span> View Session
         </div>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

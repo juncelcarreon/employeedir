@@ -59,43 +59,6 @@
 </li>
 
 <li>
-	<a href="javascript:;" class="menu-has-child" id="requestMenuLink" data-key="close">
-		<em class="fa fa-support">&nbsp;</em>
-		Request
-	</a>
-
-	<ul class="menu-child" data-target="requestMenuLink">
-		<li>
-			<a id="menu-leaves" class="menu-child-item" href="<?= url('leave') ?>">
-				<em class="fa fa-circle-o">&nbsp;</em>
-				Leaves
-				<?php
-				if(Auth::user()->leaveRequestCount() > 0) {
-				?>
-				<span class="badge label-danger"><?= Auth::user()->leaveRequestCount() ?></span>
-				<?php
-				}
-				?>
-			</a>
-		</li>
-
-		<li>
-			<a id="menu-overtime" class="menu-child-item" href="{{url('overtime')}}">
-				<em class="fa fa-circle-o">&nbsp;</em>
-				Overtime
-			</a>
-		</li>
-
-		<li>
-			<a id="menu-undertime" class="menu-child-item" href="{{url('undertime')}}">
-				<em class="fa fa-circle-o">&nbsp;</em>
-				Undertime
-			</a>
-		</li>
-	</ul>
-</li>
-
-<li>
 	<a href="javascript:;" class="menu-has-child" id="blogpostMenuLink" data-key="close">
 		<em class="fa fa-newspaper-o">&nbsp;</em>
 		Blog Post
@@ -126,23 +89,71 @@
 </li>
 
 <li>
+	<a href="javascript:;" class="menu-has-child" id="timekeepingMenuLink" data-key="close">
+		<em class="fa fa-clock-o">&nbsp;</em>
+		Timekeeping
+<?php
+	if((Auth::user()->undertimeRequestCount() + Auth::user()->overtimeRequestCount()) > 0) {
+?>
+		&nbsp;
+		<span class="badge label-danger"><?= Auth::user()->undertimeRequestCount() + Auth::user()->overtimeRequestCount() ?></span>
+<?php
+	}
+?>
+	</a>
+
+	<ul class="menu-child" data-target="timekeepingMenuLink">
+		<li>
+			<a id="menu-overtime" class="menu-child-item" href="<?= url('overtime') ?>">
+				<em class="fa fa-circle-o">&nbsp;</em>
+				Overtime
+<?php
+	if(Auth::user()->overtimeRequestCount() > 0) {
+?>
+				&nbsp;
+				<span class="badge label-secondary"><?= Auth::user()->overtimeRequestCount() ?></span>
+<?php
+	}
+?>
+			</a>
+		</li>
+
+		<li>
+			<a id="menu-undertime" class="menu-child-item" href="<?= url('undertime') ?>">
+				<em class="fa fa-circle-o">&nbsp;</em>
+				Undertime
+<?php
+	if(Auth::user()->undertimeRequestCount() > 0) {
+?>
+				&nbsp;
+				<span class="badge label-secondary"><?= Auth::user()->undertimeRequestCount() ?></span>
+<?php
+	}
+?>
+			</a>
+		</li>
+	</ul>
+</li>
+
+<li>
+	<a id="menu-leaves" href="<?= url('leave') ?>">
+		<em class="fa fa-calendar-o">&nbsp;</em>
+		Leaves
+<?php
+	if(Auth::user()->leaveRequestCount() > 0) {
+?>
+		&nbsp;
+		<span class="badge label-danger"><?= Auth::user()->leaveRequestCount() ?></span>
+<?php
+	}
+?>
+	</a>
+</li>
+
+<li>
 	<a id="menu-dainfraction" href="<?= url('dainfraction') ?>">
 		<em class="fa fa-warning">&nbsp;</em>
 		DA Infractions
-	</a>
-</li>
-
-<li>
-	<a id="menu-offline-break-logger" href="<?= url('time-keeping') ?>">
-		<em class="fa fa-clock-o">&nbsp;</em>
-		Offline Break Logger
-	</a>
-</li>
-
-<li>
-	<a id="menu-break-management" href="<?= url('sup-view') ?>">
-		<em class="fa fa-clock-o">&nbsp;</em>
-		Break Management 
 	</a>
 </li>
 

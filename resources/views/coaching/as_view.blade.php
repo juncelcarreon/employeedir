@@ -101,5 +101,7 @@ Linking Sessions <span>/</span> Accountability Setting <span>/</span> View Sessi
         </div>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

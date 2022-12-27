@@ -109,5 +109,7 @@ Linking Sessions <span>/</span> Skill Building <span>></span> Acknowledge Sessio
         </form>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

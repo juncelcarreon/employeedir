@@ -13,21 +13,21 @@
 
 	<ul class="menu-child" data-target="policyMenuLink">
 		<li>
-			<a id="menu-attendance" class="menu-child-item" target="_blank" href="<?= url('attachment/attendance.pdf') ?>">
+			<a id="menu-attendance" class="menu-child-item" target="_blank" href="<?= url('public/attachment/attendance.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Attendance
 			</a>
 		</li>
 
 		<li>
-			<a id="menu-company-directives" class="menu-child-item" target="_blank" href="<?= url('attachment/directives.pdf') ?>">
+			<a id="menu-company-directives" class="menu-child-item" target="_blank" href="<?= url('public/attachment/directives.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Company Directives
 			</a>
 		</li>
 
 		<li>
-			<a id="menu-dress-code" class="menu-child-item" target="_blank" href="<?= url('attachment/dresscode.pdf') ?>">
+			<a id="menu-dress-code" class="menu-child-item" target="_blank" href="<?= url('public/attachment/dresscode.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Dress Code
 			</a>
@@ -36,24 +36,49 @@
 </li>
 
 <li>
-	<a id="menu-offline-break-logger" href="<?= url('time-keeping') ?>">
+	<a href="javascript:;" class="menu-has-child" id="timekeepingMenuLink" data-key="close">
 		<em class="fa fa-clock-o">&nbsp;</em>
-		Offline Break Logger
+		Timekeeping
+	</a>
+
+	<ul class="menu-child" data-target="timekeepingMenuLink">
+		<li>
+			<a id="menu-overtime" class="menu-child-item" href="<?= url('overtime') ?>">
+				<em class="fa fa-circle-o">&nbsp;</em>
+				Overtime
+			</a>
+		</li>
+
+		<li>
+			<a id="menu-undertime" class="menu-child-item" href="<?= url('undertime') ?>">
+				<em class="fa fa-circle-o">&nbsp;</em>
+				Undertime
+			</a>
+		</li>
+	</ul>
+</li>
+
+<li>
+	<a id="menu-leaves" href="<?= url('leave') ?>">
+		<em class="fa fa-calendar-o">&nbsp;</em>
+		Leaves
 	</a>
 </li>
 
-<?php
-if(Auth::check() && (Auth::user()->usertype == 2 || Auth::user()->usertype == 3)) {
-?>
 <li>
-	<a id="menu-break-management" href="<?= url('sup-view') ?>">
-		<em class="fa fa-clock-o">&nbsp;</em>
-		Break Management 
+	<a id="menu-dainfraction" href="<?= url('dainfraction') ?>">
+		<em class="fa fa-warning">&nbsp;</em>
+		DA Infractions
+<?php
+	if(Auth::check() && Auth::user()->scopeInfractionCount(Auth::user()->id) > 0) {
+?>
+		&nbsp;
+		<span class="badge label-danger"><?= Auth::user()->scopeInfractionCount(Auth::user()->id) ?></span>
+<?php
+	}
+?>
 	</a>
 </li>
-<?php
-}
-?>
 
 <li>
 	<a id="menu-linking-sessions" href="<?= url('coaching-session') ?>">
@@ -66,13 +91,6 @@ if(Auth::check() && (Auth::user()->usertype == 2 || Auth::user()->usertype == 3)
 	<a id="menu-active-employees" href="<?= url('employees') ?>">
 		<em class="fa fa-users">&nbsp;</em>
 		Employees
-	</a>
-</li>
-
-<li>
-	<a id="menu-leaves" href="<?= url('leave') ?>">
-		<em class="fa fa-calendar">&nbsp;</em>
-		Leaves
 	</a>
 </li>
 
@@ -91,7 +109,7 @@ if(Auth::check() && (Auth::user()->usertype == 2 || Auth::user()->usertype == 3)
 </li>
 
 <li>
-	<a id="menu-employee-hierarchy" target="_blank" href="<?= url('img/company-hierarchy.jpeg') ?>">
+	<a id="menu-employee-hierarchy" target="_blank" href="<?= url('public/img/company-hierarchy.jpeg') ?>">
 		<em class="fa fa-sitemap">&nbsp;</em>
 		Employee Hierarchy
 	</a>

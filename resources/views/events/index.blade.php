@@ -1,80 +1,71 @@
 @extends('layouts.main')
 @section('title')
-Blog Posts > Events
+Blog Post > Events
+@endsection
+@section('head')
+@include('events.style')
 @endsection
 @section('breadcrumb')
-Blog Posts <span>></span> Events
+Blog Post <span>></span> Events
 @endsection
 @section('content')
-<style>
-@include('events.style');
-</style>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        Events List
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default m-0">
+            <div class="panel-heading">
+                Events List
 
-        <a href="<?= url('events/create') ?>" class="btn btn-primary pull-right"><span class="fa fa-plus"></span>&nbsp; Add Event</a>
-        <a href="<?= url('events/calendar') ?>" class="btn btn-info pull-right" style="margin-right: 10px;"><span class="fa fa-calendar"></span>&nbsp; Calendar View</a>
-    </div>
-    <div class="pane-body panel">
-        <br>
-        <br>
-        <table class="table">
-            <thead>
-                <tr>
-                    <td>#</td>
-                    <td>Name</td>
-                    <td>Description</td>
-                    <td>Start Date</td>
-                    <td>End Date</td>
-                    <td>Tip Color</td>
-                    <td>Option</td>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-            $i = 1;
-            foreach($events as $event) {
-            ?>
-                <tr>
-                    <td><?= $i ?></td>
-                    <td><?= $event->event_name ?></td>
-                    <td><?= $event->event_description ?></td>
-                    <td><?= prettyDate($event->start_date) ?></td>
-                    <td><?= prettyDate($event->end_date) ?></td>
-                    <td>
-                        <div style="background: <?= $event->event_color ?>; width: 20px; height: 20px; margin:0 auto;"></div>
-                    </td>
-                    <td>
-                        <a title="View" href="<?= url("events/{$event->id}") ?>"><span class="fa fa-eye"></span></a>&nbsp;&nbsp;
-                        <a title="Edit" href="<?= url("events/{$event->id}/edit") ?>"><span class="fa fa-pencil"></span></a>&nbsp;&nbsp;
-                        <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Delete" data-id="<?= $event->id ?>">
-                            <i class="fa fa-trash" style="color: red;" ></i>
-                        </a>
-                    </td>
-                </tr>
-            <?php
-            $i++;
-            }
-            ?>
-            </tbody>
-        </table>
+                <a href="<?= url('events/create') ?>" class="btn btn-primary pull-right"><span class="fa fa-plus"></span>&nbsp; Add Event</a>
+                <a href="<?= url('events/calendar') ?>" class="btn btn-info pull-right"><span class="fa fa-calendar"></span>&nbsp; Calendar View</a>
+            </div>
+            <div class="pane-body panel m-0">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Tip Color</th>
+                            <th>Option</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach($events as $no=>$event) {
+                    ?>
+                        <tr>
+                            <td><?= ++$no ?></td>
+                            <td title="<?= $event->event_name ?>"><?= stringLimit($event->event_name, 100) ?></td>
+                            <td title="<?= $event->event_description ?>"><?= stringLimit($event->event_description, 100) ?></td>
+                            <td><span class="d-none"><?= strtotime($event->start_date) ?></span> <?= prettyDate($event->start_date) ?></td>
+                            <td><span class="d-none"><?= strtotime($event->end_date) ?></span> <?= prettyDate($event->end_date) ?></td>
+                            <td class="data-center">
+                                <div class="tip-color" style="background-color:<?= $event->event_color ?>;"></div>
+                            </td>
+                            <td>
+                                <a title="View" href="<?= url("events/{$event->id}") ?>">
+                                    <i class="fa fa-eye"></i>
+                                </a>&nbsp;&nbsp;
+                                <a title="Edit" href="<?= url("events/{$event->id}/edit") ?>">
+                                    <i class="fa fa-pencil"></i>
+                                </a>&nbsp;&nbsp;
+                                <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Delete" data-id="<?= $event->id ?>">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
 @section('scripts')
-<script>
-$(function() {
-    activeMenu($('#menu-events'));
-
-    $('.delete_btn').click(function(){
-        $('#messageModal .modal-title').html('Delete Event');
-        $('#messageModal #message').html('Are you sure you want to delete the activity ?');
-        $('#messageModal .delete_form').attr('action', "<?= url('events') ?>/" + $(this).attr("data-id"));
-    });
-    $('#messageModal #yes').click(function(){
-        $('#messageModal .delete_form').submit();
-    });
-});
-</script>
+@include('events.js-script')
 @endsection

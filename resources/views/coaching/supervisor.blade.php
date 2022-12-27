@@ -77,5 +77,7 @@ Linking Sessions <span>></span> New Linking Session
         </div>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

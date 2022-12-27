@@ -18,7 +18,7 @@ Linking Sessions <span>/</span> Quick Link <span>></span> List
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table table-bordered" id="table-list">
+                        <table class="table table-striped" id="table-list">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -48,5 +48,7 @@ Linking Sessions <span>/</span> Quick Link <span>></span> List
         </div>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

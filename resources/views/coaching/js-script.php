@@ -43,6 +43,17 @@ function requiredFields(form){
 $(function(){
     activeMenu($('#menu-linking-sessions'));
 
+    $('.table').DataTable().destroy();
+
+    $('#table-history').DataTable({
+        order: [[0, 'desc']],
+        pageLength: 5
+    });
+
+    $('#table-list').DataTable({
+        order: [[0, 'desc']]
+    });
+
     $('.select').select2();
 
     $('.select-date').keydown(function(e){
@@ -54,15 +65,6 @@ $(function(){
     $('.select-date').datetimepicker({
         format: 'MM/DD/YYYY',
         useCurrent: false
-    });
-
-    $('#table-history').DataTable({
-        order: [[0, 'desc']],
-        pageLength: 5
-    });
-
-    $('#table-list').DataTable({
-        order: [[0, 'desc']]
     });
 
     $("#main_linkee").on("change",function(){

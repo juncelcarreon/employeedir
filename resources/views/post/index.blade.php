@@ -2,148 +2,61 @@
 @section('title')
 Blog Posts > HR Progress
 @endsection
+@section('head')
+<style type="text/css">
+@include('post.style');
+</style>
+@endsection
 @section('breadcrumb')
 Blog Posts <span>></span> HR Progress
 @endsection
 @section('content')
-<style>
-ol.breadcrumb li span{
-    display: inline-block;
-    color: #ccc;
-    padding: 0 5px;
-}
-.switch {
-	position: relative;
-	display: inline-block;
-	width: 60px;
-	height: 34px;
-	margin-bottom: 0px;
-}
-.switch input {
-	display: none;
-}
-.slider {
-	position: absolute;
-	cursor: pointer;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #ccc;
-	-webkit-transition: .4s;
-	transition: .4s;
-}
-.slider:before {
-	position: absolute;
-	content: "";
-	height: 26px;
-	width: 26px;
-	left: 4px;
-	bottom: 4px;
-	background-color: white;
-	-webkit-transition: .4s;
-	transition: .4s;
-}
-input.primary:checked + .slider {
-	background-color: #2196F3;
-}
-input:checked + .slider:before {
-	 -webkit-transform: translateX(26px);
-	 -ms-transform: translateX(26px);
-	 transform: translateX(26px);
- }
-#post-table{
-	width: 1000px;
-}
-.post-image{
-	width: 400px;
-	margin: 10px;
-}
-.image-id{
-	padding: 10px;
-}
-.btn-delete{
-	font-size: 40px;
-	margin-left: 15px;
-	margin-bottom: 5px;
-}
-.fa-trash{
-	color: red;
-}
-</style>
-<div class="panel panel-default">
-	<div class="panel panel-heading">
-		Posts
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default m-0">
+			<div class="panel panel-heading m-0">
+				Posts
 
-		<a class="pull-right btn btn-primary" href="<?= url('posts/create') ?>"><span class="fa fa-plus"></span>&nbsp; Create New Post</a>
-	</div>
-    <div class="pane-body panel">
-        <br>
-        <br>
-		<table id="post-table" class="table-striped table">
-			<thead>
-				<tr>
-					<td>#</td>
-					<td style="width: 420px;">Image</td>
-					<td align="center">Option</td>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-				$i=1;
-				foreach($posts as $post){
-				?>
-				<tr>
-					<td class="image-id"><?= $i ?></td>
-					<td>
-						<img src="<?= $post->image ?>" class="img-thumbnail post-image">
-					</td>
-					<td align="center">
-						<label class="switch" title="Enable/Disable">
-							<input type="checkbox" value="1" id="progress1" tabIndex="1" class="primary" data-id="<?= $post->id ?>" <?= $post->enabled == 1 ? 'checked' : '' ?>>
-							<span class="slider"></span>
-						</label>
-						<a href="#" class="btn-delete delete_btn" data-toggle="modal" data-target="#messageModal" title="Delete" data-id="<?= $post->id ?>">
-							<i class="fa fa-trash"></i>
-						</a>
-					</td>
-				</tr>
-				<?php
-				$i++;
-				}
-				?>
-			</tbody>
-		</table>
+				<a class="pull-right btn btn-primary" href="<?= url('posts/create') ?>"><span class="fa fa-plus"></span>&nbsp; Create New Post</a>
+			</div>
+		    <div class="pane-body panel m-0">
+				<table id="post-table" class="table-striped table">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Image</th>
+							<th>Option</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						foreach($posts as $no=>$post){
+						?>
+						<tr>
+							<td><?= ++$no ?></td>
+							<td>
+								<img src="<?= $post->image ?>" class="img-thumbnail post-image" alt="post image">
+							</td>
+							<td>
+								<label class="switch" title="Enable/Disable">
+									<input type="checkbox" value="1" id="progress1" tabIndex="1" class="primary" data-id="<?= $post->id ?>" <?= $post->enabled == 1 ? 'checked' : '' ?>>
+									<span class="slider"></span>
+								</label>
+								<a href="#" class="btn-delete delete_btn" data-toggle="modal" data-target="#messageModal" title="Delete" data-id="<?= $post->id ?>">
+									<i class="fa fa-trash"></i>
+								</a>
+							</td>
+						</tr>
+						<?php
+						}
+						?>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
 </div>
 @endsection
 @section('scripts')
-<script>
-$(function() {
-    activeMenu($('#menu-hr-progress'));
-
-	$(document).on('change', 'input[type=checkbox]', function(){
-		let enabled;
-		let id = $(this).data('id');
-		if($(this).is(":checked")){
-			enabled = 1;
-		}else{
-			enabled = 0;
-		}
-        $.LoadingOverlay("show");
-		setTimeout(function(){
-            $.LoadingOverlay("hide");
-			window.location.replace("<?= url('posts') ?>/" + id + "/enabled?enabled=" + enabled);
-		}, 1000);
-	});
-	$('.delete_btn').click(function(){
-		$('#messageModal .modal-title').html('Delete Post');
-		$('#messageModal #message').html('Are you sure you want to delete the post ?');
-		$('#messageModal .delete_form').attr('action', "<?= url('posts') ?>/" + $(this).attr("data-id"));
-	});
-	$('#messageModal #yes').click(function(){
-		$('#messageModal .delete_form').submit();
-	});
-});
-</script>
+@include('post.js-script')
 @endsection

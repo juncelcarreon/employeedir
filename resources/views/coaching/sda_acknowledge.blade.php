@@ -121,5 +121,7 @@ Linking Sessions <span>/</span> Skills Development Activities <span>></span> Ack
         </form>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

@@ -12,7 +12,8 @@ class OvertimeRequest extends Model
 
     protected $table = 'overtime_request';
 
-    public static function getOvertime($in_type = 'pending', $in_method = 'list', $in_id = null){
+    public static function getOvertime($in_type = 'pending', $in_method = 'list', $in_id = null)
+    {
         $in_type = strtoupper($in_type);
         $query = '';
         switch($in_method) {

@@ -6,6 +6,7 @@ ol.breadcrumb li span{
 
 .dataTables_wrapper{
     margin:0 !important;
+    padding: 0 !important;
 }
 
 .panel-heading{
@@ -86,7 +87,18 @@ ol.breadcrumb li span{
     font-size: 14px;
 }
 
-td span{
+.table > thead > tr >th {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
+    height: auto !important;
+    min-height: 20px !important;
+}
+
+table > tbody > tr > td {
+    vertical-align: middle !important;
+    margin: auto;
+}
+
+table > tbody > tr > td > span{
     display: none;
 }
 

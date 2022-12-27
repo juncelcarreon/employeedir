@@ -124,8 +124,8 @@
             @yield('content')
             <div class="row">
                 <div class="col-md-12">
-                    <div class="text-center" style="color: #999;font-weight: 400; padding: 30px 0 40px;">
-                        Copyright {{ date('Y')}} eLink Systems & Concepts   Corp.
+                    <div class="text-center" style="color: #999;font-size: 13px; font-weight: 400; padding: 30px 0 40px;">
+                        © Copyright <?= date('Y') ?> • eLink Systems & Concepts Corp.
                     </div>
                 </div>
             </div>

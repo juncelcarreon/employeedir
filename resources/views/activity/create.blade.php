@@ -1,92 +1,83 @@
 @extends('layouts.main')
 @section('title')
-Blog Posts > Activities > Add Activity
+Blog Post > Activities > Add Activity
 @endsection
-@section('breadcrumb')
-Blog Posts <span>/</span> Activities <span>></span> Add Activity
-@endsection
-@section('content')
+@section('head')
 <style type="text/css">
 @include('activity.style');
 </style>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        New Activity
+@endsection
+@section('breadcrumb')
+Blog Post <span>/</span> Activities <span>></span> Add Activity
+@endsection
+@section('content')
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default m-0">
+            <div class="panel-heading">
+                New Activity
 
-        <a href="<?= url('activities') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
-    </div>
-    <div class="panel-body timeline-container">
-        <div class="flex-center position-ref full-height">
-            <form id="create_activity_form" role="form" method="POST" action="<?= route('activities.store') ?>" enctype="multipart/form-data">
-                {{ csrf_field() }}
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" name="title" class="form-control" required>
+                <a href="<?= url('activities') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
+            </div>
+            <div class="panel-body timeline-container">
+                <div class="flex-center position-ref full-height">
+                    <form role="form" method="POST" action="<?= route('activities.store') ?>" enctype="multipart/form-data" autocomplete="off">
+                        {{ csrf_field() }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="asterisk-required">Title</label>
+                                    <input type="text" name="title" class="form-control" placeholder="Title..." required>
+                                    <div class="form-text d-none"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="asterisk-required">Subtitle</label>
+                                    <input type="text" name="subtitle" class="form-control" placeholder="Subtitle..." required>
+                                    <div class="form-text d-none"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Message</label>
+                                    <textarea name="message" class="form-control" placeholder="Message..."></textarea>
+                                </div>
+                                <br>
+                            </div>
+                            <div class="col-md-12 text-center d-none">
+                                <div class="form-group">
+                                    <img src="" id="img_holder" alt="image holder">
+                                    <br>
+                                    <br>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="asterisk-required">Image Attachment</label>
+                                    <input type="file" name="image_url" class="form-control" accept="image/png, image/jpg, image/jpeg" required>
+                                    <div class="form-text d-none"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="asterisk-required">Activity Date</label>
+                                    <input type="text" name="activity_date" class="form-control datepicker" placeholder="MM/DD/YYYY" required>
+                                    <div class="form-text d-none"></div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Subtitle</label>
-                            <input type="text" name="subtitle" class="form-control" required>
+                        <div class="division"></div>
+                        <div class="form-group pull-right">
+                            <button class="btn btn-primary btn-submit">Save</button>
                         </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Message</label>
-                            <textarea name="message" class="form-control" style="min-height: 100px; resize: vertical;"></textarea>
-                        </div>
-                        <br>
-                    </div>
-                    <div class="col-md-12" style="text-align: center;">
-                        <img src="" id="img_holder">
-                        <br>
-                        <br>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Image Attachment</label>
-                            <input type="file" name="image_url" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Activity Date</label>
-                            <input type="text" name="activity_date" class="form-control datepicker" required>
-                        </div>
-                    </div>
+                    </form>
                 </div>
-                <div class="col-md-12" style="border-top: 1px solid rgba(0,0,0,.125); padding-top: 15px; margin-top: 15px"></div>
-                <div class="form-group pull-right">
-                    <button class="btn btn-primary">Save</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
 @endsection
 @section('scripts')
-<script type="text/javascript">
-function readURL(input) {
-  if (input.files && input.files[0]) {
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      $('#img_holder').attr('src', e.target.result);
-    }
-    reader.readAsDataURL(input.files[0]);
-  }
-}
-$(function() {
-    activeMenu($('#menu-activities'));
-
-    $('#create_activity_form').validate({
-        ignore: []
-    });
-
-    $("input[name=image_url]").change(function() {
-      readURL(this);
-    });
-});
-</script>
+@include('activity.js-script')
 @endsection

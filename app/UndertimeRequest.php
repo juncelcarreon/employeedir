@@ -12,12 +12,14 @@ class UndertimeRequest extends Model
 
     protected $table = 'undertime_request';
 
-    public static function getUndertime($in_type = 'pending', $in_method = 'list', $in_id = null){
+    public static function getUndertime($in_type = 'pending', $in_method = 'list', $in_id = null)
+    {
         $in_type = strtoupper($in_type);
         $query = '';
         switch($in_method) {
             case 'user':
             $query = " AND `employee_info`.`id`={$in_id}";
+            $query .= " AND `undertime_request`.`status` = '{$in_type}'";
                 break;
             case 'show':
             $query = " AND `undertime_request`.`id`={$in_id}";

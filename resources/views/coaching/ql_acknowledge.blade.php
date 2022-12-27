@@ -78,5 +78,7 @@ Linking Sessions <span>/</span> Quick Link <span>></span> Acknowledge Session
         </form>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

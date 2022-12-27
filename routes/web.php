@@ -150,6 +150,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('dainfraction/acknowledged', 'DAInfractionController@acknowledged');
     Route::post('dainfraction/explanation', 'DAInfractionController@explanation');
     Route::post('dainfraction/update', 'DAInfractionController@update');
+    Route::get('team-dainfraction', 'DAInfractionController@team');
 
     Route::resource('survey', 'SurveyController');
 

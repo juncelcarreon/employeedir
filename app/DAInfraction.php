@@ -12,14 +12,20 @@ class DAInfraction extends Model
 
     protected $table = 'da_infraction';
 
-    public static function getInfractions($in_status = null, $in_id = null){
-        $query = '';
-        if(isset($in_status)) { 
-            $query = " AND `da_infraction`.`status` = {$in_status}";
+    public static function getInfractions($in_id = null, $in_type = 'list')
+    {
+        $query = '1';
+
+        if(!empty($in_id) && $in_type != 'team') {
+            $query .= " AND `da_infraction`.`employee_id` = {$in_id}";
         }
 
-        if(isset($in_id)) {
-            $query .= " AND `da_infraction`.`employee_id` = {$in_id}";
+        if($in_type == 'team') {
+            $query .= " AND (`employee_info`.`supervisor_id`={$in_id} OR `employee_info`.`manager_id`={$in_id})";
+        }
+
+        if($in_type == 'reminder') {
+            $query .= " AND `da_infraction`.`status` = 0";
         }
 
         $data = DB::select("
@@ -41,7 +47,8 @@ class DAInfraction extends Model
                 `da_infraction`.`employee_id` = `employee_info`.`id`
             WHERE
                 `employee_info`.`deleted_at` IS NULL AND
-                `employee_info`.`status` = 1 {$query}
+                `employee_info`.`status` = 1 AND
+                {$query}
             ORDER BY 
                 `da_infraction`.`created_at` 
             DESC

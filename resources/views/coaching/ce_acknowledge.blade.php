@@ -109,5 +109,7 @@ Linking Sessions <span>/</span> Cementing Expectation <span>></span> Acknowledge
         </form>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

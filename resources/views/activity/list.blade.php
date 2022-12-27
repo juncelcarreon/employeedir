@@ -1,79 +1,69 @@
 @extends('layouts.main')
 @section('title')
-Blog Posts > Activities
+Blog Post > Activities
 @endsection
-@section('breadcrumb')
-Blog Posts <span>></span> Activities
-@endsection
-@section('content')
+@section('head')
 <style type="text/css">
 @include('activity.style');
 </style>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        List of Activities
+@endsection
+@section('breadcrumb')
+Blog Post <span>></span> Activities
+@endsection
+@section('content')
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default m-0">
+            <div class="panel-heading">
+                List of Activities
 
-        <a href="<?= url('activities/create') ?>" class="btn btn-primary pull-right" ><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Activity</a>
-    </div>
-    <div class="pane-body panel">
-        <br>
-        <br>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th align="left">#</th>
-                    <th>Activity Title</th>
-                    <th>Subtitle</th>
-                    <th>Message</th>
-                    <th>Image</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-            $i = 1;
-            foreach($activities as $activity) {
-            ?>
-                <tr> 
-                    <td><?= $i ?></td>
-                    <td><?= $activity->title ?></td>
-                    <td><?= $activity->subtitle ?></td>
-                    <td><?= truncate($activity->message, 50, false) ?></td>
-                    <td align="center">
-                        <a target="_blank" href="<?= $activity->image_url ?>" >
-                            <img src="<?= $activity->image_url ?>" style=" height: 40px;" />
-                        </a>
-                    </td>
-                    <td align="center">
-                        <a href="<?= url("activities/{$activity->id}/edit") ?>" title="Edit">
-                            <i class="fa fa-pencil"></i>
-                        </a>&nbsp;&nbsp;
-                        <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Delete" data-id="<?= $activity->id ?>">
-                            <i class="fa fa-trash" style="color: red;" ></i>
-                        </a>
-                    </td>
-                </tr>
-            <?php
-            $i++;
-            }
-            ?>
-            </tbody>
-        </table>
+                <a href="<?= url('activities/create') ?>" class="btn btn-primary pull-right" ><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Activity</a>
+            </div>
+            <div class="pane-body panel m-0">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Activity Title</th>
+                            <th>Subtitle</th>
+                            <th>Date</th>
+                            <th>Image</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach($activities as $no=>$activity) {
+                    ?>
+                        <tr> 
+                            <td><?= ++$no ?></td>
+                            <td title="<?= $activity->title ?>"><?= stringLimit($activity->title, 100) ?></td>
+                            <td title="<?= $activity->subtitle ?>"><?= stringLimit($activity->subtitle) ?></td>
+                            <td><?= prettyDate($activity->activity_date) ?></td>
+                            <td>
+                                <a target="_blank" href="<?= $activity->image_url ?>" >
+                                    <img src="<?= $activity->image_url ?>" alt="<?= $activity->title ?>" />
+                                </a>
+                            </td>
+                            <td>
+                                <a href="<?= url("activities/{$activity->id}/edit") ?>" title="Edit">
+                                    <i class="fa fa-pencil"></i>
+                                </a>&nbsp;&nbsp;
+                                <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Delete" data-id="<?= $activity->id ?>">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
-<script type="text/javascript">
-$(function() {
-    activeMenu($('#menu-activities'));
-
-    $('.delete_btn').click(function(){
-        $('#messageModal .modal-title').html('Delete Activity');
-        $('#messageModal #message').html('Are you sure you want to delete the activity ?');
-        $('#messageModal .delete_form').attr('action', "{{ url('activities') }}/" + $(this).attr("data-id"));
-    });
-
-    $('#messageModal #yes').click(function(){
-        $('#messageModal .delete_form').submit();
-    });
-});
-</script>
-@endsection 
+@endsection
+@section('scripts')
+@include('activity.js-script')
+@endsection

@@ -45,7 +45,7 @@ Linking Sessions <span>/</span> Accountability Setting <span>></span> New Sessio
                 <div class="panel-subheading">
                     Accountability Setting Session
 
-                    <a id="btn-history" class="btn btn-warning pull-right" href="#" data-toggle="modal" data-target="#modal-history"><i class="fa fa-history"></i> History</a>
+                    <a id="btn-history" class="btn btn-warning pull-right" href="#" data-toggle="modal" data-target="#modal-history"><i class="fa fa-history"></i>&nbsp; History</a>
                 </div>
                 <div class="panel-body">
                     <div class="row d-flex">
@@ -128,6 +128,8 @@ Linking Sessions <span>/</span> Accountability Setting <span>></span> New Sessio
         </form>
     </div>
 </div>
-@include('coaching.modal.accountability_setting')
+@endsection
+@section('scripts')
 @include('coaching.js-script')
+@include('coaching.modal.accountability_setting')
 @endsection

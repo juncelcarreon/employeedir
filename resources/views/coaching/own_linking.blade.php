@@ -18,7 +18,7 @@ Linking Sessions <span>></span> Personal Sessions
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table table-striped table-bordered" id="table-list">
+                        <table class="table table-striped" id="table-list">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -54,5 +54,7 @@ Linking Sessions <span>></span> Personal Sessions
         </div>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection

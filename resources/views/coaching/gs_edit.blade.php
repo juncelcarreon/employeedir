@@ -43,7 +43,7 @@ Linking Sessions <span>/</span> Goal Setting <span>></span> Edit Session
                 <div class="panel-subheading">
                     Goal Setting Session
 
-                    <a id="btn-history" class="btn btn-warning pull-right" href="#" data-toggle="modal" data-target="#modal-history"><i class="fa fa-history"></i> History</a>
+                    <a id="btn-history" class="btn btn-warning pull-right" href="#" data-toggle="modal" data-target="#modal-history"><i class="fa fa-history"></i>&nbsp; History</a>
                 </div>
                 <div class="panel-body">
                     <div class="row d-flex">
@@ -260,6 +260,8 @@ Linking Sessions <span>/</span> Goal Setting <span>></span> Edit Session
         </form>
     </div>
 </div>
-@include('coaching.modal.goal_setting')
+@endsection
+@section('scripts')
 @include('coaching.js-script')
+@include('coaching.modal.goal_setting')
 @endsection

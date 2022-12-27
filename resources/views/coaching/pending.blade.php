@@ -52,5 +52,7 @@ Linking Sessions <span>></span> Pending Sessions
         </div>
     </div>
 </div>
+@endsection
+@section('scripts')
 @include('coaching.js-script')
 @endsection
