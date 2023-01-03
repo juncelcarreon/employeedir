@@ -2,7 +2,9 @@
 $(function () {
     activeMenu($('#menu-dainfraction'));
 
-    $('._table').DataTable({"pageLength": 50});
+    $('.table').DataTable().destroy();
+
+    $('.table').DataTable({"pageLength": 50});
 
     $('.select2').change(function() {
         var obj = $(this),

@@ -185,6 +185,11 @@ class EmployeeInfoController extends Controller
 
 	public function changepassword(Request $request, $id)
 	{
+		$employee = User::withTrashed()->find($id);
+		if(empty($employee)) {
+			return redirect(url('404'));
+		}
+
 		return $this->authModel->changepassword($request, $id);
 	}
 
@@ -407,11 +412,11 @@ class EmployeeInfoController extends Controller
 
 		$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
 		$timestamp = date('m_d_Y_G_i');
-		$writer->save("./excel/report/inactives-". $timestamp . ".xlsx");
+		$writer->save('public/excel/report/inactives-'. $timestamp . ".xlsx");
 
 		$file_name = 'inactives-'.$timestamp.'.xlsx';
 
-		return redirect('./excel/report/' . $file_name);
+		return redirect('public/excel/report/' . $file_name);
 	}
 
 	public function downloadFilter(Request $request)
@@ -579,17 +584,22 @@ class EmployeeInfoController extends Controller
 
 		$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
 		$timestamp = date('m_d_Y_G_i');
-		$writer->save("./excel/report/report". $timestamp . ".xlsx");
+		$writer->save('public/excel/report/report'. $timestamp . ".xlsx");
 
 		$file_name = 'report'.$timestamp.'.xlsx';
 
-		return redirect('./excel/report/' . $file_name);
+		return redirect('public/excel/report/' . $file_name);
 	}
 
 	public function profile(Request $request, $id)
 	{
-		$data['employee'] = User::withTrashed()->find($id);
-		$data['leave_requests'] = LeaveRequest::getLeave('separated', $id, 'list', 1);
+		$employee = User::withTrashed()->find($id);
+		if(empty($employee)) {
+			return redirect(url('404'));
+		}
+
+		$data['employee'] = $employee;
+		$data['leave_requests'] = LeaveRequest::getLeave('separated', $employee->id, 'list', 1);
 
 		return view('auth.profile.view', $data);
 	}

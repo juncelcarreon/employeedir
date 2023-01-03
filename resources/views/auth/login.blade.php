@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="http://www.elink.com.ph/wp-content/uploads/2016/01/elink-logo-site.png">
-        <title>Elink Employee Directory | Login</title>
+        <title>Human Resources Gateway | Login</title>
         <link href="<?= asset('css/css.css') ?>" rel="stylesheet">
 
         @include('auth.styles')
@@ -13,8 +13,8 @@
     <body>
         <div class="container">
             <div class="authentication-logo">
-                <img src="<?= asset('img/elink-logo-site.png') ?>" alt="eLink Systems & Concepts Corp.">
-                <h1>eLink  F A L C O N&nbsp;&nbsp;<span>∞&nbsp;&nbsp;HR Portal</span></h1>
+                <img src="<?= asset('img/main-logo.png') ?>" alt="Human Resources Gateway">
+                <!-- <h1>eLink  F A L C O N&nbsp;&nbsp;<span>∞&nbsp;&nbsp;HR Portal</span></h1> -->
             </div>
             <div class="content">
                 <h2>LOGIN WITH YOUR ACCOUNT</h2>
@@ -56,6 +56,8 @@
         </div>
     </body>
     <footer>
-        <div class="copyright">© Copyright <?= date('Y') ?> • eLink Systems & Concepts Corp.</div>
+        <img src="<?= asset('img/elink-text-logo.png') ?>" alt="eLink Systems & Concepts Corp.">
+        <div class="copyright">© Copyright <?= date('Y') ?></div>
+        <!-- <div class="copyright">© Copyright <?= date('Y') ?> • eLink Systems & Concepts Corp.</div> -->
     </footer>
 </html>

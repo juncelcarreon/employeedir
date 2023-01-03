@@ -2,7 +2,7 @@
 @section('title')
 <?php
     if(Auth::check() && Auth::user()->isAdmin()) {
-        echo 'Blog Post > Events > Calendar';
+        echo 'Blog Post | Events > Calendar';
     } else {
         echo 'Events Calendar';
     }

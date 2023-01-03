@@ -1,14 +1,14 @@
 @extends('layouts.main')
 @section('title')
-Request | Leave > Approved Leave List
+Leave > Approved Leave List
 @endsection
 @section('head')
 <style type="text/css">
-@include('leave.leave-style');
+@include('leave.style');
 </style>
 @endsection
 @section('breadcrumb')
-Request <span>/</span> Leave <span>></span> Approved Leave List
+Leave <span>></span> Approved Leave List
 @endsection
 @section('content')
 <div class="row">
@@ -20,13 +20,13 @@ Request <span>/</span> Leave <span>></span> Approved Leave List
                 <a href="<?= url('leave') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
             </div>
             <div class="pane-body panel mb-0">
-                <table id="table_leave">
+                <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th class="w-50">#</th>
-                            <th class="w-100">Employee</th>
-                            <th class="w-200">Leave Type - Reason</th>
-                            <th class="w-100">Leave Dates</th>
+                            <th style="min-width: 50px;">#</th>
+                            <th style="width: 100px;">Employee</th>
+                            <th style="width: 200px;">Leave Type - Reason</th>
+                            <th style="width: 150px;">Leave Dates</th>
                             <th>Pay Status</th>
                             <th>No. Of<br> Days</th>
                             <th>Date<br> Requested</th>
@@ -37,7 +37,6 @@ Request <span>/</span> Leave <span>></span> Approved Leave List
                     $i = 1;
                     foreach($leave_requests as $request) {
                         if(!empty($request->leave_details)) {
-                            $reason = "";
                             $num_days = 0;
                             $dates = [];
                             $pay_status = [];
@@ -46,18 +45,15 @@ Request <span>/</span> Leave <span>></span> Approved Leave List
                                 array_push($pay_status, (($detail->pay_type) ? 'With Pay' : 'Without Pay'));
                                 $num_days += $detail->length;
                             endforeach;
-
-                            $reason = $request->pay_type_id == 1 ? "Planned - " : "Unplanned - ";
-                            $reason .= (strlen($request->reason) > 80) ? substr($request->reason, 0, 80)." ..." : $request->reason;
                     ?>
                         <tr>
                             <td><?= $i ?></td>
                             <td><?= $request->first_name. " " .$request->last_name ?></td>
-                            <td><?= $reason ?></td>
-                            <td><span><?= strtotime($dates[0]) ?></span> <?= implode('<br>', $dates); ?></td>
+                            <td title="<?= htmlentities($request->reason) ?>"><?= ($request->pay_type_id == 1 ? "Planned - " : "Unplanned - ").stringLimit($request->reason, 80) ?></td>
+                            <td><span class="d-none"><?= strtotime($dates[0]) ?></span> <?= implode('<br>', $dates); ?></td>
                             <td><?= implode('<br>', $pay_status); ?></td>
                             <td><?= (float) $num_days ?></td>
-                            <td><span><?= strtotime($request->date_filed) ?></span> <?= date("M d, Y",strtotime($request->date_filed)) ?></td>
+                            <td><span class="d-none"><?= strtotime($request->date_filed) ?></span> <?= date("M d, Y",strtotime($request->date_filed)) ?></td>
                         </tr>
                     <?php 
                         $i++;
@@ -76,7 +72,9 @@ Request <span>/</span> Leave <span>></span> Approved Leave List
 $(function () {
     activeMenu($('#menu-leaves'));
 
-    $('#table_leave').DataTable({"pageLength": 50});
+    $('.table').DataTable().destroy();
+
+    $('.table').DataTable({"pageLength": 50});
 });
 </script>
 @endsection

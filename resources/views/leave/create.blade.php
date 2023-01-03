@@ -1,14 +1,14 @@
 @extends('layouts.main')
 @section('title')
-Request | Leaves > File a Leave
+Leave > File a Leave
 @endsection
 @section('head')
 <style type="text/css">
-@include('leave.leave-style');
+@include('leave.style');
 </style>
 @endsection
 @section('breadcrumb')
-Request <span>/</span> Leave <span>></span> File a Leave
+Leave <span>></span> File a Leave
 @endsection
 @section('content')
 <div class="row">

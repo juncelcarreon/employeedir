@@ -25,7 +25,7 @@ class PostController extends Controller
         $post = new Posts();
         $post->posted_by_id = Auth::user()->id;
 
-        if ($request->has('enabled')) {
+        if($request->has('enabled')) {
             $post->enabled = 1;
         } else {
             $post->enabled = 0;
@@ -33,7 +33,7 @@ class PostController extends Controller
 
         $post->save();
 
-        if ($request->hasFile("images_videos")) {
+        if($request->hasFile("images_videos")) {
             $extension = $request->file('images_videos')->guessExtension();
             $path = $request->images_videos->storeAs('images/posts/'.$post->id, $post->id . '.' . $extension);
             $post->image = asset('storage/app/'.$path);
@@ -46,8 +46,8 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Posts::find($id);
-        if($post->delete()){
 
+        if($post->delete()){
             return  redirect('posts')->with('success', 'Successfully deleted a post');
         } else {
             return redirect('posts')->with('error', 'Something went wrong!');
@@ -58,6 +58,7 @@ class PostController extends Controller
     {
         $post = Posts::find($id);
         $post->enabled = $request->enabled;
+
         if($post->save()){
             $action = "enabled";
             if ($request->enabled == 1) {
@@ -69,6 +70,5 @@ class PostController extends Controller
         } else {
             return redirect('posts')->with('error', 'Something went wrong!');
         }
-
     }
 }

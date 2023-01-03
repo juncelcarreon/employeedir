@@ -93,13 +93,17 @@ ol.breadcrumb li span{
     min-height: 20px !important;
 }
 
-table > tbody > tr > td {
+.table > tbody > tr > td {
     vertical-align: middle !important;
     margin: auto;
 }
 
-table > tbody > tr > td > span{
+.table > tbody > tr > td > span{
     display: none;
+}
+
+.table > tbody > tr.even {
+    background: #ddd !important;
 }
 
 .select2-container--default .select2-results__option[aria-disabled=true]{

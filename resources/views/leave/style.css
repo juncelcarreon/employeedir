@@ -27,20 +27,22 @@
     margin: 0 !important;
 }
 
-#table_leave tr.even{
-    background: #ddd !important;
+.table > tbody > tr > td {
+    vertical-align: middle !important;
 }
 
-#table_leave .td-option{
-    text-align: center;
-}
-
-#table_leave td > span{
-    display: none;
-}
-
-#table_leave td > small{
+.table > tbody > tr > td small{
     font-size:75% !important;
+}
+
+.table > thead > tr >th {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
+    height: auto !important;
+    min-height: 20px !important;
+}
+
+.table > tbody > tr.even {
+    background: #ddd !important;
 }
 
 .td-total{
@@ -62,41 +64,6 @@
     margin: -25px auto 0 !important;
 }
 /* End DataTable */
-
-/* Custom Widths */
-.w-50{
-    width: 50px !important;
-}
-
-.w-60{
-    width: 60px !important;
-}
-
-.w-80{
-    width: 80px !important;
-}
-
-.w-100{
-    width: 100px !important;
-}
-
-.w-150{
-    width: 150px !important;
-}
-
-.w-180{
-    width: 180px !important;
-}
-
-.w-200{
-    width: 200px !important;
-}
-
-.width-100{
-    width: 100% !important;
-}
-/* End Custom Widths */
-
 
 /* Custom Button */
 .btn-dark{
@@ -347,6 +314,10 @@ small.leave-danger{
     margin:0 !important;
 }
 
+.d-none{
+    display: none;
+}
+
 .dates_info{
     color: #000; 
     border: none;
@@ -364,5 +335,9 @@ small.leave-danger{
 
 .td-background{
     background-color:  #fff !important;
+}
+
+.width-100{
+    width: 100%;
 }
 /* End Others */

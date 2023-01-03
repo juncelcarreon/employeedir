@@ -7,20 +7,12 @@ use App\User;
 use App\Referral;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Spatie\Valuestore\Valuestore;
 
 class ReferralController extends Controller
 {
-    public $settings;
-
-    public function __construct()
-    {
-        $this->settings = Valuestore::make(storage_path('app/settings.json'));
-    }
-
     public function index()
     {
-        $data['referrals'] = Referral::all();
+        $data['referrals'] = Referral::orderByDesc('created_at')->get();
 
         return view('referral.index', $data);
     }
@@ -45,13 +37,6 @@ class ReferralController extends Controller
         $referral->position_applied = $request->position_applied;
 
         if($referral->save()){
-            if($this->settings->get('email_notification')){
-                $erp = User::where('is_erp', '=', 1)->orWhere('is_admin', '=', 1)->select('email')->get()->toArray();
-                if(count($erp) > 0){
-                    Mail::to($erp)->queue(new ReferralSubmitted($referral));
-                }
-            }
-
             return back()->with('success', 'Referral successfully sent to the ERP Team. Thank you.');
         }
 
@@ -60,8 +45,30 @@ class ReferralController extends Controller
 
     public function show($id)
     {
-        $data['referral'] = Referral::find($id);
+        $referral = Referral::find($id);
+        if(empty($referral)){
+            return redirect(url('404'));
+        }
+
+        $referral->acknowledged = 1;
+        $referral->save();
+
+        $data['referral'] = $referral;
 
         return view('referral.show', $data);
+    }
+
+    public function destroy($id)
+    {
+        $referral = Referral::find($id);
+        if(empty($referral)){
+            return redirect(url('404'));
+        }
+
+        if($referral->delete()) {
+            return redirect(url('referral'))->with('success', "Successfully deleted referral information record");
+        }
+
+        return back()->with('error', 'Something went wrong');
     }
 }

@@ -13,21 +13,21 @@
 
 	<ul class="menu-child" data-target="policyMenuLink">
 		<li>
-			<a id="menu-attendance" class="menu-child-item" target="_blank" href="<?= url('public/attachment/attendance.pdf') ?>">
+			<a id="menu-attendance" class="menu-child-item" target="_blank" href="<?= asset('attachment/attendance.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Attendance
 			</a>
 		</li>
 
 		<li>
-			<a id="menu-company-directives" class="menu-child-item" target="_blank" href="<?= url('public/attachment/directives.pdf') ?>">
+			<a id="menu-company-directives" class="menu-child-item" target="_blank" href="<?= asset('attachment/directives.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Company Directives
 			</a>
 		</li>
 
 		<li>
-			<a id="menu-dress-code" class="menu-child-item" target="_blank" href="<?= url('public/attachment/dresscode.pdf') ?>">
+			<a id="menu-dress-code" class="menu-child-item" target="_blank" href="<?= asset('attachment/dresscode.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Dress Code
 			</a>
@@ -94,12 +94,36 @@
 	</a>
 </li>
 
+<?php
+if(Auth::check() && Auth::user()->dept_code == 'TLA01') {
+?>
+<li>
+	<a id="menu-referrals" href="<?= url('referral') ?>">
+		<em class="fa fa-user-plus">&nbsp;</em>
+		Referrals
+
+<?php
+	if(Auth::user()->scopeNewReferral() > 0) {
+?>
+		&nbsp;
+		<span class="badge label-danger"><?= Auth::user()->scopeNewReferral() ?></span>
+<?php
+	}
+?>
+	</a>
+</li>
+<?php
+} else {
+?>
 <li>
 	<a id="menu-referrals" href="<?= url('referral/create') ?>">
 		<em class="fa fa-user-plus">&nbsp;</em>
 		Job Referral
 	</a>
 </li>
+<?php
+}
+?>
 
 <li>
 	<a id="menu-events" href="<?= url('events/calendar') ?>">
@@ -109,7 +133,7 @@
 </li>
 
 <li>
-	<a id="menu-employee-hierarchy" target="_blank" href="<?= url('public/img/company-hierarchy.jpeg') ?>">
+	<a id="menu-employee-hierarchy" target="_blank" href="<?= asset('img/company-hierarchy.jpeg') ?>">
 		<em class="fa fa-sitemap">&nbsp;</em>
 		Employee Hierarchy
 	</a>

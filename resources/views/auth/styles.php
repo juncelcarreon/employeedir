@@ -1,7 +1,8 @@
 <style>
 body{
     font-family: "Source Sans Pro", "Segoe UI", Frutiger, "Frutiger Linotype", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-    background: url('<?= asset('img/blue.jpg') ?>') no-repeat center center/cover;
+    /*background: url('<?= asset('img/blue.jpg') ?>') no-repeat center center/cover;*/
+    background: #fff;
     text-align: center;
     color: #fff;
     margin: 0;
@@ -13,14 +14,17 @@ div, input{
 }
 
 .authentication-logo{
-    margin: 0 auto; 
-    width: 100%;
+    margin: 50px auto 30px; 
+    width: 400px;
+    max-width: 100%;
     text-align: center; 
-    padding-top: 180px;
+    padding:10px;
+    background: #fff;
+    box-sizing: content-box;
 }
 
 .authentication-logo img{
-    width: 80px;
+    width: 400px;
     margin: 0 auto !important;
 }
 
@@ -36,7 +40,7 @@ div, input{
 .content{
     width: 480px;
     padding: 30px 30px 50px;
-    background: rgba(0,0,0,.26);
+    background: linear-gradient(rgba(0,0,0,.26), rgba(0,0,0,.26)), url('<?= asset('img/blue.jpg') ?>') no-repeat center center/cover;
     box-shadow: 1px 1px 2px rgba(169,169,169,.44);
     margin: 0 auto;
     max-width: 100%;
@@ -108,11 +112,16 @@ button.flat:hover{
     font-weight: 500;
 }
 
+footer{
+    margin: 30px auto 0;
+}
+
 .copyright{
+    margin: -10px auto 0;
     text-align: center;
-    color: #ddd;
+    color: #333;
     font-size: 14px;
     font-weight: normal;
-    padding: 30px 0 40px;
+    padding: 0 0 40px;
 }
 </style>

@@ -63,12 +63,16 @@ DA Infractions <span>></span> View Infraction
 					</div>
 					<?php
 		            $status = 'Not Acknowledged';
+		            $date = "";
+		            if(!empty($infraction->acknowledged_date)) {
+		            	$date = ' ('.date('Y-m-d', strtotime($infraction->acknowledged_date)).')';
+		            }
 		            switch($infraction->status) {
 		                case 1:
-		                $status = 'Acknowledged';
+		                $status = "Acknowledged{$date}";
 		                    break;
 		                case 2:
-		                $status = 'Acknowledged <small>(Pending Explanation)</small>';
+		                $status = "Acknowledged{$date} <small>(Pending Explanation)</small>";
 		                    break;
 		            }
 					?>
@@ -106,11 +110,53 @@ DA Infractions <span>></span> View Infraction
 							if(Auth::user()->isAdmin()) {
 						?>
 						<a href="<?= url("dainfraction/{$infraction->id}/edit") ?>" class="btn btn-info">Update</a>
+						<button class="btn btn-success" id="btn-print">Print</button>
 						<?php
 							}
 						?>
 					</div>
 				</div>
+		    	<div style="width:100%;height:300px;background:#000;overflow:hidden;display: none;">
+					<canvas id="pdf-canvas" style="width: 800px;margin:0 auto;"></canvas>
+				</div>
+			</div>
+			<div class="panel panel-body" id="html" style="display: none;">
+				<p style="font-size:10px;height:10px;margin:0;">Printed Date: <?= date('F d, Y') ?></p>
+				<i style="display: block;font-size: 20px;text-align: center;margin:0;"><?= ($infraction->infraction_type == 'NOD') ? 'Notice of Decision' : 'Notice to Explain' ?></i>
+				<span style="font-size: 30px;font-weight:bold;text-align: center;margin:0;"> <?= $infraction->title ?></span>
+				<div style="width:100%;text-align:center;">
+					<img src="" id="image" style="width: 600px;margin:0 auto;">
+				</div>
+				<table data-pdfmake="{'widths':[50,'*','auto']}">
+<?php
+	if(!empty($infraction->reason)) {
+?>
+				  <tr>
+				    <td colspan="3" style="border:0;"><b>Reason:</b></td>
+				  </tr>
+				  <tr>
+				    <td colspan="3" style="border:0;white-space:pre-line;"><?= htmlentities($infraction->reason) ?></td>
+				  </tr>
+				  <tr>
+				    <td colspan="3" style="height:40px;border:0;">&nbsp;</td>
+				  </tr>
+<?php
+	}
+?>
+				  <tr>
+				    <td colspan="3" style="text-align: right;border:0;"><b>Affixed Name:</b></td>
+				  </tr>
+				  <tr>
+				    <td style="border:0;">&nbsp;</td>
+				    <td style="border:0;">&nbsp;</td>
+				    <td style="text-align: right;border:0;"><i><?= $infraction->affixed_name ?></i></td>
+				  </tr>
+				  <tr>
+				    <td style="border:0;">&nbsp;</td>
+				    <td style="border:0;">&nbsp;</td>
+				    <td style="text-align: right;border:0;"><?= date('Y-m-d', strtotime($infraction->acknowledged_date)) ?></td>
+				  </tr>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -118,6 +164,98 @@ DA Infractions <span>></span> View Infraction
 @endsection
 @section('scripts')
 @include('dainfraction.script')
+<script src='https://cdn.jsdelivr.net/npm/pdfmake@latest/build/pdfmake.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/pdfmake@latest/build/vfs_fonts.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/html-to-pdfmake/browser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.228/pdf.min.js"></script>
+<script type="text/javascript">
+var _PDF_DOC,
+    _CURRENT_PAGE,
+    _TOTAL_PAGES,
+    _PAGE_RENDERING_IN_PROGRESS = 0,
+    _CANVAS = document.querySelector('#pdf-canvas'),
+    _CANVAS_URL = '';
+
+async function showPDF(pdf_url) {
+    try {
+        _PDF_DOC = await pdfjsLib.getDocument({ url: pdf_url });
+    }
+    catch(error) {
+        alert(error.message);
+    }
+
+    _TOTAL_PAGES = _PDF_DOC.numPages;
+
+    showPage(1);
+}
+
+async function showPage(page_no) {
+    _PAGE_RENDERING_IN_PROGRESS = 1;
+    _CURRENT_PAGE = page_no;
+
+    document.querySelector("#pdf-canvas").style.display = 'none';
+
+    try {
+        var page = await _PDF_DOC.getPage(page_no);
+    }
+    catch(error) {
+        alert(error.message);
+    }
+
+    var pdf_original_width = page.getViewport(1).width;
+    var scale_required = 1000 / pdf_original_width;
+    var viewport = page.getViewport(scale_required);
+
+    _CANVAS.width = viewport.width;
+    _CANVAS.height = 400;
+
+    var render_context = {
+        canvasContext: _CANVAS.getContext('2d'),
+        viewport: viewport
+    };
+
+    try {
+        await page.render(render_context);
+    }
+    catch(error) {
+        alert(error.message);
+    }
+
+    _PAGE_RENDERING_IN_PROGRESS = 0;
+
+    document.querySelector("#pdf-canvas").style.display = 'block';
+
+	_CANVAS_URL = _CANVAS.toDataURL('image/png');
+	$('body').removeAttr('style');
+}
+$(function(){
+	$('body').css({'pointer-events':'none'});
+
+	showPDF('<?= $infraction->file ?>');
+
+	$('#btn-print').click(function(e){
+		e.preventDefault();	
+
+		var html = $('#html').html();
+
+		$('#image').attr('src', _CANVAS_URL);
+
+		var ret = htmlToPdfmake(html, {
+		  tableAutoSize:true,
+		  imagesByReference:true
+		});
+
+		ret.images.img_ref_0 = _CANVAS_URL;
+
+		var dd = {
+		  content:ret.content,
+		  images:ret.images
+		}
+
+		pdfMake.createPdf(dd).download();
+	});
+});
+</script>
 <div id="acknowledgemodal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">

@@ -1,14 +1,14 @@
 @extends('layouts.main')
 @section('title')
-Request | Leave > Edit Credit
+Leave | Leave Credit > Edit Credit
 @endsection
 @section('head')
 <style type="text/css">
-@include('leave.leave-style');
+@include('leave.style');
 </style>
 @endsection
 @section('breadcrumb')
-Request <span>/</span> Leave <span>></span> Edit Credit
+Leave <span>/</span> Leave Credit <span>></span> Edit Employee Credit
 @endsection
 @section('content')
 <div class="row">

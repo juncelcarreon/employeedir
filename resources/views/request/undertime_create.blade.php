@@ -60,14 +60,14 @@ Timekeeping <span>/</span> Undertime <span>></span> File Undertime
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <strong class="asterisk-required">Undertime Date:</strong>
-                                    <input type="text" name="date" class="form-control undertime_date" placeholder="MM/DD/YYYY" autocomplete="off" required>
-                                </div> 
+                                    <input type="text" name="date" class="form-control datepicker input_none" placeholder="MM/DD/YYYY" autocomplete="off" required>
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <strong class="asterisk-required">Time In:</strong>
                                     <div class="input-group datetimepicker time_in">
-                                        <input type="text" name="time_in" class="form-control" onkeydown="return false" placeholder="MM/DD/YYYY 00:00 AM" autocomplete="off" required />
+                                        <input type="text" name="time_in" class="form-control input_none" placeholder="MM/DD/YYYY 00:00 AM" autocomplete="off" required />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
@@ -78,7 +78,7 @@ Timekeeping <span>/</span> Undertime <span>></span> File Undertime
                                 <div class="form-group">
                                     <strong class="asterisk-required">Time Out:</strong>
                                     <div class="input-group datetimepicker time_out">
-                                        <input type="text" name="time_out" class="form-control" onkeydown="return false" placeholder="MM/DD/YYYY 00:00 AM" autocomplete="off" required />
+                                        <input type="text" name="time_out" class="form-control input_none" placeholder="MM/DD/YYYY 00:00 AM" autocomplete="off" required />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
@@ -107,33 +107,5 @@ Timekeeping <span>/</span> Undertime <span>></span> File Undertime
 </div>
 @endsection
 @section('scripts')
-<script type="text/javascript">
-$(function(){
-    activeMenu($('#menu-undertime'));
-
-    $('.datetimepicker').datetimepicker({ useCurrent: false });
-
-    $('.undertime_date').datepicker();
-
-    $(".time_in").on("dp.change", function (e) {
-        $('.time_out').data("DateTimePicker").minDate(e.date);
-    });
-
-    $(".time_out").on("dp.change", function (e) {
-        $('.time_in').data("DateTimePicker").maxDate(e.date);
-    });
-
-    $('input[type="reset"]').click(function(e) {
-        e.preventDefault();
-
-        var obj = $(this),
-            form = obj.closest('form');
-
-        form.find('input[required], textarea[required]').each(function() {
-            $(this).val('');
-            $(this).removeAttr('style');
-        });
-    });
-});
-</script>
+@include('request.js-script');
 @endsection

@@ -277,6 +277,7 @@ class OvertimeController extends Controller
         }
 
         $data['overtime'] = $item[0];
+        $data['timekeeping'] = 1;
 
         return view('request.overtime_timekeeping', $data);
     }
@@ -321,6 +322,9 @@ class OvertimeController extends Controller
 
         if($i == 0) {
             $overtime->status = 'VERIFYING';
+            if(!empty($request->remarks)) {
+                $overtime->reverted_reason = $request->remarks;
+            }
             $overtime->save();
 
             if(empty($manager)) {

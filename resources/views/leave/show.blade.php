@@ -1,14 +1,14 @@
 @extends('layouts.main')
 @section('title')
-Request | Leave > View Information
+Leave > View Information
 @endsection
 @section('head')
 <style type="text/css">
-@include('leave.leave-style');
+@include('leave.style');
 </style>
 @endsection
 @section('breadcrumb')
-Request <span>/</span> Leave <span>></span> View Information
+Leave <span>></span> View Information
 @endsection
 @section('content')
 <div class="row">
@@ -30,9 +30,10 @@ Request <span>/</span> Leave <span>></span> View Information
 					<div class="print-title">
 						<img src="http://www.elink.com.ph/wp-content/uploads/2016/01/elink-logo-site.png" alt="eLink Systems & Concepts Corp."> 
 						<h4>&nbsp;eLink Systems & Concepts Corp.</h4>
-						<br>
-						<br>
+						<br />
+						<br />
 						<h3>LEAVE APPLICATION REQUEST</h3>
+						<br />
 					</div>
 
 					<div class="division"></div>
@@ -209,14 +210,17 @@ Request <span>/</span> Leave <span>></span> View Information
 @endsection
 @section('scripts')
 <script type="text/javascript">
-$('.table').DataTable({
-	"paging"    :   false,
-	"ordering"  :   false,
-	"info"      :   false,
-	searching   :   false
-});
 $(function() {
     activeMenu($('#menu-leaves'));
+
+    $('.table').DataTable().destroy();
+
+	$('.table').DataTable({
+		"paging"    :   false,
+		"ordering"  :   false,
+		"info"      :   false,
+		searching   :   false
+	});
 
     $('button[type="submit"]').click(function(e) {
         e.preventDefault();

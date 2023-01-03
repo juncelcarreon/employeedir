@@ -4,11 +4,11 @@ Leave > Edit
 @endsection
 @section('head')
 <style type="text/css">
-@include('leave.leave-style');
+@include('leave.style');
 </style>
 @endsection
 @section('breadcrumb')
-Request <span>/</span> Leave <span>></span> Edit
+Leave <span>></span> Edit Leave Application
 @endsection
 @section('content')
 <div class="row">

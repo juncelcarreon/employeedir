@@ -174,3 +174,77 @@ function timekeepingStatus($item = null){
 
     return $status;
 }
+
+function leaveStatus($status = null){
+	$txt = "Pending <br> <small>(Recommendation / Approval)</small>";
+	if(empty($status)) {
+		return $txt;
+	}
+
+    switch($status) {
+        case 1:
+            $txt = 'Approved';
+            break;
+        case 2:
+            $txt = 'Not Approved';
+            break;
+        case 3:
+            $txt = "Pending <br> <small>(Approval)</small>";
+            break;
+    }
+
+    return $txt;
+}
+
+function timekeepingApprovedStatus($item = null){
+	$txt = '<span class="fa fa-refresh"></span>&nbsp; Waiting for response';
+
+	if(empty($item)) {
+		return $txt;
+	}
+
+	switch($item->status) {
+		case 'APPROVED':
+			$txt = '<span class="fa fa-clock-o text-success"></span> Timekeeping';
+			if(!empty($item->approved_reason)) {
+				$txt = '<span class="fa fa-undo text-declined"></span> Reverted <br>Reason for incompletion <br>'.htmlentities($item->approved_reason);
+			}
+			if(!empty($item->date)) {
+				$txt = '<span class="fa fa-check text-success"></span> Approved';
+			}
+			break;
+		case 'DECLINED':
+			$txt = '<span class="fa fa-thumbs-down text-declined"></span> Declined <br>Reason for disapproval <br>'.htmlentities($item->declined_reason);
+			break;
+		case 'VERIFYING':
+			$txt = '<span class="fa fa-spinner text-verify"></span> Verifying';
+			break;
+		case 'COMPLETED':
+			$txt = '<span class="fa fa-check text-success"></span> Completed';
+	}
+
+	return nl2br($txt);
+}
+
+function numberOfHours($time_in = null, $time_out = null, $undertime = false, $minutes = false){
+	$no_of_hours = '';
+	if(!empty($time_in) && !empty($time_out)) {
+	    $start = new DateTime($time_in);
+	    $end = $start->diff(new DateTime($time_out));
+	    $end->d = $end->d * 24;
+	    if($undertime) {
+		    $end->h = ($end->h - 1) + $end->d;
+		} else {
+		    $end->h = $end->h + $end->d;
+		}
+
+		if($minutes) {
+			$no_of_hours = "{$end->h} hrs";
+			if($end->i > 0) { $no_of_hours.= " {$end->i} mins"; }
+		} else {
+		    $no_of_hours = number_format($end->h, 2);
+		}
+	}
+
+	return $no_of_hours;
+}

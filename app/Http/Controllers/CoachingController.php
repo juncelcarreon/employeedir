@@ -181,7 +181,7 @@ class CoachingController extends Controller
         {
             $ql = QuickLink::getSession($id);
             if(empty($ql)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $ql;
@@ -209,7 +209,7 @@ class CoachingController extends Controller
         {
             $ql = QuickLink::getSession($id);
             if(empty($ql)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $ql;
@@ -248,7 +248,7 @@ class CoachingController extends Controller
         {
             $ql = QuickLink::getSession($id);
             if(empty($ql)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $ql;
@@ -300,7 +300,7 @@ class CoachingController extends Controller
         {
             $ce = CementingExpectations::getSession($id);
             if(empty($ce)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $ce;
@@ -333,7 +333,7 @@ class CoachingController extends Controller
         {
             $ce = CementingExpectations::getSession($id);
             if(empty($ce)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $ce;
@@ -372,7 +372,7 @@ class CoachingController extends Controller
         {
             $ce = CementingExpectations::getSession($id);
             if(empty($ce)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $ce;
@@ -424,7 +424,7 @@ class CoachingController extends Controller
         {
             $as = AccountabilitySession::getSession($id);
             if(empty($as)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $as;
@@ -458,7 +458,7 @@ class CoachingController extends Controller
         {
             $as = AccountabilitySession::getSession($id);
             if(empty($as)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $as;
@@ -497,7 +497,7 @@ class CoachingController extends Controller
         {
             $as = AccountabilitySession::getSession($id);
             if(empty($as)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $as;
@@ -549,7 +549,7 @@ class CoachingController extends Controller
         {
             $sda = SkillsDevelopment::getSession($id);
             if(empty($sda)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $sda;
@@ -582,7 +582,7 @@ class CoachingController extends Controller
         {
             $sda = SkillsDevelopment::getSession($id);
             if(empty($sda)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $sda;
@@ -621,7 +621,7 @@ class CoachingController extends Controller
         {
             $sda = SkillsDevelopment::getSession($id);
             if(empty($sda)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $sda;
@@ -687,7 +687,7 @@ class CoachingController extends Controller
         {
             $gtky = GettingToKnowYou::getSession($id);
             if(empty($gtky)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $gtky;
@@ -733,7 +733,7 @@ class CoachingController extends Controller
         {
             $gtky = GettingToKnowYou::getSession($id);
             if(empty($gtky)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $gtky;
@@ -772,7 +772,7 @@ class CoachingController extends Controller
         {
             $gtky = GettingToKnowYou::getSession($id);
             if(empty($gtky)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $gtky;
@@ -823,7 +823,7 @@ class CoachingController extends Controller
         {
             $as = SkillBuilding::getSession($id);
             if(empty($as)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $as;
@@ -856,7 +856,7 @@ class CoachingController extends Controller
         {
             $sb = SkillBuilding::getSession($id);
             if(empty($sb)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $sb;
@@ -895,7 +895,7 @@ class CoachingController extends Controller
         {
             $sb = SkillBuilding::getSession($id);
             if(empty($sb)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $sb;
@@ -970,7 +970,7 @@ class CoachingController extends Controller
         {
             $gs = GoalSetting::getSession($id);
             if(empty($gs)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $gs;
@@ -1026,7 +1026,7 @@ class CoachingController extends Controller
         {
             $gs = GoalSetting::getSession($id);
             if(empty($gs)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $gs;
@@ -1065,7 +1065,7 @@ class CoachingController extends Controller
         {
             $gs = GoalSetting::getSession($id);
             if(empty($gs)) {
-                redirect(url('404'));
+                return redirect(url('404'));
             }
 
             $data['obj'] = $gs;

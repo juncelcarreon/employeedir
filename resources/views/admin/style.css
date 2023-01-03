@@ -22,3 +22,26 @@ h5{
 .dataTables_wrapper{
     margin: 0 !important;
 }
+
+.table > thead > tr >th {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
+    height: auto !important;
+    min-height: 20px !important;
+}
+
+.table > tbody > tr.even {
+    background: #ddd !important;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle !important;
+    margin: auto;
+}
+
+.division{
+    border-top: 1px solid rgba(0,0,0,.125);
+    padding-top: 15px;
+    margin-top: 15px;
+    width: 100%;
+    float: left;
+}

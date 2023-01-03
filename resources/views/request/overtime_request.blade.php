@@ -52,10 +52,10 @@ Timekeeping <span>/</span> Overtime <span>></span> <?= ucfirst($type) ?> List
                             <td><?= ++$no ?></td>
                             <td><?= $request->first_name. " " .$request->last_name ?></td>
                             <td title="<?= htmlentities($request->reason) ?>"><?= stringLimit($request->reason, 100) ?></td>
-                            <td><span><?= strtotime($request->dates[0]) ?></span> <?= implode('<br>', $request->dates) ?></td>
+                            <td><span class="d-none"><?= strtotime($request->dates[0]) ?></span> <?= implode('<br>', $request->dates) ?></td>
                             <td><?= array_sum($request->no_of_hours) ?></td>
                             <td><?= timekeepingStatus($request) ?></td>
-                            <td><span><?= strtotime($request->created_at) ?></span> <?= date("M d, Y",strtotime($request->created_at)) ?></td>
+                            <td><span class="d-none"><?= strtotime($request->created_at) ?></span> <?= date("M d, Y",strtotime($request->created_at)) ?></td>
                             <td class="text-center">
                                 <a href="<?= url("overtime/{$request->id}") ?>" title="View">
                                     <i class="fa fa-eye"></i>
@@ -73,13 +73,5 @@ Timekeeping <span>/</span> Overtime <span>></span> <?= ucfirst($type) ?> List
 </div>
 @endsection
 @section('scripts')
-<script type="text/javascript">
-$(function() {
-    activeMenu($('#menu-overtime'));
-
-    $('.table').DataTable().destroy();
-
-    $('.table').DataTable({"pageLength": 50});
-});
-</script>
+@include('request.js-script');
 @endsection

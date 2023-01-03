@@ -11,6 +11,7 @@ use App\LeaveRequest;
 use App\UndertimeRequest;
 use App\OvertimeRequest;
 use App\DAInfraction;
+use App\Referral;
 use Spatie\Valuestore\Valuestore;
 
 class User extends Authenticatable
@@ -78,6 +79,10 @@ class User extends Authenticatable
 
     public function scopeOvertimeRequestCount(){
         return count(OvertimeRequest::getOvertime());
+    }
+
+    public function scopeNewReferral(){
+        return count(Referral::where('acknowledged', 0)->get());
     }
 
     public function scopeInfractionCount($id){

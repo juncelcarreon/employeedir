@@ -46,12 +46,17 @@ class ActivityController extends Controller
 
     public function show($id)
     {
-        return ElinkActivities::find($id);
+        return redirect(url('404'));
     }
 
     public function edit($id)
     {
-        $data['activity'] = ElinkActivities::find($id);
+        $activity = ElinkActivities::find($id);
+        if(empty($activity)){
+            return redirect(url('404'));
+        }
+
+        $data['activity'] = $activity;
 
         return view('activity.edit', $data);
     }

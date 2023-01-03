@@ -61,14 +61,14 @@ Timekeeping <span>/</span> Undertime <span>></span> Edit Undertime
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <strong class="asterisk-required">Undertime Date:</strong>
-                                    <input type="text" name="date" class="form-control undertime_date" placeholder="MM/DD/YYYY" value="<?= date('m/d/Y',strtotime($undertime->date)) ?>" autocomplete="off" required />
+                                    <input type="text" name="date" class="form-control datepicker input_none" placeholder="MM/DD/YYYY" value="<?= date('m/d/Y',strtotime($undertime->date)) ?>" autocomplete="off" required />
                                 </div> 
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <strong class="asterisk-required">Time In:</strong>
                                     <div class="input-group datetimepicker time_in">
-                                        <input type="text" name="time_in" class="form-control" value="<?= date('m/d/Y H:i A',strtotime($undertime->time_in)) ?>" onkeydown="return false" placeholder="MM/DD/YYYY 00:00 AM" autocomplete="off" required />
+                                        <input type="text" name="time_in" class="form-control input_none" value="<?= date('m/d/Y H:i A',strtotime($undertime->time_in)) ?>" placeholder="MM/DD/YYYY 00:00 AM" autocomplete="off" required />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
@@ -79,7 +79,7 @@ Timekeeping <span>/</span> Undertime <span>></span> Edit Undertime
                                 <div class="form-group">
                                     <strong class="asterisk-required">Time Out:</strong>
                                     <div class="input-group datetimepicker time_out">
-                                        <input type="text" name="time_out" class="form-control" value="<?= date('m/d/Y H:i A',strtotime($undertime->time_out)) ?>" onkeydown="return false" placeholder="MM/DD/YYYY 00:00 AM" autocomplete="off" required />
+                                        <input type="text" name="time_out" class="form-control input_none" value="<?= date('m/d/Y H:i A',strtotime($undertime->time_out)) ?>" placeholder="MM/DD/YYYY 00:00 AM" autocomplete="off" required />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
@@ -108,33 +108,5 @@ Timekeeping <span>/</span> Undertime <span>></span> Edit Undertime
 </div>
 @endsection
 @section('scripts')
-<script type="text/javascript">
-$(function(){
-    activeMenu($('#menu-undertime'));
-
-    $('.time_in').datetimepicker({ useCurrent: false, maxDate: new Date('<?= $undertime->time_out ?>') });
-    $('.time_out').datetimepicker({ useCurrent: false, minDate: new Date('<?= $undertime->time_in ?>') });
-
-    $('.undertime_date').datepicker();
-
-    $(".time_in").on("dp.change", function (e) {
-        $('.time_out').data("DateTimePicker").minDate(e.date);
-    });
-
-    $(".time_out").on("dp.change", function (e) {
-        $('.time_in').data("DateTimePicker").maxDate(e.date);
-    });
-
-    $('input[type="reset"]').click(function(e) {
-        e.preventDefault();
-
-        var obj = $(this),
-            form = obj.closest('form');
-
-        form.find('input[required], textarea[required]').each(function() {
-            $(this).val('');
-        });
-    });
-});
-</script>
+@include('request.js-script');
 @endsection

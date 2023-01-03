@@ -27,6 +27,7 @@ class UndertimeController extends Controller
         $data['undertime_request'] = UndertimeRequest::getUndertime($status, 'user', $id);
         $data['type'] = $status;
         $data['is_leader'] = count(DB::select("SELECT id FROM `employee_info` WHERE `employee_info`.`deleted_at` IS NULL AND `employee_info`.`status` = 1 AND (`employee_info`.`manager_id`={$id} OR `employee_info`.`supervisor_id`={$id})"));
+        $data['undertime'] = 1;
 
         if(Auth::user()->isAdmin()){ $data['undertime_request'] = UndertimeRequest::getUndertime($status); }
 
@@ -40,13 +41,16 @@ class UndertimeController extends Controller
 
         $data['undertime_request'] = UndertimeRequest::getUndertime($status, 'team', $id);
         $data['type'] = $status;
+        $data['undertime'] = 1;
 
         return view('request.undertime_team', $data);
     }
 
     public function create()
     {
-        return view('request.undertime_create');
+        $data['undertime'] = 1;
+
+        return view('request.undertime_create', $data);
     }
 
     public function store(Request $request)
@@ -108,14 +112,10 @@ class UndertimeController extends Controller
             exit;
         }
         $undertime = $item[0];
-        $manager = User::find($undertime->manager_id);
-        $supervisor = User::find($undertime->supervisor_id);
 
-        $data = [
-            'undertime'   => $undertime,
-            'manager'    => $manager,
-            'supervisor' => $supervisor
-        ];
+        $data['undertime'] = $undertime;
+        $data['manager'] = User::find($undertime->manager_id);
+        $data['supervisor'] = User::find($undertime->supervisor_id);
 
         return view('request.undertime_show', $data);
     }
@@ -127,11 +127,8 @@ class UndertimeController extends Controller
             return redirect('/404');
             exit;
         }
-        $undertime = $item[0];
 
-        $data = [
-            'undertime'   => $undertime
-        ];
+        $data['undertime'] = $item[0];
 
         return view('request.undertime_edit', $data);
     }

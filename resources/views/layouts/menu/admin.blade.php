@@ -13,21 +13,21 @@
 
 	<ul class="menu-child" data-target="policyMenuLink">
 		<li>
-			<a id="menu-attendance" class="menu-child-item" target="_blank" href="<?= url('attachment/attendance.pdf') ?>">
+			<a id="menu-attendance" class="menu-child-item" target="_blank" href="<?= asset('/attachment/attendance.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Attendance
 			</a>
 		</li>
 
 		<li>
-			<a id="menu-company-directives" class="menu-child-item" target="_blank" href="<?= url('attachment/directives.pdf') ?>">
+			<a id="menu-company-directives" class="menu-child-item" target="_blank" href="<?= asset('/attachment/directives.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Company Directives
 			</a>
 		</li>
 
 		<li>
-			<a id="menu-dress-code" class="menu-child-item" target="_blank" href="<?= url('attachment/dresscode.pdf') ?>">
+			<a id="menu-dress-code" class="menu-child-item" target="_blank" href="<?= asset('/attachment/dresscode.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Dress Code
 			</a>
@@ -186,7 +186,7 @@
 </li>
 
 <li>
-	<a id="menu-employee-hierarchy" target="_blank" href="<?= url('img/company-hierarchy.jpeg') ?>">
+	<a id="menu-employee-hierarchy" target="_blank" href="<?= asset('/img/company-hierarchy.jpeg') ?>">
 		<em class="fa fa-sitemap">&nbsp;</em>
 		Employee Hierarchy
 	</a>

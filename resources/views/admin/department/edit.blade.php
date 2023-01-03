@@ -4,11 +4,11 @@ Departments > Edit Department
 @endsection
 @section('head')
 <style type="text/css">
-@include('admin.style');
+@include('admin.style')
 </style>
 @endsection
 @section('breadcrumb')
-Departments <span>></span> Edit Department 
+Departments <span>></span> Edit Department
 @endsection
 @section('content')
 <div class="row">
@@ -21,19 +21,19 @@ Departments <span>></span> Edit Department
             </div>
             <div class="panel-body timeline-container">
                 <div class="flex-center position-ref full-height">
-                    {{ Form::open(array('url' => 'department/' . $department->id,'id' => 'edit_department_form')) }}
-                    {{ Form::hidden('_method', 'PUT') }}
+                    <form action="<?= url("department/{$department->id}") ?>" method="POST" id="edit_department_form" autocomplete="off">
+                        {{ Form::hidden('_method', 'PUT') }}
                         {{ csrf_field() }}
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <strong>Department Name:</strong>
+                                    <strong class="asterisk-required">Department Name:</strong>
                                     <input type="text" name="department_name" class="form-control" value="<?= $department->department_name ?>" placeholder="Department Name..." required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <strong>Department Code:</strong>
+                                    <strong class="asterisk-required">Department Code:</strong>
                                     <input type="text" name="department_code" class="form-control" value="<?= $department->department_code ?>" placeholder="Department Code..." required>
                                 </div>
                             </div>
@@ -54,7 +54,7 @@ Departments <span>></span> Edit Department
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <strong>Account</strong>
+                                    <strong class="asterisk-required">Account</strong>
                                     <select class="select2 form-control" name="account_id" required>
                                         <option value="" disabled selected>Select Account</option>
                                         <?php
@@ -68,11 +68,11 @@ Departments <span>></span> Edit Department
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12" style="border-top: 1px solid rgba(0,0,0,.125); padding-top: 15px; margin-top: 15px"></div>
+                        <div class="division"></div>
                         <div class="form-group pull-right">
                             <button id="btn_save" class="btn btn-primary">Update</button>
                         </div>
-                    {{ Form::close() }}
+                    </form>
                 </div>
             </div>
         </div>
@@ -80,28 +80,5 @@ Departments <span>></span> Edit Department
 </div>
 @endsection
 @section('scripts')
-<script type="text/javascript">
-$(function(e) {
-    var departments = [<?php foreach($departments as $department) { echo '"'.$department->department_code.'"'.","; } ?>];
-
-    activeMenu($('#menu-department'));
-
-    $('#btn_save').click(function(e) {
-        e.preventDefault();
-        var result = true;
-
-        result = checkRequired($(this).closest('form'));
-
-        if(result && $.inArray($('input[name="department_code"]').val(), departments) !== -1) {
-            alert('Department Code Already Exists');
-
-            result = false;
-        }
-
-        if(result) {
-            saveForm($(this));
-        }
-    });
-});
-</script>
+@include('admin.js-script')
 @endsection

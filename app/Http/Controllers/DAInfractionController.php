@@ -163,6 +163,7 @@ class DAInfractionController extends Controller
         }
 
         $infraction->affixed_name = $request->affixed_name;
+        $infraction->acknowledged_date = date('Y-m-d H:i:s');
         if($infraction->infraction_type == 'NTE') {
             $infraction->status = 2;
         } else {

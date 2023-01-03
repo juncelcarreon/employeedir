@@ -4,7 +4,7 @@ Departments
 @endsection
 @section('head')
 <style type="text/css">
-@include('admin.style');
+@include('admin.style')
 </style>
 @endsection
 @section('breadcrumb')
@@ -23,7 +23,7 @@ Departments
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th align="left">#</th>
+                            <th>#</th>
                             <th>Department Code</th>
                             <th style="max-width: 250px;">Department Name</th>
                             <th>Division</th>
@@ -33,19 +33,19 @@ Departments
                     </thead>
                     <tbody>
                     <?php
-                    foreach($departments as $idx=>$department) {
+                    foreach($departments as $no=>$department) {
                     ?>
                         <tr> 
-                            <td><?= ++$idx ?></td>
+                            <td><?= ++$no ?></td>
                             <td><?= $department->department_code ?></td>
                             <td><h5><?= $department->department_name ?></h5></td>
                             <td><?= (isset($department->division)) ? $department->division->division_name : 'N/A' ?></td>
                             <td><?= (isset($department->account)) ? $department->account->account_name : 'N/A' ?></td>
-                            <td align="center">
+                            <td class="text-center">
                                 <a href="<?= url("department/{$department->id}/edit") ?>" title="Edit">
                                     <i class="fa fa-pencil"></i>
                                 </a>&nbsp;&nbsp;
-                                <a href="javascript:;" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Delete" data-id="<?= $department->id ?>">
+                                <a href="#" class="delete_btn" data-toggle="modal" data-target="#messageModal" title="Delete" data-id="<?= $department->id ?>">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </td>
@@ -61,19 +61,5 @@ Departments
 </div>
 @endsection
 @section('scripts')
-<script type="text/javascript">
-$(function(e) {
-    activeMenu($('#menu-department'));
-
-    $('.delete_btn').click(function(){
-        $('#messageModal .modal-title').html('Delete Department');
-        $('#messageModal #message').html('Are you sure you want to delete the department ?');
-        $('#messageModal .delete_form').attr('action', "<?= url('department') ?>/" + $(this).attr("data-id"));
-    });
-
-    $('#messageModal #yes').click(function(){
-        $('#messageModal .delete_form').submit();
-    });
-});
-</script>
+@include('admin.js-script')
 @endsection

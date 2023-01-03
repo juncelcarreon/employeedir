@@ -40,7 +40,12 @@ class DepartmentController extends Controller
 
     public function edit($id)
     {
-        $data['department'] = EmployeeDepartment::find($id);
+        $department = EmployeeDepartment::find($id);
+        if(empty($department)) {
+            return redirect(url('404'));
+        }
+
+        $data['department'] = $department;
         $data['divisions'] = ElinkDivision::all();
         $data['accounts'] = ElinkAccount::all();
         $data['departments'] = EmployeeDepartment::where('id', '<>', $id)->whereNull('deleted_at')->get();

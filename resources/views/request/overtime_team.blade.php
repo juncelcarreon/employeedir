@@ -24,12 +24,12 @@ Timekeeping <span>/</span> Overtime <span>/</span> Team Overtime <span>></span><
                 <a href="<?= url('overtime') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
             </div>
             <div class="pane-body panel m-0">
-                <table class="_table">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th style="width:50px;">#</th>
-                            <th style="width:150px;">Employee</th>
-                            <th style="width:200px;">Reason</th>
+                            <th style="width:100px;">Employee</th>
+                            <th style="width:150px;">Reason</th>
                             <th>Date</th>
                             <th>Estimated<br> No. Of Hours</th>
                             <th>Status</th>
@@ -40,28 +40,19 @@ Timekeeping <span>/</span> Overtime <span>/</span> Team Overtime <span>></span><
                     <tbody>
                     <?php
                     foreach($overtime_request as $no=>$request) {
-                        $status = $request->status;
-                        if($request->status == 'APPROVED' && !empty($request->approved_reason)) {
-                            $status = 'REVERTED';
-                        }
-                        if($request->status == 'PENDING') {
-                            if(empty($request->recommend_date)) {
-                                $status .= ' <br><small>(Recommendation / Approval)</small>';
-                            } else {
-                                $status .= ' <br><small>(Approval)</small>';
-                            }
-                        }
                     ?>
                         <tr>
                             <td><?= ++$no ?></td>
                             <td><?= $request->first_name. " " .$request->last_name ?></td>
-                            <td><?= (strlen(htmlentities($request->reason)) > 100) ? substr(htmlentities($request->reason), 0, 100)." ..." : htmlentities($request->reason) ?></td>
-                            <td><span><?= strtotime($request->dates[0]) ?></span> <?= implode('<br>', $request->dates) ?></td>
+                            <td title="<?= htmlentities($request->reason) ?>"><?= stringLimit($request->reason, 100) ?></td>
+                            <td><span class="d-none"><?= strtotime($request->dates[0]) ?></span> <?= implode('<br>', $request->dates) ?></td>
                             <td><?= array_sum($request->no_of_hours) ?></td>
-                            <td><?= $status ?></td>
-                            <td><span><?= strtotime($request->created_at) ?></span> <?= date("M d, Y",strtotime($request->created_at)) ?></td>
-                            <td class="td-option">
-                                <a href="<?= url("overtime/{$request->id}") ?>" title="View"><b class="fa fa-eye"></b></a>
+                            <td><?= timekeepingStatus($request) ?></td>
+                            <td><span class="d-none"><?= strtotime($request->created_at) ?></span> <?= date("M d, Y",strtotime($request->created_at)) ?></td>
+                            <td class="text-center">
+                                <a href="<?= url("overtime/{$request->id}") ?>" title="View">
+                                    <i class="fa fa-eye"></i>
+                                </a>
                             </td>
                         </tr>
                     <?php
@@ -75,11 +66,5 @@ Timekeeping <span>/</span> Overtime <span>/</span> Team Overtime <span>></span><
 </div>
 @endsection
 @section('scripts')
-<script type="text/javascript">
-$(function() {
-    activeMenu($('#menu-overtime'));
-
-    $('._table').DataTable({"pageLength": 50});
-});
-</script>
+@include('request.js-script');
 @endsection

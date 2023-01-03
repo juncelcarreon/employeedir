@@ -151,6 +151,7 @@ Route::middleware(['auth'])->group(function(){
     Route::post('dainfraction/explanation', 'DAInfractionController@explanation');
     Route::post('dainfraction/update', 'DAInfractionController@update');
     Route::get('team-dainfraction', 'DAInfractionController@team');
+    Route::get('dainfraction-pdf/{id}', 'DAInfractionController@pdf');
 
     Route::resource('survey', 'SurveyController');
 
@@ -241,7 +242,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('has-admin','UtilsController@setThisAdmin');
     Route::get('expanded-credits', 'LeaveController@leaveCredits')->name('expanded.credits');
     Route::get('expanded-tracker', 'LeaveController@leaveTracker');
-    Route::get('past-credits', 'LeaveController@pastCredits');
+    Route::get('past-credits/{year}', 'LeaveController@pastCredits');
     Route::get('leave-report', 'LeaveController@reports');
     Route::get('display-report', 'LeaveController@displayReport');
     Route::get('patch-credits', 'LeaveController@patchCredits');

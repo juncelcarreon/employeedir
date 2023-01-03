@@ -23,11 +23,15 @@
     margin: 0 !important;
 }
 
-.table tr td span{
-    display: none;
+small{
+    font-size: 90% !important;
 }
 
-.table tr td small{
+.table > tbody > tr > td {
+    vertical-align: middle !important;
+}
+
+.table > tbody > tr > td small{
     font-size:75% !important;
 }
 
@@ -35,6 +39,14 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
     height: auto !important;
     min-height: 20px !important;
+}
+
+.table:not(#table-list) > tbody > tr.even {
+    background: #ddd !important;
+}
+
+#table-timekeeping .form-group{
+    margin: 0;
 }
 
 .btn-dark{
@@ -71,6 +83,10 @@
 
 .input-group-addon:hover {
     opacity: .6;
+}
+
+textarea{
+    resize: vertical;
 }
 
 ol.breadcrumb li span{
@@ -124,4 +140,26 @@ ol.breadcrumb li span{
 
 .d-inline-flex{
     display: inline-flex;
+}
+
+.d-none{
+    display: none;
+}
+
+.modal-header{
+    background-color: #0086cd;
+}
+
+.modal-header button{
+    color: #fff !important;
+    opacity: 1;
+}
+
+.modal-header h4{
+    font-weight: bold;
+    color: #fff;
+}
+
+.modal-body button{
+    margin: 5px 0 0 5px;
 }

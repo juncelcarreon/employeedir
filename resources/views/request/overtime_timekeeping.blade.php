@@ -54,7 +54,7 @@ Timekeeping <span>/</span> Overtime <span>></span> Timekeeping
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <strong>Reason:</strong>
-                                    <p style="white-space: pre;"><?= htmlentities($overtime->reason) ?></p>
+                                    <p class="pre-line"><?= htmlentities($overtime->reason) ?></p>
                                 </div> 
                             </div>
                         </div>
@@ -67,7 +67,7 @@ Timekeeping <span>/</span> Overtime <span>></span> Timekeeping
                     <div class="flex-center position-ref full-height">
                         <div class="row">
                             <div class="col-md-12">
-                                <table class="table table-striped">
+                                <table class="table table-striped" id="table-timekeeping">
                                     <thead>
                                         <tr>
                                             <th>Date</th>
@@ -87,9 +87,9 @@ Timekeeping <span>/</span> Overtime <span>></span> Timekeeping
                                                 <input type="hidden" name="ids[]" value="<?= $overtime->ids[$key] ?>">
                                                 <div class="form-group">
                                                     <div class="input-group datetimepicker time_in">
-                                                        <input type="text" name="time_in[]" class="form-control" value="<?= empty($overtime->time_in[$key]) ? '' : date('m/d/Y H:i A', strtotime($overtime->time_in[$key])) ?>" onkeydown="return false" autocomplete="off" placeholder="MM/DD/YYYY 00:00 AM"<?= ($key == 0) ? ' required' : '' ?> />
+                                                        <input type="text" name="time_in[]" class="form-control input_none" value="<?= empty($overtime->time_in[$key]) ? '' : date('m/d/Y H:i A', strtotime($overtime->time_in[$key])) ?>" autocomplete="off" placeholder="MM/DD/YYYY 00:00 AM"<?= ($key == 0) ? ' required' : '' ?> />
                                                         <span class="input-group-addon">
-                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                            <i class="glyphicon glyphicon-calendar"></i>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -97,9 +97,9 @@ Timekeeping <span>/</span> Overtime <span>></span> Timekeeping
                                             <td>
                                                 <div class="form-group">
                                                     <div class="input-group datetimepicker time_out">
-                                                        <input type="text" name="time_out[]" class="form-control" value="<?= empty($overtime->time_out[$key]) ? '' : date('m/d/Y H:i A', strtotime($overtime->time_out[$key])) ?>" onkeydown="return false" autocomplete="off" placeholder="MM/DD/YYYY 00:00 AM" />
+                                                        <input type="text" name="time_out[]" class="form-control input_none" value="<?= empty($overtime->time_out[$key]) ? '' : date('m/d/Y H:i A', strtotime($overtime->time_out[$key])) ?>" autocomplete="off" placeholder="MM/DD/YYYY 00:00 AM" />
                                                         <span class="input-group-addon">
-                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                            <i class="glyphicon glyphicon-calendar"></i>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -111,8 +111,20 @@ Timekeeping <span>/</span> Overtime <span>></span> Timekeeping
                                     </tbody>
                                 </table>
                             </div>
+                            <?php
+                            if(!empty($overtime->approved_reason) && $overtime->status == 'APPROVED') {
+                            ?>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <strong class="asterisk-required">Remark <small>(Revert Reason):</small></strong>
+                                    <textarea class="form-control" name="remarks" rows="5" required></textarea>
+                                </div>
+                            </div>
+                            <?php
+                            }
+                            ?>
                         </div>
-                        <div class="divider"></div>
+                        <div class="division"></div>
                         <div class="form-group pull-right">
                             <input type="submit" class="btn btn-primary btn_submit" value="Update" />
                             <input type="reset" class="btn btn-default" value="Reset" />
@@ -125,40 +137,5 @@ Timekeeping <span>/</span> Overtime <span>></span> Timekeeping
 </div>
 @endsection
 @section('scripts')
-<script type="text/javascript">
-$('.table').DataTable({
-    "paging"    :   false,
-    "ordering"  :   false,
-    "info"      :   false,
-    "searching" :   false
-});
-$(function(){
-    activeMenu($('#menu-overtime'));
-
-    $('.datetimepicker').datetimepicker({ useCurrent: false });
-
-    $(".time_in").on("dp.change", function (e) {
-        var obj = $(this),
-            row = obj.closest('tr');
-
-        row.find('.time_out').data("DateTimePicker").minDate(e.date);
-    });
-
-    $(".time_out").on("dp.change", function (e) {
-        var obj = $(this),
-            row = obj.closest('tr');
-
-        row.find('.time_in').data("DateTimePicker").maxDate(e.date);
-    });
-
-    $('input[type="reset"]').click(function(e) {
-        e.preventDefault();
-
-        $('.datetimepicker').each(function() {
-            $(this).data("DateTimePicker").clear();
-            $(this).find('input').removeAttr('style');
-        });
-    });
-});
-</script>
+@include('request.js-script');
 @endsection

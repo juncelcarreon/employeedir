@@ -53,10 +53,8 @@ class PasswordResetController extends Controller
             return back()->withErrors(['email'=> "Email doesn't exist in our record"]);
         }
 
-        $data = [
-            'token' => Crypt::encrypt($employee[0]->id),
-            'email' => $employee[0]->email ?? $employee[0]->email2
-        ];
+        $data['token'] = Crypt::encrypt($employee[0]->id);
+        $data['email'] = $employee[0]->email ?? $employee[0]->email2;
 
         Mail::to($data['email'])->send(new ResetPasswordMail($data));
 

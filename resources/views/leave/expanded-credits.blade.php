@@ -1,14 +1,14 @@
 @extends('layouts.main')
 @section('title')
-Request | Leave > Leave Credits
+Leave > Leave Credits
 @endsection
 @section('head')
 <style type="text/css">
-@include('leave.leave-style');
+@include('leave.style');
 </style>
 @endsection
 @section('breadcrumb')
-Request <span>/</span> Leave <span>></span> Leave Credits
+Leave <span>></span> Leave Credits
 @endsection
 @section('content')
 <div class="row">
@@ -21,16 +21,16 @@ Request <span>/</span> Leave <span>></span> Leave Credits
                 <a href="<?= url('download-credits') ?>" class="pull-right btn btn-success"><span class="fa fa-download"></span>&nbsp; Download Leave Credits</a>
             </div>
             <div class="pane-body panel mb-0">
-                <table id="table_leave">
+                <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Employee ID</th>
+                            <th style="min-width:100px;">Employee ID</th>
                             <th>Employee Name</th>
                             <th><?= date('Y') - 1 ?> PTO<br>Forwarded</th>
                             <th><?= date('Y') ?> PTO<br>Monthly Accrual</th>
-                            <th class="w-100">Used PTO<br>(Jan-Jun)</th>
-                            <th class="w-100">Used PTO<br>(Jul-Dec)</th>
-                            <th class="w-100">Current PTO Balance</th>
+                            <th style="width: 100px;">Used PTO<br>(Jan-Jun)</th>
+                            <th style="width: 100px;">Used PTO<br>(Jul-Dec)</th>
+                            <th style="width: 100px;">Current PTO Balance</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -83,7 +83,9 @@ Request <span>/</span> Leave <span>></span> Leave Credits
 $(function() {
     activeMenu($('#menu-leaves'));
 
-    $('#table_leave').dataTable({ "pageLength": 50 });
+    $('.table').DataTable().destroy();
+
+    $('.table').DataTable({"pageLength": 50});
 });
 </script>
 @endsection

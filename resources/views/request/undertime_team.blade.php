@@ -22,13 +22,13 @@ Timekeeping <span>/</span> Undertime <span>/</span> Team Undertime <span>></span
                 <a href="<?= url('undertime') ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
             </div>
             <div class="pane-body panel m-0">
-                <table class="_table">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th style="width:50px;">#</th>
-                            <th style="width:150px;">Employee</th>
-                            <th style="width:200px;">Reason</th>
-                            <th style="width:80px;">Date</th>
+                            <th style="width:100px;">Employee</th>
+                            <th style="width:150px;">Reason</th>
+                            <th>Date</th>
                             <th>No. Of Hours</th>
                             <th>Status</th>
                             <th>Date<br> Requested</th>
@@ -38,38 +38,19 @@ Timekeeping <span>/</span> Undertime <span>/</span> Team Undertime <span>></span
                     <tbody>
                     <?php
                     foreach($undertime_request as $no=>$request) {
-                        $status = $request->status;
-                        if($request->status == 'APPROVED' && !empty($request->approved_reason)) {
-                            $status = 'REVERTED';
-                        }
-                        if($request->status == 'PENDING') {
-                            if(empty($request->recommend_date)) {
-                                $status .= ' <br><small>(Recommendation / Approval)</small>';
-                            } else {
-                                $status .= ' <br><small>(Approval)</small>';
-                            }
-                        }
-
-                        $no_of_hours = 0;
-                        if(!empty($request->time_in) && !empty($request->time_out)) {
-                            $start = new DateTime($request->time_in);
-                            $end = $start->diff(new DateTime($request->time_out));
-                            $end->d = $end->d * 24;
-                            $end->h = ($end->h - 1) + $end->d;
-
-                            $no_of_hours = $end->h;
-                        }
                     ?>
                         <tr>
                             <td><?= ++$no ?></td>
                             <td><?= $request->first_name. " " .$request->last_name ?></td>
-                            <td><?= (strlen(htmlentities($request->reason)) > 100) ? substr(htmlentities($request->reason), 0, 100)." ..." : htmlentities($request->reason) ?></td>
-                            <td><span><?= strtotime($request->date) ?></span> <?= date("M d, Y", strtotime($request->date)) ?></td>
-                            <td><?= number_format($no_of_hours, 2) ?></td>
-                            <td><?= $status ?></td>
-                            <td><span><?= strtotime($request->created_at) ?></span> <?= date("M d, Y", strtotime($request->created_at)) ?></td>
-                            <td class="td-option">
-                                <a href="<?= url("undertime/{$request->id}") ?>" title="View" class="btn_view"><b class="fa fa-eye"></b></a>
+                            <td title="<?= htmlentities($request->reason) ?>"><?= stringLimit($request->reason, 100) ?></td>
+                            <td><span class="d-none"><?= strtotime($request->date) ?></span> <?= date("M d, Y", strtotime($request->date)) ?></td>
+                            <td><?= numberOfHours($request->time_in, $request->time_out, true) ?></td>
+                            <td><?= timekeepingStatus($request) ?></td>
+                            <td><span class="d-none"><?= strtotime($request->created_at) ?></span> <?= date("M d, Y", strtotime($request->created_at)) ?></td>
+                            <td class="text-center">
+                                <a href="<?= url("undertime/{$request->id}") ?>" title="View" class="btn_view">
+                                    <i class="fa fa-eye"></i>
+                                </a>
                             </td>
                         </tr>
                     <?php
@@ -83,11 +64,5 @@ Timekeeping <span>/</span> Undertime <span>/</span> Team Undertime <span>></span
 </div>
 @endsection
 @section('scripts')
-<script type="text/javascript">
-$(function() {
-    activeMenu($('#menu-undertime'));
-
-    $('._table').DataTable({"pageLength": 50});
-});
-</script>
+@include('request.js-script');
 @endsection

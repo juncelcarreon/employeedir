@@ -34,10 +34,10 @@ DA Infractions
             <div class="pane-body panel m-0">
                 <br>
                 <br>
-                <table class="_table">
+                <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th style="width:50px;">#</th>
+                            <th style="min-width:50px;">#</th>
                             <th style="width:200px;">Employee</th>
                             <th style="width:200px;">Title</th>
                             <th>Date</th>
@@ -63,13 +63,14 @@ DA Infractions
                         <tr>
                             <td><?= $i ?></td>
                             <td><?= $infraction->first_name.' '.$infraction->last_name ?></td>
-                            <td><?= $infraction->infraction_type.' - '.$infraction->title ?></td>
+                            <td title="<?= $infraction->title ?>"><?= $infraction->infraction_type.' - '.$infraction->title ?></td>
                             <td><span><?= strtotime($infraction->date) ?></span> <?= date('M d, Y', strtotime($infraction->date)) ?></td>
                             <td><?= $status ?></td>
                             <td><span><?= strtotime($infraction->created_at) ?></span> <?= date("M d, Y",strtotime($infraction->created_at)) ?></td>
-                            <td class="td-option">
-                                <a href="<?= url("dainfraction/{$infraction->id}") ?>" title="View" class="btn_view"><span class="fa fa-eye"></span></a>
-                                &nbsp;&nbsp;
+                            <td class="text-center">
+                                <a href="<?= url("dainfraction/{$infraction->id}") ?>" title="View" class="btn_view">
+                                    <span class="fa fa-eye"></span>
+                                </a>
                             </td>
                         </tr>
                     <?php 

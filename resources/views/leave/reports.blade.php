@@ -1,19 +1,19 @@
 @extends('layouts.main')
 @section('title')
-Request | Leave > Reports
+Leave > Reports
 @endsection
 @section('head')
 <style type="text/css">
-@include('leave.leave-style');
+@include('leave.style');
 </style>
 @endsection
 @section('breadcrumb')
-Request <span>/</span> Leave <span>></span> Reports
+Leave <span>></span> Reports
 @endsection
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-default">
+        <div class="panel panel-default mb-0">
             <div class="panel-heading">
                 LEAVE TRACKER REPORTS &nbsp; - &nbsp;&nbsp;&nbsp; 
                 <input id="startdate" type="text" class="dates_info" autocomplete="off" placeholder="From" value="<?= (isset($target)) ? date('m/d/Y', strtotime($target['from'])) : '' ?>"> &nbsp;&nbsp;&nbsp; 
@@ -37,11 +37,11 @@ Request <span>/</span> Leave <span>></span> Reports
                 ?>
                 <button id="id_btn_display" class="btn btn-md btn-primary pull-right"><span class="fa fa-file"></span>&nbsp; Display Report</button>
             </div>
-            <div class="pane-body panel">
+            <div class="pane-body panel mb-0">
                 <table class="_table stripe row-border order-column">
                     <thead>
                         <tr>
-                            <th style="width:100px;">Leave ID</th>
+                            <th style="width:200px;">Leave ID</th>
                             <th style="width:150px;">EE Number</th>
                             <th style="width:200px;" class="bordered">EE Name</th>
                             <th style="width:150px;">Start</th>

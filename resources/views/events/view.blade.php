@@ -1,12 +1,24 @@
 @extends('layouts.main')
 @section('title')
-Blog Post > Events > <?= $event->event_name ?>
+<?php
+    if(Auth::check() && Auth::user()->isAdmin()) {
+        echo "Blog Post | Events > {$event->event_name}";
+    } else {
+        echo "Events Calendar > {$event->event_name}";
+    }
+?>
 @endsection
 @section('head')
 @include('events.style')
 @endsection
 @section('breadcrumb')
-Blog Post <span>/</span> Events <span>></span> <?= $event->event_name ?>
+<?php
+    if(Auth::check() && Auth::user()->isAdmin()) {
+        echo "Blog Post <span>/</span> Events <span>></span> {$event->event_name}";
+    } else {
+        echo "Events Calendar <span>></span> {$event->event_name}";
+    }
+?>
 @endsection
 @section('content')
 <div class="row">
@@ -17,7 +29,7 @@ Blog Post <span>/</span> Events <span>></span> <?= $event->event_name ?>
 
                 <?php
                 $url = url('events/calendar');
-                if(Auth::user()->isAdmin()) { $url = url('events'); }
+                if(Auth::check() && Auth::user()->isAdmin()) { $url = url('events'); }
                 ?>
                 <a href="<?= $url ?>" class="btn btn-danger pull-right"><span class="fa fa-chevron-left"></span>&nbsp; Back</a>
             </div>
@@ -57,7 +69,7 @@ Blog Post <span>/</span> Events <span>></span> <?= $event->event_name ?>
                 ?>
                 <div class="division"></div>
                 <div class="form-group pull-right">
-                    <a href="<?= url("events/{$event->id}/edit") ?>" class="btn btn-primary pull-right">Edit</a>
+                    <a href="<?= url("events/{$event->id}/edit") ?>" class="btn btn-primary">Edit</a>
                 </div>
                 <?php
                     }

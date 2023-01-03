@@ -1,0 +1,63 @@
+ol.breadcrumb li span{
+    display: inline-block;
+    color: #ccc;
+    padding: 0 5px;
+}
+
+.panel-subheading{
+    background-color: #5bc0de !important;
+}
+
+.division{
+    border-top: 1px solid rgba(0,0,0,.125);
+    padding-top: 15px;
+    margin-top: 15px;
+    width: 100%;
+    float: left;
+}
+
+.border-required{
+    border: 2px solid #ff0000 !important;
+}
+
+.dataTables_wrapper, .m-0{
+    margin: 0 !important;
+}
+
+.table > thead > tr >th {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
+    height: auto !important;
+    min-height: 20px !important;
+}
+
+.table > tbody > tr.even {
+    background: #ddd !important;
+}
+
+.table > tbody > tr.unacknowledged td {
+    font-weight: 600 !important;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle !important;
+    margin: auto;
+}
+
+.table > tbody > tr > td > span{
+    display: none;
+}
+
+#table-show{
+    width: 100%;
+    margin: 10px;
+}
+#table-show tr td {
+    border-bottom: 1px dashed #dadada;
+    font-size: 13px;
+    padding-top: 15px;
+    padding-bottom: 5px;
+}
+
+#table-show tr td:nth-child(2){
+    font-weight: 600;
+}

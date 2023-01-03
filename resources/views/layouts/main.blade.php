@@ -1,34 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>eLink Falcon - HR Portal | @yield('title')</title>
-    <link rel="icon" type="image/png" href="http://www.elink.com.ph/wp-content/uploads/2016/01/elink-logo-site.png">
-    <link href="{{ asset('./css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('./css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('./css/datepicker3.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('./css/styles.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('./css/custom.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('./css/jquery.dataTables.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{ asset('./css/select2.min.css')}}" rel="stylesheet">
-    <link href="{{ asset('./css/tagify.css')}}" rel="stylesheet">
-    <link href="{{ asset('./css/css.css')}}" rel="stylesheet">
-    <link href="{{ asset('./css/theme-midnight.css')}}" rel="stylesheet">
+    <title>Human Resources Gateway | @yield('title')</title>
+    <link rel="icon" type="image/png" href="<?= asset('img/favicon.png') ?>">
+    <link href="<?= asset('css/bootstrap.min.css') ?>" rel="stylesheet" type="text/css">
+    <link href="<?= asset('css/font-awesome.min.css') ?>" rel="stylesheet" type="text/css">
+    <link href="<?= asset('css/datepicker3.css') ?>" rel="stylesheet" type="text/css">
+    <link href="<?= asset('css/styles.css') ?>" rel="stylesheet" type="text/css">
+    <link href="<?= asset('css/custom.css') ?>" rel="stylesheet" type="text/css">
+    <link href="<?= asset('css/jquery.dataTables.css') ?>" rel="stylesheet" type="text/css">
+    <link href="<?= asset('css/select2.min.css') ?>" rel="stylesheet">
+    <link href="<?= asset('css/tagify.css') ?>" rel="stylesheet">
+    <link href="<?= asset('css/css.css') ?>" rel="stylesheet">
+    <link href="<?= asset('css/theme-midnight.css') ?>" rel="stylesheet">
 
-    <script src="{{ asset('./js/jquery-1.11.1.min.js')}}"></script>
+    <script src="<?= asset('js/jquery-1.11.1.min.js') ?>"></script>
 
-    <script type="text/javascript" src="{{ asset('./js/jquery.bootstrap-growl.min.js') }}"></script>
+    <script type="text/javascript" src="<?= asset('js/jquery.bootstrap-growl.min.js') ?>"></script>
 
     <!-- FROALA EDITOR -->
-    <link rel="stylesheet" href="{{ asset('./css/froala_editor/froala_editor.css')}}">
-    <link rel="stylesheet" href="{{ asset('./css/froala_editor/froala_style.css')}}">
-    <link rel="stylesheet" href="{{ asset('./css/froala_editor/plugins/emoticons.css')}}">
+    <link rel="stylesheet" href="<?= asset('css/froala_editor/froala_editor.css') ?>">
+    <link rel="stylesheet" href="<?= asset('css/froala_editor/froala_style.css') ?>">
+    <link rel="stylesheet" href="<?= asset('css/froala_editor/plugins/emoticons.css') ?>">
 
-    <link rel="stylesheet" href="{{ asset('./css/bootstrap-datetimepicker.min.css')}}" />
-    <link rel="stylesheet" href="{{ asset('./css/jquery-ui.min.css')}}" />
-    <link rel="stylesheet" href="{{ asset('./css/pages/' . request()->path() . '.css')}}" />
+    <link rel="stylesheet" href="<?= asset('css/bootstrap-datetimepicker.min.css') ?>" />
+    <link rel="stylesheet" href="<?= asset('css/jquery-ui.min.css') ?>" />
+    <link rel="stylesheet" href="<?= asset('css/pages/' . request()->path() . '.css') ?>" />
+    <style>
+    @font-face {
+      font-family: "Cervo";
+      font-weight: normal;
+      src: url(<?= asset("fonts/Cervo-Regular.otf") ?>) format("opentype");
+    }
+    @font-face {
+      font-family: "Seconda Round";
+      font-weight: 900;
+      src: url(<?= asset("fonts/SecondaRound-Black.ttf") ?>) format("truetype");
+    }
+    </style>
     @yield('head')
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -40,13 +52,12 @@
                 <button type="button" id="toggle-sidebar">
                     <span class="fa fa-bars"></span>
                 </button>
-                <a class="navbar-brand" href="{{url('/home')}}">
-                    <span>
-                        <img src="{{ asset('./img/elink-logo-site.png')}}" style="width: 40px; margin-top: -10px">
-                        &nbsp;eLink&nbsp; F A L C O N&nbsp;&nbsp;
+                <a class="navbar-brand" href="<?= url('home') ?>">
+                    <span style="font-family:'Cervo';font-weight:normal;color:#3abae5;letter-spacing:2px;">
+                        <img src="<?= asset('img/logo.png') ?>" style="width: 40px; margin-top: -10px">
+                        &nbsp;HUMAN<span style="color:#155da9;">RESOURCES</span>
                     </span>
-                    ∞&nbsp;&nbsp; HR Portal&nbsp;&nbsp; 
-                    <img src="{{ asset('./img/falcon-logo.png')}}" style="width: 30px; margin-top: -10px; float: right; padding-top: 7px;">
+                    <span style="font-family:'Seconda Round';color:#fff;">GATEWAY</span>
                 </a>
                 <ul class="nav navbar-top-links navbar-right">
                     @guest
@@ -125,38 +136,38 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="text-center" style="color: #999;font-size: 13px; font-weight: 400; padding: 30px 0 40px;">
-                        © Copyright <?= date('Y') ?> • eLink Systems & Concepts Corp.
+                        &copy; Copyright <?= date('Y') ?> &bull; eLink Systems & Concepts Corp.
                     </div>
                 </div>
             </div>
         </div>
     </div>  <!--/.main-->
-    <script type="text/javascript" src="{{ asset('./js/bootstrap.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/chart.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/chart-data.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/easypiechart.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/easypiechart-data.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/bootstrap-datepicker.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/jquery.dataTables.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/jquery.validate.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/dataTables.responsive.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/dataTables.fixedColumns.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/select2.full.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/moment.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./bootstrap/js/transition.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./bootstrap/js/collapse.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/bootstrap-datetimepicker.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/loadingoverlay.min.js')}}"></script>
+    <script type="text/javascript" src="<?= asset('js/bootstrap.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/chart.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/chart-data.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/easypiechart.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/easypiechart-data.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/bootstrap-datepicker.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/jquery.dataTables.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/jquery.validate.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/dataTables.responsive.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/dataTables.fixedColumns.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/select2.full.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/moment.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('bootstrap/js/transition.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('bootstrap/js/collapse.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/bootstrap-datetimepicker.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/loadingoverlay.min.js') ?>"></script>
 
-    <script type="text/javascript" src="{{ asset('./js/global.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/custom.js')}}"></script>
+    <script type="text/javascript" src="<?= asset('js/global.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/custom.js') ?>"></script>
 
-    <script type="text/javascript" src="{{ asset('./js/froala_editor/froala_editor.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/froala_editor/plugins/emoticons.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/froala_editor/plugins/link.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/tagify.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/jQuery.tagify.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('./js/jquery-ui.min.js')}}"></script>
+    <script type="text/javascript" src="<?= asset('js/froala_editor/froala_editor.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/froala_editor/plugins/emoticons.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/froala_editor/plugins/link.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/tagify.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/jQuery.tagify.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= asset('js/jquery-ui.min.js') ?>"></script>
 
 <!-- Modal Success -->
    <div id="messageModal" class="modal fade" role="dialog">

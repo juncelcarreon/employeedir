@@ -83,7 +83,7 @@ Timekeeping <span>/</span> Overtime <span>></span> Edit Overtime
                             <div class="row row-entry">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <input type="text" name="date[]" class="form-control overtime_date" placeholder="MM/DD/YYYY" value="<?= date('m/d/Y',strtotime($date)) ?>" autocomplete="off" onkeydown="return false" required />
+                                        <input type="text" name="date[]" class="form-control datepicker input_none" placeholder="MM/DD/YYYY" value="<?= date('m/d/Y',strtotime($date)) ?>" autocomplete="off" required />
                                     </div> 
                                 </div>
                                 <div class="col-md-4">
@@ -124,79 +124,5 @@ Timekeeping <span>/</span> Overtime <span>></span> Edit Overtime
 </div>
 @endsection
 @section('scripts')
-<script type="text/javascript">
-$(function(){
-    activeMenu($('#menu-overtime'));
-
-    $('.overtime_date').datepicker();
-
-    $('.btn-add').click(function(e) {
-        e.preventDefault();
-
-        var obj = $(this),
-            parent = obj.closest('.entry-content'),
-            entry = parent.find('.row-entry:first'),
-            entry_last = parent.find('.row-entry:last');
-
-        var new_entry = entry.clone().insertAfter(entry_last);
-            new_entry.find('.btn-add').html('<span class="fa fa-minus"></span>');
-            new_entry.find('.btn-add').removeClass('btn-primary').addClass('btn-danger');
-            new_entry.find('.btn-add').removeClass('btn-add').addClass('btn-remove')
-            new_entry.find('.overtime_date').removeAttr('id').removeClass('hasDatepicker').removeData('datepicker').unbind().datepicker();
-            new_entry.find('.overtime_date').val('');
-            new_entry.find('input[type="number"]').val('1.00');
-            new_entry.find('input[type="hidden"]').val('');
-            new_entry.find('.btn-remove').click(function(e) {
-                e.preventDefault();
-                $(this).closest('.row-entry').remove();
-            });
-    });
-
-    $('.btn-remove').click(function(e) {
-        e.preventDefault();
-        $(this).closest('.row-entry').remove();
-    });
-
-    $('input[type="submit"]').click(function(e) {
-        e.preventDefault();
-
-        var obj = $(this),
-            form = obj.closest('form'),
-            result = true;
-
-        form.find('input[required], textarea[required], select[required]').each(function(e) {
-            if($(this).val() == ''){
-                $(this).focus();
-                $(this).css({'border':'1px solid #ff0000'});
-
-                result = false;
-
-                return false;
-            }
-            $(this).removeAttr('style');
-        });
-
-        if(result) {
-            $('body').css({'pointer-events':'none'});
-            obj.attr('disabled', true);
-            obj.val('Please wait');
-            form.submit();
-        }
-    });
-
-    $('input[type="reset"]').click(function(e) {
-        e.preventDefault();
-
-        var obj = $(this),
-            form = obj.closest('form');
-
-        form.find('input[required], textarea[required]').each(function() {
-            $(this).val('');
-            if($(this).attr('type') == 'number') {
-                $(this).val('1.00');
-            }
-        });
-    });
-});
-</script>
+@include('request.js-script');
 @endsection

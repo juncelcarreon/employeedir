@@ -9,7 +9,7 @@ class EventsController extends Controller
 {
     public function index()
     {
-        $data['events'] = Events::all();
+        $data['events'] = Events::orderByDesc('id')->get();
 
         return view('events.index', $data);
     }
@@ -42,14 +42,24 @@ class EventsController extends Controller
 
     public function show($id)
     {
-        $data['event'] = Events::find($id);
+        $event = Events::find($id);
+        if(empty($event)){
+            return redirect(url('404'));
+        }
+
+        $data['event'] = $event;
 
         return view('events.view', $data);
     }
 
     public function edit($id)
     {
-        $data['event'] = Events::find($id);
+        $event = Events::find($id);
+        if(empty($event)){
+            return redirect(url('404'));
+        }
+
+        $data['event'] = $event;
 
         return view('events.edit', $data);
     }
@@ -77,6 +87,7 @@ class EventsController extends Controller
     public function destroy($id)
     {
         $event = Events::find($id);
+
         if($event->delete()){
             return redirect('events')->with('success', 'Succesfully deleted the event');
         } else {

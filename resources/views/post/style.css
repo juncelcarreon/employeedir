@@ -97,6 +97,10 @@ div.gallery{
     min-height: 20px !important;
 }
 
+.table > tbody > tr.even {
+    background: #ddd !important;
+}
+
 table > tbody > tr > td {
     vertical-align: middle !important;
     margin: auto;
