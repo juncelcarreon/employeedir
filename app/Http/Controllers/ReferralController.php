@@ -36,7 +36,14 @@ class ReferralController extends Controller
         $referral->referral_email = $request->referral_email;
         $referral->position_applied = $request->position_applied;
 
+        $users = User::ActiveEmployees()->where('dept_code', 'TLA01')->select('email')->get();
+
+        $emails = ['juncelcarreon@elink.com.ph'];
+        foreach($users as $user) { array_push($emails, $user->email); }
+
         if($referral->save()){
+            // Mail::to('hrd@elink.com.ph')->cc($emails)->send(new ReferralSubmitted($referral));
+
             return back()->with('success', 'Referral successfully sent to the ERP Team. Thank you.');
         }
 

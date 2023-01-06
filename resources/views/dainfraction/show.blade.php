@@ -116,16 +116,22 @@ DA Infractions <span>></span> View Infraction
 						?>
 					</div>
 				</div>
-		    	<div style="width:100%;height:300px;background:#000;overflow:hidden;display: none;">
-					<canvas id="pdf-canvas" style="width: 800px;margin:0 auto;"></canvas>
+		    	<div style="background:#000;padding:10px;text-align:center;" id="divImage">
+<?php
+for($x = 1; $x <= $pages; $x++) {
+?>
+					<canvas id="pdf-canvas<?= $x ?>" style="width: 200px;"></canvas>
+<?php
+	}
+?>
 				</div>
 			</div>
-			<div class="panel panel-body" id="html" style="display: none;">
+			<div class="panel panel-body" id="html">
 				<p style="font-size:10px;height:10px;margin:0;">Printed Date: <?= date('F d, Y') ?></p>
 				<i style="display: block;font-size: 20px;text-align: center;margin:0;"><?= ($infraction->infraction_type == 'NOD') ? 'Notice of Decision' : 'Notice to Explain' ?></i>
 				<span style="font-size: 30px;font-weight:bold;text-align: center;margin:0;"> <?= $infraction->title ?></span>
 				<div style="width:100%;text-align:center;">
-					<img src="" id="image" style="width: 600px;margin:0 auto;">
+					<img id="image" style="width:750px;">
 				</div>
 				<table data-pdfmake="{'widths':[50,'*','auto']}">
 <?php
@@ -168,15 +174,25 @@ DA Infractions <span>></span> View Infraction
 <script src='https://cdn.jsdelivr.net/npm/pdfmake@latest/build/vfs_fonts.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/html-to-pdfmake/browser.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.228/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.js"></script>
 <script type="text/javascript">
 var _PDF_DOC,
     _CURRENT_PAGE,
     _TOTAL_PAGES,
     _PAGE_RENDERING_IN_PROGRESS = 0,
-    _CANVAS = document.querySelector('#pdf-canvas'),
+<?php
+    for($x = 1;$x <= $pages; $x++) {
+?>
+    _CANVAS<?= $x ?> = document.querySelector('#pdf-canvas<?= $x ?>'),
+<?php
+	}
+?>
     _CANVAS_URL = '';
 
-async function showPDF(pdf_url) {
+<?php
+    for($x = 1;$x <= $pages; $x++) {
+?>
+async function showPDF<?= $x ?>(pdf_url) {
     try {
         _PDF_DOC = await pdfjsLib.getDocument({ url: pdf_url });
     }
@@ -184,75 +200,96 @@ async function showPDF(pdf_url) {
         alert(error.message);
     }
 
-    _TOTAL_PAGES = _PDF_DOC.numPages;
-
-    showPage(1);
+    showPage<?= $x ?>(<?= $x ?>);
 }
+<?php
+	}
 
-async function showPage(page_no) {
-    _PAGE_RENDERING_IN_PROGRESS = 1;
-    _CURRENT_PAGE = page_no;
+	for($x = 1;$x <= $pages; $x++) {
+?>
+	async function showPage<?= $x ?>(page_no) {
+	    _PAGE_RENDERING_IN_PROGRESS = 1;
+	    _CURRENT_PAGE = page_no;
 
-    document.querySelector("#pdf-canvas").style.display = 'none';
+	    document.querySelector("#pdf-canvas<?= $x ?>").style.display = 'none';
 
-    try {
-        var page = await _PDF_DOC.getPage(page_no);
-    }
-    catch(error) {
-        alert(error.message);
-    }
+	    try {
+	        var page = await _PDF_DOC.getPage(page_no);
+	    }
+	    catch(error) {
+	        alert(error.message);
+	    }
 
-    var pdf_original_width = page.getViewport(1).width;
-    var scale_required = 1000 / pdf_original_width;
-    var viewport = page.getViewport(scale_required);
+	    var pdf_original_width = page.getViewport(1).width;
+	    var scale_required = 200 / pdf_original_width;
+	    var viewport = page.getViewport(scale_required);
 
-    _CANVAS.width = viewport.width;
-    _CANVAS.height = 400;
+	    _CANVAS<?= $x ?>.width = viewport.width;
+	    _CANVAS<?= $x ?>.height = viewport.height;
 
-    var render_context = {
-        canvasContext: _CANVAS.getContext('2d'),
-        viewport: viewport
-    };
+	    var render_context = {
+	        canvasContext: _CANVAS<?= $x ?>.getContext('2d'),
+	        viewport: viewport
+	    };
 
-    try {
-        await page.render(render_context);
-    }
-    catch(error) {
-        alert(error.message);
-    }
+	    try {
+	        await page.render(render_context);
+	    }
+	    catch(error) {
+	        alert(error.message);
+	    }
 
-    _PAGE_RENDERING_IN_PROGRESS = 0;
+	    _PAGE_RENDERING_IN_PROGRESS = 0;
 
-    document.querySelector("#pdf-canvas").style.display = 'block';
+	    document.querySelector("#pdf-canvas<?= $x ?>").style.display = 'inline-block';
 
-	_CANVAS_URL = _CANVAS.toDataURL('image/png');
-	$('body').removeAttr('style');
-}
+		$('body').removeAttr('style');
+	}
+<?php
+	}
+?>
+
 $(function(){
 	$('body').css({'pointer-events':'none'});
 
-	showPDF('<?= $infraction->file ?>');
+<?php
+	for($x = 1;$x <= $pages; $x++) {
+?>
+	showPDF<?= $x ?>('<?= $infraction->file ?>');
+<?php
+	}
+?>
+
+	$('#btnDownload').click(function(){
+	  var element = document.querySelector("#divImage");
+	  saveCapture(element)
+	});
 
 	$('#btn-print').click(function(e){
 		e.preventDefault();	
 
 		var html = $('#html').html();
+		var element = document.querySelector("#divImage");
 
-		$('#image').attr('src', _CANVAS_URL);
+		html2canvas(element, {
+	        onrendered: function (canvas) {
+			    $('#image').attr('src', canvas.toDataURL("image/png"));
 
-		var ret = htmlToPdfmake(html, {
-		  tableAutoSize:true,
-		  imagesByReference:true
-		});
+				var ret = htmlToPdfmake(html, {
+				  tableAutoSize:true,
+				  imagesByReference:true
+				});
 
-		ret.images.img_ref_0 = _CANVAS_URL;
+				ret.images.img_ref_0 = canvas.toDataURL("image/png");
 
-		var dd = {
-		  content:ret.content,
-		  images:ret.images
-		}
+				var dd = {
+				  content:ret.content,
+				  images:ret.images
+				}
 
-		pdfMake.createPdf(dd).download();
+				pdfMake.createPdf(dd).download();
+	        }     
+	    });
 	});
 });
 </script>

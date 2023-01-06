@@ -13,21 +13,21 @@
 
 	<ul class="menu-child" data-target="policyMenuLink">
 		<li>
-			<a id="menu-attendance" class="menu-child-item" target="_blank" href="<?= asset('/attachment/attendance.pdf') ?>">
+			<a id="menu-attendance" class="menu-child-item" target="_blank" href="<?= asset('attachment/attendance.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Attendance
 			</a>
 		</li>
 
 		<li>
-			<a id="menu-company-directives" class="menu-child-item" target="_blank" href="<?= asset('/attachment/directives.pdf') ?>">
+			<a id="menu-company-directives" class="menu-child-item" target="_blank" href="<?= asset('attachment/directives.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Company Directives
 			</a>
 		</li>
 
 		<li>
-			<a id="menu-dress-code" class="menu-child-item" target="_blank" href="<?= asset('/attachment/dresscode.pdf') ?>">
+			<a id="menu-dress-code" class="menu-child-item" target="_blank" href="<?= asset('attachment/dresscode.pdf') ?>">
 				<em class="fa fa-circle-o">&nbsp;</em>
 				Dress Code
 			</a>
@@ -149,14 +149,14 @@
 ?>
 	</a>
 </li>
-
+<!-- 
 <li>
 	<a id="menu-dainfraction" href="<?= url('dainfraction') ?>">
 		<em class="fa fa-warning">&nbsp;</em>
 		DA Infractions
 	</a>
 </li>
-
+ -->
 <li>
 	<a id="menu-linking-sessions" href="<?= url('coaching-session') ?>">
 		<em class="fa fa-cogs">&nbsp;</em>
@@ -175,6 +175,14 @@
 	<a id="menu-referrals" href="<?= url('referral') ?>">
 		<em class="fa fa-user-plus">&nbsp;</em>
 		Referrals
+<?php
+	if(Auth::user()->scopeNewReferral() > 0) {
+?>
+		&nbsp;
+		<span class="badge label-danger"><?= Auth::user()->scopeNewReferral() ?></span>
+<?php
+	}
+?>
 	</a>
 </li>
 
@@ -186,7 +194,7 @@
 </li>
 
 <li>
-	<a id="menu-employee-hierarchy" target="_blank" href="<?= asset('/img/company-hierarchy.jpeg') ?>">
+	<a id="menu-employee-hierarchy" target="_blank" href="<?= asset('img/company-hierarchy.jpeg') ?>">
 		<em class="fa fa-sitemap">&nbsp;</em>
 		Employee Hierarchy
 	</a>

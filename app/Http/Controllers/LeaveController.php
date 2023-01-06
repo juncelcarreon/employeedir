@@ -772,6 +772,7 @@ class LeaveController extends Controller
 	public function updateLeaveEntry(Request $request)
 	{
 		$leave = LeaveRequest::find($request->id);
+		$details = LeaveRequestDetails::where('leave_id', $request->id)->get();
 
 		$obj = [
 			'leave_date'    => $request->leave_date,
@@ -806,8 +807,10 @@ class LeaveController extends Controller
 				$leave->leave_type_id = 99; // CTO & VL
 			}
 		}
+
         $leave->save();
 
+		$pay_types = [];
         for($i = 0; $i < count($obj['field_id']); $i++) {
 			if($obj['field_id'][$i] > 0) {
 				LeaveRequestDetails::where('id',"=",$obj['field_id'][$i])
@@ -825,6 +828,8 @@ class LeaveController extends Controller
 				];
 				LeaveRequestDetails::create($details);
 			}
+
+			$pay_types[$i] = $obj['pay_type'][$i];
         }
 
 		LeaveRequestDetails::where('leave_id', $request->id)->where('pay_type', 3)->delete();
@@ -842,6 +847,26 @@ class LeaveController extends Controller
 					LeaveRequestDetails::create($details);
 				}
 			}
+		}
+
+		$orig_pay = [];
+		foreach($details as $key=>$detail){
+			$orig_pay[$key] = $detail->pay_type;
+		}
+
+		if($leave->approve_status_id == 1 && $pay_types != $orig_pay) {
+			$orig = array_sum($orig_pay);
+			$new = array_sum($pay_types);
+
+			$lc = new LeaveCredits();
+			$lc->employee_id = $leave->employee_id;
+			$lc->credit = $orig - $new;
+			$lc->type = 7;
+			$lc->month = date("m", strtotime($leave->date_filed));
+			$lc->year = date("Y", strtotime($leave->date_filed));
+			$lc->leave_id = 0;
+			$lc->status = 1;
+			$lc->save();
 		}
 
 		return redirect("leave" . '/' . $request->id)->with('success', 'Leave Request Successfully Updated!!');

@@ -51,6 +51,9 @@ class DAInfractionController extends Controller
 
     public function store(Request $request)
     {
+        $employee = User::withTrashed()->find($request->employee_id);
+        $supervisor = User::find($employee->supervisor_id);
+        $manager = User::find($employee->manager_id);
         $file_name = $request->infraction_type.'-'.time();
 
         $infraction = new DAInfraction();
@@ -60,6 +63,8 @@ class DAInfractionController extends Controller
         $infraction->date = date('Y-m-d', strtotime($request->date));
         $infraction->filed_by = Auth::user()->id;
         $infraction->file = '';
+        if(!empty($supervisor->id)) { $infraction->supervisor_id = $supervisor->id; }
+        if(!empty($manager->id)) { $infraction->manager_id = $manager->id; }
 
         if ($request->hasFile("file")) {
             $extension = $request->file('file')->guessExtension();
@@ -67,10 +72,6 @@ class DAInfractionController extends Controller
 
             $infraction->file = asset($path);
         }
-
-        $employee = User::withTrashed()->find($request->employee_id);
-        $supervisor = User::find($employee->supervisor_id);
-        $manager = User::find($employee->manager_id);
 
         if($infraction->save()){
             $data['id'] = $infraction->id;
@@ -102,15 +103,23 @@ class DAInfractionController extends Controller
 
     public function show($id)
     {
+        ini_set('max_execution_time', '-1');
+        ini_set('max_input_time', '-1');
         $item = DAInfraction::withTrashed()->find($id);
         if(empty($item)) {
             return redirect('/404');
             exit;
         }
 
+        $path = 'http://dir.elink.corp/public/infractions//NOD-1673018385.pdf';
+        $pdftext = file_get_contents($path);
+        $pages = preg_match_all("/\/Page\W/", $pdftext, $dummy);
+
         $data['infraction'] = $item;
         $data['employee'] = User::withTrashed()->find($item->employee_id);
         $data['filer'] = User::withTrashed()->find($item->filed_by);
+        $data['path'] = $path;
+        $data['pages'] = $pages;
 
         return view('dainfraction.show', $data);
     }

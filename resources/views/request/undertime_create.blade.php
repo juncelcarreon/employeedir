@@ -65,7 +65,7 @@ Timekeeping <span>/</span> Undertime <span>></span> File Undertime
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <strong class="asterisk-required">Time In:</strong>
+                                    <strong class="asterisk-required">From:</strong>
                                     <div class="input-group datetimepicker time_in">
                                         <input type="text" name="time_in" class="form-control input_none" placeholder="MM/DD/YYYY 00:00 AM" autocomplete="off" required />
                                         <span class="input-group-addon">
@@ -76,7 +76,7 @@ Timekeeping <span>/</span> Undertime <span>></span> File Undertime
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <strong class="asterisk-required">Time Out:</strong>
+                                    <strong class="asterisk-required">To:</strong>
                                     <div class="input-group datetimepicker time_out">
                                         <input type="text" name="time_out" class="form-control input_none" placeholder="MM/DD/YYYY 00:00 AM" autocomplete="off" required />
                                         <span class="input-group-addon">

@@ -51,8 +51,8 @@ Timekeeping <span>/</span> Undertime <span>></span> View Undertime
 		                    <thead>
 		                        <tr>
 		                            <th>Date</th>
-		                            <th>Time In</th>
-		                            <th>Time Out</th>
+		                            <th>From</th>
+		                            <th>To</th>
 		                            <th>No. of Hours</th>
 		                        </tr>
 		                    </thead>
