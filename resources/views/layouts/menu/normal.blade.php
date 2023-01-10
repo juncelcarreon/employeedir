@@ -64,7 +64,7 @@
 		Leaves
 	</a>
 </li>
-<!-- 
+
 <li>
 	<a id="menu-dainfraction" href="<?= url('dainfraction') ?>">
 		<em class="fa fa-warning">&nbsp;</em>
@@ -79,7 +79,7 @@
 ?>
 	</a>
 </li>
- -->
+
 <li>
 	<a id="menu-linking-sessions" href="<?= url('coaching-session') ?>">
 		<em class="fa fa-cogs">&nbsp;</em>

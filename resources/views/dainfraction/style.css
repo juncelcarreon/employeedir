@@ -103,3 +103,11 @@ embed{
 .direction-rtl{
     direction: rtl
 }
+
+.text-success{
+    color: #008000;
+}
+
+.text-primary{
+    color: #3a75fb;
+}

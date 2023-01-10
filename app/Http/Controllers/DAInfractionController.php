@@ -13,6 +13,8 @@ use App\SentEmailArchives;
 use App\User;
 use App\Mail\InfractionAcknowledged;
 use App\Mail\InfractionNotification;
+use App\Mail\InfractionExplanation;
+use App\Mail\InfractionRecommendation;
 use App\Mail\InfractionNODNotification;
 use App\Mail\InfractionNODAcknowledged;
 
@@ -70,7 +72,7 @@ class DAInfractionController extends Controller
             $extension = $request->file('file')->guessExtension();
             $path = Storage::disk('public')->putFileAs("infractions/{$request->employee_id}", $request->file, "{$file_name}.pdf");
 
-            $infraction->file = asset($path);
+            $infraction->file = asset('public/'.$path);
         }
 
         if($infraction->save()){
@@ -90,9 +92,9 @@ class DAInfractionController extends Controller
             }
 
             if($request->infraction_type == 'NTE') {
-                // Mail::to($employee->email)->cc($emails)->send(new InfractionNotification($data));
+                Mail::to($employee->email)->cc($emails)->send(new InfractionNotification($data));
             } else {
-                // Mail::to($employee->email)->cc($emails)->send(new InfractionNODNotification($data));
+                Mail::to($employee->email)->cc($emails)->send(new InfractionNODNotification($data));
             }
 
             return redirect(url("dainfraction/{$infraction->id}"))->with('success', "DA Infraction Successfully Submitted!!");
@@ -111,13 +113,18 @@ class DAInfractionController extends Controller
             exit;
         }
 
-        $path = 'http://dir.elink.corp/public/infractions//NOD-1673018385.pdf';
+        // $path = 'http://dir.elink.corp/public/infractions//NOD-1673018385.pdf';
+        $path = $item->file;
         $pdftext = file_get_contents($path);
         $pages = preg_match_all("/\/Page\W/", $pdftext, $dummy);
+        $supervisor = User::find($item->supervisor_id);
+        $manager = User::find($item->manager_id);
 
         $data['infraction'] = $item;
         $data['employee'] = User::withTrashed()->find($item->employee_id);
         $data['filer'] = User::withTrashed()->find($item->filed_by);
+        $data['supervisor'] = $supervisor;
+        $data['manager'] = $manager;
         $data['path'] = $path;
         $data['pages'] = $pages;
 
@@ -153,7 +160,7 @@ class DAInfractionController extends Controller
             $extension = $request->file('file')->guessExtension();
             $path = Storage::disk('public')->putFileAs("infractions/{$request->employee_id}", $request->file, "{$file_name}.pdf");
 
-            $infraction->file = asset($path);
+            $infraction->file = asset('public/'.$path);
         }
 
         if($infraction->save()){
@@ -185,9 +192,9 @@ class DAInfractionController extends Controller
 
         if($infraction->save()){
             if($infraction->infraction_type == 'NTE') {
-                // Mail::to($employee->email)->cc(['juncelcarreon@elink.com.ph'])->send(new InfractionAcknowledged(['emp_name'=>strtoupper($employee->first_name)]));
+                Mail::to($employee->email)->cc(['juncelcarreon@elink.com.ph'])->send(new InfractionAcknowledged(['emp_name'=>strtoupper($employee->first_name)]));
             } else{
-                // Mail::to($employee->email)->cc(['juncelcarreon@elink.com.ph'])->send(new InfractionNODAcknowledged(['emp_name'=>strtoupper($employee->first_name)]));
+                Mail::to($employee->email)->cc(['juncelcarreon@elink.com.ph'])->send(new InfractionNODAcknowledged(['emp_name'=>strtoupper($employee->first_name)]));
             }
 
             return back()->with('success', 'Infraction Successfully Acknowledged!!');
@@ -207,9 +214,82 @@ class DAInfractionController extends Controller
         $infraction->status = 1;
 
         $employee = User::withTrashed()->find($infraction->employee_id);
+        $supervisor = User::find($employee->supervisor_id);
 
         if($infraction->save()){
+            if(!empty($supervisor) && $infraction->infraction_type == 'NTE') {
+                $data['leader_name'] = strtoupper($supervisor->first_name);
+                $data['emp_name'] = strtoupper($employee->first_name);
+                $data['title'] = $infraction->title;
+                $data['url'] = url("dainfraction/{$infraction->id}");
+
+                Mail::to($supervisor->email)->cc(['juncelcarreon@elink.com.ph'])->send(new InfractionExplanation($data));
+            }
+
             return back()->with('success', "{$infraction->infraction_type} - Explanation Successfully Submitted!!");
+        } else {
+            return back()->with('error', 'Something went wrong.');
+        }
+    }
+
+    public function noted(Request $request)
+    {
+        $infraction = DAInfraction::withTrashed()->find($request->id);
+        if(empty($infraction)) {
+            return redirect('/404');
+            exit;
+        }
+        $infraction->hr_notes = $request->notes;
+
+        if($infraction->save()){
+            return back()->with('success', "HR Notes Successfully Submitted!!");
+        } else {
+            return back()->with('error', 'Something went wrong.');
+        }
+    }
+
+    public function recommend(Request $request)
+    {
+        $infraction = DAInfraction::withTrashed()->find($request->id);
+        if(empty($infraction)) {
+            return redirect('/404');
+            exit;
+        }
+        $infraction->recommend_date = date('Y-m-d H:i:s');
+        $infraction->approved_status = 'RECOMMENDED';
+
+        $employee = User::withTrashed()->find($infraction->employee_id);
+        $manager = User::find($employee->manager_id);
+
+        if($infraction->save()){
+            if(!empty($manager) && $infraction->infraction_type == 'NTE') {
+                $data['manager_name'] = strtoupper($manager->first_name);
+                $data['leader_name'] = strtoupper(Auth::user()->first_name);
+                $data['emp_name'] = strtoupper($employee->first_name);
+                $data['title'] = $infraction->title;
+                $data['url'] = url("dainfraction/{$infraction->id}");
+
+                Mail::to($manager->email)->cc(['juncelcarreon@elink.com.ph'])->send(new InfractionRecommendation($data));
+            }
+
+            return back()->with('success', "{$infraction->infraction_type} Successfully Recommended!!");
+        } else {
+            return back()->with('error', 'Something went wrong.');
+        }
+    }
+
+    public function approved(Request $request)
+    {
+        $infraction = DAInfraction::withTrashed()->find($request->id);
+        if(empty($infraction)) {
+            return redirect('/404');
+            exit;
+        }
+        $infraction->approved_date = date('Y-m-d H:i:s');
+        $infraction->approved_status = 'APPROVED';
+
+        if($infraction->save()){
+            return back()->with('success', "{$infraction->infraction_type} Successfully Approved!!");
         } else {
             return back()->with('error', 'Something went wrong.');
         }

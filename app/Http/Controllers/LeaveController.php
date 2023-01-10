@@ -772,7 +772,7 @@ class LeaveController extends Controller
 	public function updateLeaveEntry(Request $request)
 	{
 		$leave = LeaveRequest::find($request->id);
-		$details = LeaveRequestDetails::where('leave_id', $request->id)->get();
+		$orig_details = LeaveRequestDetails::where('leave_id', $request->id)->where('pay_type', '<>', 3)->get();
 
 		$obj = [
 			'leave_date'    => $request->leave_date,
@@ -850,8 +850,12 @@ class LeaveController extends Controller
 		}
 
 		$orig_pay = [];
-		foreach($details as $key=>$detail){
-			$orig_pay[$key] = $detail->pay_type;
+		if(!empty($orig_details)) {
+			foreach($orig_details as $key=>$detail){
+				$orig_pay[$key] = $detail->pay_type;
+			}
+		} else {
+			$orig_pay = [0];
 		}
 
 		if($leave->approve_status_id == 1 && $pay_types != $orig_pay) {
@@ -861,7 +865,7 @@ class LeaveController extends Controller
 			$lc = new LeaveCredits();
 			$lc->employee_id = $leave->employee_id;
 			$lc->credit = $orig - $new;
-			$lc->type = 7;
+			$lc->type = (date("Y", strtotime($leave->date_filed)) != date('Y')) ? 2 : 7;
 			$lc->month = date("m", strtotime($leave->date_filed));
 			$lc->year = date("Y", strtotime($leave->date_filed));
 			$lc->leave_id = 0;
@@ -1073,9 +1077,8 @@ class LeaveController extends Controller
 
 	public function decline(Request $request)
 	{
+		$orig_details = LeaveRequestDetails::where('leave_id', $request->leave_id)->where('pay_type', '<>', 3)->get();
 		$leave_request = LeaveRequest::find($request->leave_id);
-		$leave_request->reason_for_disapproval = $request->reason_for_disapproval;
-		$leave_request->approve_status_id = 2;
 
 		LeaveCredits::where('leave_id', $request->leave_id)->delete();
 		LeaveRequestDetails::where('leave_id',$request->leave_id)->where('status',3)->update(['status'=>1]);
@@ -1086,6 +1089,28 @@ class LeaveController extends Controller
 			'emp_name' => strtoupper($employee->first_name),
 			'date'     => $details->date
 		];
+
+		$with_pay = 0;
+		foreach($orig_details as $detail) {
+			if($detail->pay_type == 1){
+				$with_pay += $detail->length;
+			}
+		}
+
+		if($leave_request->approve_status_id == 1 && $with_pay > 0) {
+			$lc = new LeaveCredits();
+			$lc->employee_id = $leave_request->employee_id;
+			$lc->credit = $with_pay;
+			$lc->type = (date("Y", strtotime($leave_request->date_filed)) != date('Y')) ? 2 : 7;
+			$lc->month = date("m", strtotime($leave_request->date_filed));
+			$lc->year = date("Y", strtotime($leave_request->date_filed));
+			$lc->leave_id = 0;
+			$lc->status = 1;
+			$lc->save();
+		}
+
+		$leave_request->reason_for_disapproval = $request->reason_for_disapproval;
+		$leave_request->approve_status_id = 2;
 
 		if($leave_request->save()){
 			Mail::to($employee->email)->send(new LeaveDeclined($data));

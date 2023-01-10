@@ -150,10 +150,10 @@ Route::middleware(['auth'])->group(function(){
     Route::post('dainfraction/acknowledged', 'DAInfractionController@acknowledged');
     Route::post('dainfraction/explanation', 'DAInfractionController@explanation');
     Route::post('dainfraction/update', 'DAInfractionController@update');
+    Route::post('dainfraction/noted', 'DAInfractionController@noted');
+    Route::post('dainfraction/recommend', 'DAInfractionController@recommend');
+    Route::post('dainfraction/approved', 'DAInfractionController@approved');
     Route::get('team-dainfraction', 'DAInfractionController@team');
-    Route::get('dainfraction-pdf/{id}', 'DAInfractionController@pdf');
-
-    Route::resource('survey', 'SurveyController');
 
     Route::get('recommend-request-info/{id}', 'EmployeeInfoController@recommendApproval');
     Route::get('approve-request-info/{id}', 'EmployeeInfoController@approveChangeProfile');

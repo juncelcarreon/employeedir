@@ -87,38 +87,98 @@ DA Infractions <span>></span> View Infraction
 					<div class="col-md-12">
 						<label>Explanation:</label>
 						<p class="pre-line"><?= htmlentities($infraction->reason) ?></p>
-						<br>
-						<br>
+					</div>
+<?php
+	}
+	if(!empty($infraction->hr_notes)) {
+?>
+					<div class="col-md-12">&nbsp;</div>
+					<div class="col-md-12">
+						<label>HR Notes:</label>
+						<p class="pre-line"><?= htmlentities($infraction->hr_notes) ?></p>
 					</div>
 <?php
 	}
 ?>
+					<div class="col-md-12">
+						<br>
+						<br>
+					</div>
+					<div class="col-md-4">
+						<label>Recommending Approval:</label>
+						<p><?= (!empty($supervisor) ? strtoupper($supervisor->first_name.' '.$supervisor->last_name).' '.(($supervisor->id == Auth::user()->id) ? '(You)' : '') : 'NO SUPERVISOR') ?></p>
+						<small <?= ((!empty($infraction->recommend_date)) ? 'class="text-success"' : '') ?>><?= ((!empty($infraction->recommend_date)) ? 'Recommended last ' .  prettyDate($infraction->recommend_date) : 'Not yet recommended') ?></small>
+					</div>
+					<div class="col-md-4">
+						<label>Approved by:</label>
+						<p><?= (!empty($manager) ? strtoupper($manager->first_name.' '.$manager->last_name).' '.(($manager->manager_id == Auth::user()->id) ? '(You)' : '') : 'HR DEPARTMENT') ?></p>
+						<small <?= ((!empty($infraction->approved_date)) ? 'class="text-success"' : '') ?>><?= ((!empty($infraction->approved_date)) ? 'Approved last ' .  prettyDate($infraction->approved_date) : 'Not yet approved') ?></small>
+					</div>
+					<div class="col-md-4">
+					<?php
+						$txt = '<span class="fa fa-refresh"></span>&nbsp; Waiting for response';
+
+						switch($infraction->approved_status) {
+							case 'APPROVED':
+								$txt = '<span class="fa fa-check text-success"></span> Approved';
+								break;
+							case 'RECOMMENDED':
+								$txt = '<span class="fa fa-thumbs-up text-primary"></span> Recommended';
+								break;
+						}
+					?>
+						<label>Approve Status:</label>
+						<p><?= nl2br($txt) ?>
+					</div>
 					<div class="division"></div>
 					<div class="col-md-6"></div>
 					<div class="col-md-6 direction-rtl">
 						<?php
-							if($infraction->status == 0) {
+							if($infraction->employee_id == Auth::user()->id && $infraction->status == 0) {
 						?>
 						<button class="btn btn-primary" data-target="#acknowledgemodal" data-toggle="modal">Acknowledge</button>
 						<?php
 							}
-							if($infraction->status == 2) {
+							if($infraction->employee_id == Auth::user()->id && $infraction->status == 2) {
 						?>
 						<button class="btn btn-primary" data-target="#explanationmodal" data-toggle="modal">Please State Your Explanation</button>
 						<?php
 							}
 							if(Auth::user()->isAdmin()) {
 						?>
+						<button class="btn btn-primary" data-target="#hrnotesmodal" data-toggle="modal">HR Notes</button>
 						<a href="<?= url("dainfraction/{$infraction->id}/edit") ?>" class="btn btn-info">Update</a>
+						<?php
+								if(!empty($infraction->reason)) {
+						?>
 						<button class="btn btn-success" id="btn-print">Print</button>
+						<?php
+								}
+							}
+							if($infraction->infraction_type == 'NTE' && $infraction->approved_status != 'APPROVED' && ((!empty($manager) && $manager->id == Auth::user()->id) || (Auth::user()->isAdmin()))) {
+						?>
+						    <form action="<?= url('dainfraction/approved') ?>" method="POST" style="display: inline-block;">
+						        {{ csrf_field() }}
+						        <input type="hidden" name="id" value="<?= $infraction->id ?>">
+						        <button type="submit" class="btn btn-primary">Approved</button>
+						    </form>
+						<?php
+							}
+							if($infraction->infraction_type == 'NTE' && $infraction->approved_status == 'NONE' && !empty($supervisor) && $supervisor->id == Auth::user()->id) {
+						?>
+						    <form action="<?= url('dainfraction/recommend') ?>" method="POST" style="display: inline-block;">
+						        {{ csrf_field() }}
+						        <input type="hidden" name="id" value="<?= $infraction->id ?>">
+						        <button type="submit" class="btn btn-primary">Recommend</button>
+						    </form>
 						<?php
 							}
 						?>
 					</div>
 				</div>
-		    	<div style="background:#000;padding:10px;text-align:center;" id="divImage">
+	    		<div style="background:#525659;padding:10px;text-align:center;display: none;" id="divImage">
 <?php
-for($x = 1; $x <= $pages; $x++) {
+	for($x = 1; $x <= $pages; $x++) {
 ?>
 					<canvas id="pdf-canvas<?= $x ?>" style="width: 200px;"></canvas>
 <?php
@@ -126,7 +186,7 @@ for($x = 1; $x <= $pages; $x++) {
 ?>
 				</div>
 			</div>
-			<div class="panel panel-body" id="html">
+			<div class="panel panel-body" id="html" style="display: none;">
 				<p style="font-size:10px;height:10px;margin:0;">Printed Date: <?= date('F d, Y') ?></p>
 				<i style="display: block;font-size: 20px;text-align: center;margin:0;"><?= ($infraction->infraction_type == 'NOD') ? 'Notice of Decision' : 'Notice to Explain' ?></i>
 				<span style="font-size: 30px;font-weight:bold;text-align: center;margin:0;"> <?= $infraction->title ?></span>
@@ -260,36 +320,39 @@ $(function(){
 	}
 ?>
 
-	$('#btnDownload').click(function(){
-	  var element = document.querySelector("#divImage");
-	  saveCapture(element)
-	});
-
 	$('#btn-print').click(function(e){
 		e.preventDefault();	
 
+		var obj = $(this);
 		var html = $('#html').html();
 		var element = document.querySelector("#divImage");
 
+		obj.text('Processing');
+		obj.attr('disabled', true);
+
 		html2canvas(element, {
-	        onrendered: function (canvas) {
-			    $('#image').attr('src', canvas.toDataURL("image/png"));
+		    onclone: function (clonedDoc) {
+		        clonedDoc.getElementById('divImage').style.display = 'block';
+		    }
+		}).then((canvas)=>{
+		    $('#image').attr('src', canvas.toDataURL("image/png"));
+			obj.text('Print');
+			obj.attr('disabled', false);
 
-				var ret = htmlToPdfmake(html, {
-				  tableAutoSize:true,
-				  imagesByReference:true
-				});
+			var ret = htmlToPdfmake(html, {
+			  tableAutoSize:true,
+			  imagesByReference:true
+			});
 
-				ret.images.img_ref_0 = canvas.toDataURL("image/png");
+			ret.images.img_ref_0 = canvas.toDataURL("image/png");
 
-				var dd = {
-				  content:ret.content,
-				  images:ret.images
-				}
+			var dd = {
+			  content:ret.content,
+			  images:ret.images
+			}
 
-				pdfMake.createPdf(dd).download();
-	        }     
-	    });
+			pdfMake.createPdf(dd).download("infraction-<?= $infraction->id ?>.pdf");
+		});
 	});
 });
 </script>
@@ -334,6 +397,33 @@ $(function(){
                         {{ csrf_field() }}
                         <div class="form-group">
                             <textarea class="form-control" name="reason" style="resize: vertical;min-height: 150px;" required></textarea>
+                            <input type="hidden" name="id" value="<?= $infraction->id ?>">
+                        </div>
+                        <div class="col-md-12">
+                            <br>
+                            <button type="submit" class="btn btn-primary pull-right" style="margin-top: 5px;">Submit</button>
+                            <button type="button" class="btn btn-default pull-right" style="margin-top: 5px; margin-right: 5px;" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+<div id="hrnotesmodal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #0086CD;">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="color: white !important;opacity: 1;">X</button>
+                <h4 class="modal-title"><b style="color: white">HR Notes.</b></h4>
+            </div>
+            <div class="modal-body">
+                <div clas="row">
+                    <form action="<?= url('dainfraction/noted') ?>" method="POST">
+                        {{ csrf_field() }}
+                        <div class="form-group">
+                            <textarea class="form-control" name="notes" style="resize: vertical;min-height: 150px;" required></textarea>
                             <input type="hidden" name="id" value="<?= $infraction->id ?>">
                         </div>
                         <div class="col-md-12">
